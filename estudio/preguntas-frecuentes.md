@@ -18,13 +18,13 @@ El curso permite hacerlo en cinco pasos. Primero, escribir el objetivo en una or
 
 En el ejemplo de la sección 2.5, un agente de soporte tiene como objetivo resolver el 80% de los tickets de nivel 1 sin intervención humana, en menos de 3 minutos. Ese objetivo se convierte en reglas, como no modificar cuentas sin confirmación humana o escalar si el cliente menciona la cancelación, y en métricas, como un CSAT mayor o igual a 4,2 sobre 5. Se profundiza en el Módulo 2, secciones 2.2 a 2.6.
 
-## ¿Qué ejemplos hay de métricas de valor?
+## ¿Qué son las métricas de éxito y de valor, y cómo se aplican en la realidad?
 
-Una métrica de valor responde si el agente está generando valor para el negocio, y no solo si el sistema funciona. El curso lo muestra con un contraste: un agente puede tener un 99,9% de uptime y aun así bajar la satisfacción del cliente y subir el costo por caso.
+Las métricas de éxito, o de valor, miden si el agente genera valor para el negocio y no solo si el sistema funciona: un agente puede tener un 99,9% de uptime y aun así bajar la satisfacción del cliente y subir el costo por caso. Son el sexto parámetro de la identidad del agente, en la sección 2.2, y las define el AI Agent Manager, no el equipo técnico.
 
-El curso da cinco métricas esenciales. Primero, la tasa de resolución autónoma, el porcentaje de casos resueltos sin una persona. Segundo, la tasa de escalamiento. Tercero, el tiempo promedio de resolución, comparado con el baseline anterior al agente. Cuarto, el costo por caso. Y quinto, una métrica de calidad, como el CSAT. A más largo plazo, la sección 5.2 suma el NPS, el volumen adicional sin aumentar el personal, la participación de mercado y los nuevos servicios.
+El curso da cinco esenciales en la sección 3.2: la tasa de resolución autónoma, la tasa de escalamiento, el tiempo promedio de resolución, el costo por caso y una métrica de calidad, como el CSAT. Deben ser explícitas y medibles; llevar un número objetivo, como en la sección 2.5, con resolución autónoma mayor o igual al 80%, CSAT mayor o igual a 4,2 sobre 5, escalamiento menor o igual al 20% y 3 minutos o menos; y definirse antes del piloto y compararse con el baseline, porque sin él toda mejora es anecdótica. En Salesforce, por ejemplo, el 74% de los casos se resolvió sin intervención humana.
 
-Los casos reales lo muestran: en Salesforce, el 74% de los casos se resolvieron sin intervención humana y se generaron 60 millones de dólares en pipeline de ventas en 4 meses; en Klarna, el agente hizo el trabajo de 700 agentes a tiempo completo, con un ahorro estimado de 40 millones de dólares al año. Siempre se compara con el baseline, porque sin él toda mejora es anecdótica. Se profundiza en el Módulo 3, sección 3.2, y en el Módulo 5, sección 5.2.
+Esto no viene en el curso, pero sigue su lógica: un agente de cobranza puede medirse por el porcentaje de deuda recuperada y los días promedio de cobro; uno de consultas de recursos humanos, por el porcentaje resuelto sin escalar y la satisfacción de los empleados; y uno de ventas, por cuántos clientes potenciales pasan a una reunión. A más largo plazo se suman las métricas de los tres horizontes de la sección 5.2.
 
 ## ¿Qué es un audit trail, cómo se hace y cómo se ejecuta?
 
@@ -41,16 +41,6 @@ Gestionar estratégicamente un agente es preguntarse qué valor de negocio gener
 Con lo que enseñan los cinco módulos se puede ordenar en cinco prácticas; este orden no viene así en el curso. Primero, elegir dónde usar agentes según su impacto, identificando los tres a cinco mejores procesos candidatos. Segundo, dar a cada agente la gobernanza que corresponde a su nivel de autonomía. Tercero, supervisar resultados y no actividad, interviniendo solo cuando se pasa un umbral. Cuarto, comunicar el valor a la dirección con los tres horizontes y el business case. Y quinto, gestionar los agentes como un portafolio, con un registro y una revisión trimestral.
 
 La regla del curso, en la sección 3.1, es: supervisa los resultados con rigurosidad; interviene en los procesos solo cuando los resultados lo justifican. Un contraejemplo está en la pregunta de validación 7 del Módulo 1: decir que el Director de Tecnología no tiene tiempo es un argumento operativo, no estratégico.
-
-## ¿Cuáles son las métricas de éxito de un agente y cómo se aplican en la realidad?
-
-Las métricas de éxito son el sexto parámetro de la identidad del agente, según la sección 2.2: definen cómo se medirá su desempeño desde la perspectiva del negocio. Las define el AI Agent Manager, no el equipo técnico, y son también el último componente de las instrucciones del agente.
-
-Según el curso, cumplen tres condiciones. Primero, son explícitas, medibles y sin ambigüedad, porque el agente no interpreta intenciones. Segundo, llevan un número objetivo, como en el ejemplo de la sección 2.5: resolución autónoma mayor o igual al 80%, CSAT mayor o igual a 4,2 sobre 5, escalamiento menor o igual al 20% y resolución en 3 minutos o menos. Tercero, se definen antes de empezar, incluso antes del piloto, como pide la sección 4.3, y se comparan con el baseline. Salesforce, en la sección 3.8, decidió desde el primer día que serían exclusivamente de negocio.
-
-Esto no viene en el curso, pero sigue su lógica. Un agente de cobranza podría medirse por el porcentaje de deuda recuperada, los días promedio de cobro y las quejas por cada mil gestiones. Un agente que responde consultas internas de recursos humanos, por el porcentaje resuelto sin escalar, el tiempo de respuesta y la satisfacción de los empleados. Y un agente de ventas que califica clientes potenciales, por cuántos pasan a una reunión y las horas que ahorra a los vendedores.
-
-Más ejemplos del curso están en la pregunta sobre métricas de valor.
 
 ## ¿Cómo hace un AI Agent Manager una auditoría de seguridad?
 
