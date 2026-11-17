@@ -1101,26 +1101,3 @@ Al completar el programa AIAM™, un profesional de finanzas regresa a su organi
 Respuesta correcta: Documentar el baseline del proceso que se desea agentizar: métricas actuales de tiempo, costo, calidad y capacidad, antes de activar cualquier agente, para tener la referencia contra la que se medirá todo retorno futuro.
 
 Por qué: El Business Case AIAM™ establece que el Baseline es el primer elemento: la medición empieza antes de activar el agente, no después. Sin baseline documentado, cualquier mejora posterior es anecdótica y no defendible ante la dirección. Esta es una de las lecciones más prácticas del programa: el primer acto del AIAM™ al iniciar un proyecto agentic no es activar tecnología sino documentar el punto de partida. Los retornos se calculan contra ese punto, no contra una percepción subjetiva de cuánto ha mejorado.
-
-
-## Glosario
-
-### Accountability
-
-Accountability es una palabra en inglés que en español se traduce como responsabilidad de rendir cuentas. Significa ser la persona que debe responder por los resultados de algo, tanto cuando sale bien como cuando sale mal, y que debe poder explicar y justificar las decisiones que se tomaron. El mismo documento la define en la práctica en la sección de responsabilidades del Módulo 1, al describir el mapa de accountability: para cada agente en operación, documentar explícitamente quién responde por sus resultados, sus errores y sus decisiones, ante el equipo, ante los clientes y ante el C-suite. También la asocia con la auditoría y la rendición de cuentas al explicar el principio de permisos mínimos.
-
-Cuando el documento habla de la accountability principal, en la sección 1.2, se refiere a quién es el principal responsable de responder por cada tipo de tecnología. En la automatización RPA, quien responde es el equipo de IT o Sistemas; en el chatbot, el equipo de Customer Experience; y en el agente de IA, el AI Agent Manager. Es decir, si un agente de IA toma una mala decisión, quien debe dar la cara y explicar qué pasó es el AI Agent Manager, aunque no haya escrito el código.
-
-Esto no aparece en el documento original: en gestión se suele distinguir entre responsibility, que es la responsabilidad de ejecutar una tarea, y accountability, que es la responsabilidad de responder por el resultado final. Varias personas pueden ejecutar una tarea, pero normalmente una sola rinde cuentas por ella. Por eso el curso insiste en que cada agente tenga un responsable claro: un agente no puede rendir cuentas, una persona sí.
-
-El término aparece en el Módulo 1, secciones 1.1, 1.2, 1.3 y 1.4, en el checklist y en las responsabilidades del módulo; en el Módulo 2, al tratar el agent sprawl y la validación; y en el Módulo 3, sección 3.6, dentro de las tensiones que gestiona el Governance Board Agentic, por ejemplo, la eficiencia operacional frente a la accountability ética.
-
-### RPA
-
-RPA es la sigla en inglés de Robotic Process Automation, que en español se traduce como automatización robótica de procesos. Esta traducción de la sigla no aparece en el documento original.
-
-En el curso, la automatización RPA es el primero de los tres tipos de tecnología que el AI Agent Manager debe saber distinguir, junto con el chatbot y el agente de IA. Según el documento, la automatización RPA se basa en reglas fijas, sin juicio; es fija y requiere reprogramación ante cambios; cubre una tarea única predefinida; usa un sistema o una API específicos; requiere intervención humana en alto grado, porque cualquier excepción la detiene; y quien responde por ella es el equipo de IT o Sistemas.
-
-Esto no aparece en el documento original: en la práctica, un RPA es un programa que imita lo que haría una persona frente al computador, como hacer clic, copiar datos de un correo y pegarlos en otro sistema o llenar un formulario, siempre siguiendo exactamente los mismos pasos. Por ejemplo, un RPA puede tomar cada factura que llega por correo y registrarla en el sistema contable. Funciona muy bien mientras todo sea igual, pero si la factura viene en un formato distinto, se detiene y necesita que una persona intervenga. Esa es la gran diferencia con un agente de IA, que puede interpretar situaciones nuevas, tomar decisiones en varios pasos y adaptarse.
-
-El término aparece en el Módulo 1, sección 1.2, en la comparación entre automatización RPA, chatbot y agente de IA, y en el checklist de competencias del módulo.
