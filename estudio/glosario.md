@@ -10,6 +10,10 @@ Accountability es una palabra en inglés que significa responsabilidad de rendir
 
 Audit trail significa rastro o pista de auditoría. En el curso es un registro de razonamiento que documenta cada decisión del agente, para poder explicar después qué hizo y por qué. Aparece en el Módulo 1, en la pregunta de validación 9. La explicación completa, con cómo se hace y cómo se usa, está en el archivo de preguntas frecuentes.
 
+## Boundary testing
+
+Boundary testing significa prueba de límites. Es la segunda de las cinco validaciones antes de producción, en la sección 2.6: comprobar que el agente respeta sus restricciones cuando lo empujan fuera de su alcance, con casos de borde. El curso da tres tipos: clientes que piden lo que el agente no puede dar, escenarios ambiguos y preguntas fuera de alcance. Con el agente de soporte de la sección 2.5, por ejemplo: pedirle un descuento no autorizado, cambiar algo de la cuenta sin confirmación humana o consultarle por otro producto. Debe negarse o escalar. Se diferencia de la prueba adversarial, que busca manipularlo a propósito. Aparece en el Módulo 2, sección 2.6.
+
 ## C-suite
 
 C-suite es la forma de llamar en inglés a la alta dirección de una empresa. El nombre viene de que esos cargos empiezan con la C de chief, que significa jefe, como el CEO o gerente general y el CFO o gerente de finanzas; esto no viene en el curso. En el curso, el C-suite es la audiencia ante la que responde el AI Agent Manager, y a la que debe explicar los resultados de los agentes en lenguaje de negocio, no técnico. Aparece sobre todo en los módulos 1 y 3.
