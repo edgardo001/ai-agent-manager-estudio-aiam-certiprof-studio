@@ -24,6 +24,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — Derechos: el PDF no trae aviso de copyright ni licencia, solo el aviso de marca registrada de Certiprof. El aviso de `README.md` se cambió de “debe mantenerse privado” a una nota de autoría que atribuye el contenido y la marca a Certiprof, LLC.
 - 2026-11-17 — Repositorio: carpeta y repositorio de GitHub `edgardo001/ai-agent-manager-estudio-aiam-certiprof-studio`, público y con todo el contenido (incluidos el PDF y la conversión), por decisión del usuario. Se recreó desde cero, con un historial limpio sin firmas ni menciones del asistente de IA.
 - 2026-11-17 — Material de repaso impreso: el usuario eligió apuntes visuales tipo “apuntes de clase” (diagramas, poco texto, letra manuscrita en títulos y notas), no fichas de pregunta y respuesta separadas. Aprobó el estilo del Módulo 1 tras pedir menos texto. Cada módulo lleva un recuadro de siglas y términos en inglés.
+- 2026-11-17 — `AGENTS.md`, `MEMORY.md` y `README.md` no deben superar las 200 líneas cada uno; si pasan el límite, se podan resumiendo sin perder lo importante. Regla registrada en `AGENTS.md`.
 
 ## Estado actual
 

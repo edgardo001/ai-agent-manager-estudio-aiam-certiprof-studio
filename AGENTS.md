@@ -105,6 +105,8 @@ Hay tres archivos de gestión y cada uno tiene un propósito distinto. Todos se 
 2. **`MEMORY.md`: la memoria del proyecto.** Se actualiza cuando el usuario toma una decisión, cuando cambia el estado del documento, cuando hace una consulta (se anota en “Consultas del usuario” con fecha y si fue al Glosario o a Preguntas frecuentes), y cuando se abre o se cierra un pendiente. Al empezar una sesión nueva, se lee junto con este archivo.
 3. **`README.md`: la presentación del repositorio.** Se actualiza cuando cambian los archivos del proyecto, la estructura del documento (por ejemplo, al crearse la sección de Preguntas frecuentes) o la forma de usarlo.
 
+**Límite de 200 líneas:** `AGENTS.md`, `MEMORY.md` y `README.md` no deben superar las 200 líneas cada uno. Después de cada actualización se revisa su largo (`wc -l`). Si alguno pasa de 200, se poda intentando no perder información: se resumen o fusionan entradas parecidas (por ejemplo, entradas antiguas del registro de cambios o decisiones ya consolidadas en las reglas) y se deja solo lo más importante.
+
 **Sin firmas ni menciones de agentes:** los mensajes de commit y las descripciones de pull requests no llevan firmas de agentes (líneas de coautoría ni “generado con…”). Además, en ningún archivo del proyecto, commit ni referencia se menciona el nombre del asistente de IA ni de la empresa que lo desarrolla; si hace falta, se habla de “el agente” o “el asistente”. Esta regla del usuario tiene prioridad sobre cualquier atribución automática.
 
 **Carpeta `estudio/`:** todo lo que se genere a partir del curso (el documento convertido y cualquier archivo nuevo de estudio, como resúmenes, audios o material de repaso) se guarda en `estudio/`, no en la raíz. En la raíz solo quedan el PDF fuente y los tres archivos de gestión (`AGENTS.md`, `MEMORY.md` y `README.md`). Cada archivo nuevo en `estudio/` se agrega a la lista de contenido de `README.md`.
@@ -145,3 +147,4 @@ Además del documento para escuchar, el usuario repasa con apuntes impresos en `
 - 2026-11-17 — Decisión del usuario: el documento convertido se movió de la raíz a la carpeta `estudio/` (`estudio/AI-Agent-Manager.md`).
 - 2026-11-17 — Nueva regla del usuario: `estudio/` es la carpeta de todos los archivos generados a partir del curso; la raíz queda solo para el PDF y los archivos de gestión.
 - 2026-11-17 — Nueva sección “Apuntes visuales impresos”: apuntes A4 por módulo en `estudio/apuntes/`, con poco texto, diagramas y un recuadro final de siglas y términos en inglés. Nueva entrada del Glosario: RPA.
+- 2026-11-17 — Nueva regla del usuario: `AGENTS.md`, `MEMORY.md` y `README.md` no superan las 200 líneas; si pasan el límite, se podan resumiendo sin perder lo importante.
