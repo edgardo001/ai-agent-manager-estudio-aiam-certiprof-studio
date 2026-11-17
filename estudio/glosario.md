@@ -6,6 +6,10 @@ Siglas y términos consultados durante el estudio del curso, en orden alfabétic
 
 Accountability es una palabra en inglés que significa responsabilidad de rendir cuentas: ser quien responde por los resultados de algo, salga bien o mal, y puede explicar las decisiones tomadas. En el curso, cada tecnología tiene un responsable principal: en la automatización RPA responde el equipo de IT, en el chatbot el de Customer Experience y en el agente de IA, el AI Agent Manager, aunque no haya escrito el código. Esto no viene en el curso: un agente no puede rendir cuentas; una persona sí. Aparece sobre todo en el Módulo 1, sección 1.2.
 
+## Agent sprawl
+
+Sprawl significa crecimiento desordenado. Según la sección 2.7, el agent sprawl es la proliferación de agentes sin dueño claro, sin propósito documentado, sin métricas y sin gobierno coherente. Aparece cuando cada área despliega agentes por su cuenta o cuando un piloto pasa a producción sin onboarding. Cuesta de tres formas: agentes redundantes que hacen casi lo mismo, nadie que responda cuando uno se equivoca y una inversión que supera el valor generado. Gartner lo señala como la causa principal de que más del 40% de los proyectos agentic se cancelen antes de 2027. Se previene con un registro centralizado de agentes, aceptación obligatoria y auditoría trimestral. Aparece en el Módulo 2, sección 2.7.
+
 ## Audit trail
 
 Audit trail significa rastro o pista de auditoría. En el curso es un registro de razonamiento que documenta cada decisión del agente, para poder explicar después qué hizo y por qué. Aparece en el Módulo 1, en la pregunta de validación 9. La explicación completa, con cómo se hace y cómo se usa, está en el archivo de preguntas frecuentes.
