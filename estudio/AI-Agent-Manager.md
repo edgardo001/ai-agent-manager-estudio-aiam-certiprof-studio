@@ -1114,3 +1114,13 @@ Cuando el documento habla de la accountability principal, en la sección 1.2, se
 Esto no aparece en el documento original: en gestión se suele distinguir entre responsibility, que es la responsabilidad de ejecutar una tarea, y accountability, que es la responsabilidad de responder por el resultado final. Varias personas pueden ejecutar una tarea, pero normalmente una sola rinde cuentas por ella. Por eso el curso insiste en que cada agente tenga un responsable claro: un agente no puede rendir cuentas, una persona sí.
 
 El término aparece en el Módulo 1, secciones 1.1, 1.2, 1.3 y 1.4, en el checklist y en las responsabilidades del módulo; en el Módulo 2, al tratar el agent sprawl y la validación; y en el Módulo 3, sección 3.6, dentro de las tensiones que gestiona el Governance Board Agentic, por ejemplo, la eficiencia operacional frente a la accountability ética.
+
+### RPA
+
+RPA es la sigla en inglés de Robotic Process Automation, que en español se traduce como automatización robótica de procesos. Esta traducción de la sigla no aparece en el documento original.
+
+En el curso, la automatización RPA es el primero de los tres tipos de tecnología que el AI Agent Manager debe saber distinguir, junto con el chatbot y el agente de IA. Según el documento, la automatización RPA se basa en reglas fijas, sin juicio; es fija y requiere reprogramación ante cambios; cubre una tarea única predefinida; usa un sistema o una API específicos; requiere intervención humana en alto grado, porque cualquier excepción la detiene; y quien responde por ella es el equipo de IT o Sistemas.
+
+Esto no aparece en el documento original: en la práctica, un RPA es un programa que imita lo que haría una persona frente al computador, como hacer clic, copiar datos de un correo y pegarlos en otro sistema o llenar un formulario, siempre siguiendo exactamente los mismos pasos. Por ejemplo, un RPA puede tomar cada factura que llega por correo y registrarla en el sistema contable. Funciona muy bien mientras todo sea igual, pero si la factura viene en un formato distinto, se detiene y necesita que una persona intervenga. Esa es la gran diferencia con un agente de IA, que puede interpretar situaciones nuevas, tomar decisiones en varios pasos y adaptarse.
+
+El término aparece en el Módulo 1, sección 1.2, en la comparación entre automatización RPA, chatbot y agente de IA, y en el checklist de competencias del módulo.

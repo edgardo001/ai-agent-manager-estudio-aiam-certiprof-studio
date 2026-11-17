@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Apuntes AIAM: Módulo 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="apuntes.css">
+</head><body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="m4-fc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b07d12"/></marker>
+  <marker id="m4-fg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5c6475"/></marker>
+  <linearGradient id="m4-gr" x1="0" x2="1"><stop offset="0" stop-color="#2f6db5"/><stop offset=".5" stop-color="#c9ccd3"/><stop offset="1" stop-color="#b07d12"/></linearGradient>
+</defs></svg>
+
+<style>
+  .m4 .tx{ display:grid; grid-template-columns:36mm 1fr 1fr; gap:1.8mm 3mm; align-items:center; font-size:9.5pt; line-height:1.3; }
+  .m4 .tx .dim{ font-family:Caveat, cursive; font-size:15.5pt; line-height:1; color:var(--ink); font-weight:700; }
+  .m4 .tx .ag{ background:#e8f0fa; padding:1.6mm 2.5mm; border-radius:1.5mm; border-left:1.3mm solid var(--blue); }
+  .m4 .tx .hu{ background:var(--cs); padding:1.6mm 2.5mm; border-radius:1.5mm; border-left:1.3mm solid var(--c); }
+  .m4 .tx .cab{ font-family:Caveat, cursive; font-size:18pt; font-weight:700; line-height:1; }
+  .m4 .capas{ display:grid; grid-template-columns:27mm 1fr 1fr 1fr; gap:1.8mm 2.5mm; align-items:stretch; font-size:9pt; line-height:1.3; }
+  .m4 .capas .cab{ font-family:Caveat, cursive; font-size:17pt; font-weight:700; line-height:1; align-self:end; }
+  .m4 .capas .cp{ background:var(--c); color:#fff; font-weight:800; border-radius:1.5mm; padding:2mm; display:flex; align-items:center; font-size:10pt; }
+  .m4 .capas .mi{ background:#fff; border:1px solid var(--c3); border-radius:1.5mm; padding:1.6mm 2.2mm; }
+  .m4 .capas .al{ background:#fdecea; border-radius:1.5mm; padding:1.6mm 2.2mm; }
+  .m4 .capas .ac{ background:var(--cs); border-radius:1.5mm; padding:1.6mm 2.2mm; border-left:1.2mm solid var(--c); }
+</style>
+
+<!-- ============ HOJA 1 ============ -->
+<div class="pag m4">
+  <div>
+    <h1><small>MÓDULO 4 · APUNTES</small>Equipos híbridos</h1>
+    <p class="sub">Rediseño de procesos: humanos + agentes trabajando juntos</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">4.1</span>La nueva unidad de trabajo</h3>
+    <div class="fila" style="grid-template-columns:1.3fr 1fr">
+      <p style="font-size:11pt; line-height:1.5">Los agentes no eliminan los equipos: <span class="hl">los transforman</span>.<br>
+      La pregunta ya no es <i>si</i> reemplazan trabajos, sino <b>cómo diseñar</b> equipos donde humanos y agentes trabajen juntos.</p>
+      <div class="postit">No es sustitución: es amplificación.</div>
+    </div>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 250">
+      <!-- Humanos -->
+      <rect x="2" y="10" width="245" height="230" rx="14" fill="#fff" stroke-width="2" style="stroke:var(--c)"/>
+      <g fill="none" stroke-width="3" style="stroke:var(--c)"><circle cx="42" cy="44" r="11"/><path d="M22,80 q20,-28 40,0"/></g>
+      <text x="76" y="64" font-size="24" font-weight="800" style="fill:var(--c)">Humanos</text>
+      <text x="26" y="118" font-size="17">criterio</text>
+      <text x="26" y="148" font-size="17">relaciones</text>
+      <text x="26" y="178" font-size="17">ética</text>
+      <text x="26" y="208" font-size="17">creatividad</text>
+
+      <!-- Agentes -->
+      <rect x="493" y="10" width="245" height="230" rx="14" fill="#fff" stroke-width="2" stroke="#2f6db5"/>
+      <g fill="none" stroke-width="3" stroke="#2f6db5"><rect x="515" y="34" width="38" height="30" rx="7"/><path d="M534,34 v-9"/><circle cx="534" cy="22" r="3"/></g>
+      <circle cx="526" cy="49" r="3.5" fill="#2f6db5"/><circle cx="542" cy="49" r="3.5" fill="#2f6db5"/>
+      <text x="567" y="64" font-size="24" font-weight="800" style="fill:#2f6db5">Agentes</text>
+      <text x="517" y="118" font-size="17">velocidad</text>
+      <text x="517" y="148" font-size="17">escala</text>
+      <text x="517" y="178" font-size="17">consistencia</text>
+      <text x="517" y="208" font-size="17">disponibles 24/7</text>
+      <text x="517" y="228" font-size="12" style="fill:#5c6475">todo el día, todos los días</text>
+
+      <!-- AIAM en el centro -->
+      <line x1="252" y1="100" x2="300" y2="100" stroke-width="2.5" style="stroke:var(--c)" marker-start="url(#m4-fc)" marker-end="url(#m4-fc)"/>
+      <line x1="440" y1="100" x2="488" y2="100" stroke-width="2.5" style="stroke:var(--c)" marker-start="url(#m4-fc)" marker-end="url(#m4-fc)"/>
+      <circle cx="370" cy="100" r="64" style="fill:var(--c)"/>
+      <text x="370" y="92" text-anchor="middle" font-size="22" font-weight="800" style="fill:#fff">AIAM</text>
+      <text x="370" y="114" text-anchor="middle" font-size="13" style="fill:#fff">diseña la interfaz</text>
+      <text x="370" y="192" text-anchor="middle" class="t-mano" font-size="19" style="fill:#2f6db5">qué hace cada quien</text>
+      <text x="370" y="214" text-anchor="middle" class="t-mano" font-size="19" style="fill:#2f6db5">protocolos de handoff</text>
+      <text x="370" y="236" text-anchor="middle" class="t-mano" font-size="19" style="fill:#2f6db5">un sistema coherente</text>
+    </svg>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 125">
+      <text x="0" y="48" font-size="50" font-weight="800" style="fill:var(--c)">78%</text>
+      <text x="0" y="74" font-size="13.5">de los trabajadores del</text>
+      <text x="0" y="92" font-size="13.5">conocimiento puede usar agentes</text>
+      <text x="0" y="116" class="t-mano" font-size="18" style="fill:#2f6db5">McKinsey, enero 2025</text>
+
+      <text x="255" y="48" font-size="50" font-weight="800" style="fill:var(--c)">20 a 45%</text>
+      <text x="255" y="74" font-size="13.5">más productividad en equipos</text>
+      <text x="255" y="92" font-size="13.5">híbridos bien diseñados</text>
+      <text x="255" y="116" class="t-mano" font-size="18" style="fill:#2f6db5">McKinsey, mismo informe</text>
+
+      <text x="525" y="48" font-size="50" font-weight="800" style="fill:var(--c)">67%</text>
+      <text x="525" y="74" font-size="13.5">de los ejecutivos: colaboración</text>
+      <text x="525" y="92" font-size="13.5">humano-agente, prioridad máxima</text>
+      <text x="525" y="116" class="t-mano" font-size="18" style="fill:#2f6db5">para 2025 y 2026</text>
+    </svg>
+  </div>
+
+  <div class="alerta" style="width:78%">
+    <p class="mano">Mito</p>
+    <p>"Delegar en un agente = perder control o calidad". La evidencia dice <b>lo contrario</b>, si hay <span class="hl">reparto deliberado</span> de responsabilidades y supervisión efectiva.</p>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 4 · hoja 1 de 6</span><span>Sección 4.1</span></div>
+</div>
+
+<!-- ============ HOJA 2 ============ -->
+<div class="pag m4">
+  <div>
+    <h3><span class="sec">4.2</span>Taxonomía de tareas: qué delegar y qué retener</h3>
+    <p style="font-size:11pt">Clasificar cada tarea: ¿del agente, del humano o en colaboración? Es una decisión <span class="hl">estratégica, no técnica</span>.</p>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 290">
+      <text x="0" y="18" font-size="15" font-weight="800" style="fill:#2f6db5">◀ LIDERA EL AGENTE</text>
+      <text x="740" y="18" text-anchor="end" font-size="15" font-weight="800" style="fill:#b07d12">LIDERA EL HUMANO ▶</text>
+      <text x="370" y="18" text-anchor="middle" class="t-mano" font-size="19" style="fill:#5c6475">4 variables</text>
+      <g transform="translate(0,38)">
+        <text x="370" y="16" text-anchor="middle" font-size="16" font-weight="800">1 · Variabilidad del contexto</text>
+        <rect x="0" y="24" width="740" height="13" rx="6.5" fill="url(#m4-gr)"/>
+        <text x="0" y="56" font-size="13.5">baja</text><text x="740" y="56" text-anchor="end" font-size="13.5">alta</text>
+      </g>
+      <g transform="translate(0,102)">
+        <text x="370" y="16" text-anchor="middle" font-size="16" font-weight="800">2 · Consecuencia del error</text>
+        <rect x="0" y="24" width="740" height="13" rx="6.5" fill="url(#m4-gr)"/>
+        <text x="0" y="56" font-size="13.5">baja</text><text x="740" y="56" text-anchor="end" font-size="13.5">alta: exige supervisión humana</text>
+      </g>
+      <g transform="translate(0,166)">
+        <text x="370" y="16" text-anchor="middle" font-size="16" font-weight="800">3 · Necesidad de relación</text>
+        <rect x="0" y="24" width="740" height="13" rx="6.5" fill="url(#m4-gr)"/>
+        <text x="0" y="56" font-size="13.5">baja</text><text x="740" y="56" text-anchor="end" font-size="13.5">empatía, negociación, confianza</text>
+      </g>
+      <g transform="translate(0,230)">
+        <text x="370" y="16" text-anchor="middle" font-size="16" font-weight="800">4 · Datos estructurados</text>
+        <rect x="0" y="24" width="740" height="13" rx="6.5" fill="url(#m4-gr)"/>
+        <text x="0" y="56" font-size="13.5">limpios y disponibles</text><text x="740" y="56" text-anchor="end" font-size="13.5">sin datos limpios: ruido, no valor</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="tx">
+    <span class="cab" style="color:var(--muted)">6 tipos de tarea</span><span class="cab" style="color:var(--blue)">el agente…</span><span class="cab" style="color:var(--c)">el humano…</span>
+    <span class="dim">Datos y reportes</span><span class="ag"><b>genera</b> · volumen alto, estructura fija</span><span class="hu"><b>valida</b> y decide sobre hallazgos</span>
+    <span class="dim">Comunicación con clientes</span><span class="ag"><b>primera capa</b> · FAQs, seguimiento</span><span class="hu">escalaciones, negociaciones, cierres clave</span>
+    <span class="dim">Análisis y decisiones</span><span class="ag"><b>prepara el tablero</b> · escenarios, backtesting</span><span class="hu">toma la <b>decisión final</b></span>
+    <span class="dim">Excepciones y problemas</span><span class="ag"><b>diagnostica y enruta</b> · abre tickets</span><span class="hu"><b>resuelve</b> lo complejo, crisis, ética</span>
+    <span class="dim">Onboarding y formación</span><span class="ag"><b>plataforma</b> · material, cuestionarios, seguimiento</span><span class="hu"><b>guía</b> · mentoría, carrera, cultura</span>
+    <span class="dim">Coordinación de proyectos</span><span class="ag"><b>lleva el tablero</b> · alertas de hitos</span><span class="hu">conflictos, re-planificación, reuniones</span>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1fr 1.15fr">
+    <p class="nota">No es rígido: revíselo cada trimestre. Lo humano de hoy puede ser del agente en 6 meses… y viceversa.</p>
+    <div class="postit" style="transform:rotate(1deg); font-size:15.5pt">"La clave no es la tecnología: es el diseño intencional de la colaboración."<br><span style="font-size:13pt; color:var(--muted)">McKinsey Global Institute, Superagency in the workplace, 2025</span></div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 4 · hoja 2 de 6</span><span>Sección 4.2</span></div>
+</div>
+
+<!-- ============ HOJA 3 ============ -->
+<div class="pag m4">
+  <div>
+    <h3><span class="sec">4.3</span>Método AIAM™ en 5 pasos</h3>
+    <div class="aa" style="grid-template-columns:1fr 8mm 1fr">
+      <span class="a"><b>Automatizar:</b> cambia pasos humanos por pasos de máquina</span><span class="f">≠</span><span class="b"><b>Rediseño híbrido:</b> reimagina el flujo completo</span>
+    </div>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 520">
+      <g>
+        <circle cx="38" cy="38" r="28" style="fill:var(--c2)"/><text x="38" y="47" text-anchor="middle" font-size="24" font-weight="800" style="fill:#fff">1</text>
+        <text x="84" y="32" font-size="20" font-weight="800">Mapear el proceso actual (AS-IS)</text>
+        <text x="84" y="56" font-size="15">el trabajo real: quién, qué, con qué datos; excepciones y atajos</text>
+        <line x1="38" y1="68" x2="38" y2="100" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m4-fc)"/>
+
+        <circle cx="38" cy="130" r="28" style="fill:var(--c2)"/><text x="38" y="139" text-anchor="middle" font-size="24" font-weight="800" style="fill:#fff">2</text>
+        <text x="84" y="124" font-size="20" font-weight="800">Clasificar con la taxonomía</text>
+        <text x="84" y="148" font-size="15">territorio agente, humano o colaboración, con su porqué</text>
+        <line x1="38" y1="160" x2="38" y2="196" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m4-fc)"/>
+
+        <rect x="2" y="198" width="610" height="96" rx="12" stroke-width="2" stroke-dasharray="6 4" style="fill:var(--cs); stroke:var(--c)"/>
+        <circle cx="38" cy="232" r="28" style="fill:var(--c)"/><text x="38" y="241" text-anchor="middle" font-size="24" font-weight="800" style="fill:#fff">3</text>
+        <text x="84" y="226" font-size="20" font-weight="800">Diseñar el proceso futuro (TO-BE)</text>
+        <text x="84" y="250" font-size="15">puntos de handoff agente ⇄ humano + SLA de respuesta</text>
+        <text x="84" y="278" font-size="15" font-weight="800" style="fill:#c0392b">¡error frecuente aquí: handoffs ambiguos!</text>
+        <line x1="38" y1="262" x2="38" y2="328" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m4-fc)"/>
+
+        <circle cx="38" cy="358" r="28" style="fill:var(--c)"/><text x="38" y="367" text-anchor="middle" font-size="24" font-weight="800" style="fill:#fff">4</text>
+        <text x="84" y="352" font-size="20" font-weight="800">Pilotar con un subconjunto</text>
+        <text x="84" y="376" font-size="15">equipo pequeño; métricas de éxito definidas antes:</text>
+        <text x="84" y="398" class="t-mano" font-size="18" style="fill:#2f6db5">tiempo de ciclo · tasa de error · satisfacción del equipo · calidad</text>
+        <line x1="38" y1="388" x2="38" y2="426" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m4-fc)"/>
+
+        <circle cx="38" cy="456" r="28" style="fill:var(--cd)"/><text x="38" y="465" text-anchor="middle" font-size="24" font-weight="800" style="fill:#fff">5</text>
+        <text x="84" y="450" font-size="20" font-weight="800">Escalar y refinar</text>
+        <text x="84" y="474" font-size="15">al equipo completo, con lo aprendido</text>
+
+        <path d="M410,456 H700 V130 H560" fill="none" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m4-fc)"/>
+        <text x="560" y="510" text-anchor="middle" class="t-mano" font-size="18" style="fill:#2f6db5">ajusta taxonomía, handoffs y umbrales</text>
+        <text x="690" y="300" text-anchor="middle" class="t-mano" font-size="22" font-weight="700" style="fill:var(--c)" transform="rotate(-90 690 300)">revisión trimestral</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1fr 1.25fr; align-items:start">
+    <div>
+      <p class="mano" style="font-size:19pt; color:var(--c); font-weight:700; line-height:1">2 errores que evita</p>
+      <p style="margin-top:1.5mm">✗ automatizar lo que debería ser <b>humano</b><br>✗ dejar en humanos lo que el <b>agente</b> hace más rápido y consistente</p>
+    </div>
+    <div class="alerta">
+      <p class="mano">Handoff ambiguo</p>
+      <p><s style="color:var(--muted)">"escala al humano cuando sea necesario"</s><br>Cada handoff, con una <span class="hl">condición objetiva</span>: umbral de confianza, tipo de excepción, tiempo máximo de espera o categoría de cliente.</p>
+      <p class="nota" style="font-size:14.5pt; margin-top:1mm">causa nº 1 de fricción en equipos híbridos (WEF, Future of Jobs Report 2025)</p>
+    </div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 4 · hoja 3 de 6</span><span>Sección 4.3</span></div>
+</div>
+
+<!-- ============ HOJA 4 ============ -->
+<div class="pag m4">
+  <div>
+    <h3><span class="sec">4.4</span>Gestión del cambio: del rechazo a la adopción</h3>
+    <div class="fila" style="grid-template-columns:auto 1fr; gap:6mm">
+      <p style="font-family:Inter; font-size:40pt; font-weight:800; color:var(--c); line-height:1">58%</p>
+      <p>de la resistencia viene de la <span class="hl">incertidumbre sobre el rol futuro</span> del trabajador, no de fallas técnicas.<br><span class="nota" style="font-size:14pt">Deloitte, Human Capital Trends 2025</span></p>
+    </div>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 150">
+      <text x="0" y="18" class="t-mano" font-size="22" font-weight="700" style="fill:var(--c)">3 formas de resistencia</text>
+      <g>
+        <rect x="2" y="32" width="230" height="110" rx="11" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+        <text x="18" y="62" font-size="18" font-weight="800" style="fill:#c0392b">Rechazo activo</text>
+        <text x="18" y="96" class="t-mano" font-size="19">"el agente comete</text>
+        <text x="18" y="118" class="t-mano" font-size="19">errores"</text>
+      </g>
+      <g transform="translate(254,0)">
+        <rect x="2" y="32" width="230" height="110" rx="11" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+        <text x="18" y="62" font-size="18" font-weight="800" style="fill:#c0392b">Rechazo pasivo</text>
+        <text x="18" y="96" class="t-mano" font-size="19">no reporta los fallos</text>
+        <text x="18" y="118" class="t-mano" font-size="19">para no depender de él</text>
+      </g>
+      <g transform="translate(508,0)">
+        <rect x="2" y="32" width="230" height="110" rx="11" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+        <text x="18" y="62" font-size="18" font-weight="800" style="fill:#c0392b">Sobre-dependencia</text>
+        <text x="18" y="96" class="t-mano" font-size="19">delega hasta lo que pide</text>
+        <text x="18" y="118" class="t-mano" font-size="19">criterio humano: riesgo</text>
+      </g>
+    </svg>
+    <p class="nota" style="margin-top:1mm">Las tres son responsabilidad del <b>manager</b>, no del trabajador.</p>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 250">
+      <text x="0" y="18" class="t-mano" font-size="22" font-weight="700" style="fill:var(--c)">3 niveles de adopción</text>
+      <rect x="0" y="170" width="240" height="78" style="fill:var(--c3)"/>
+      <rect x="250" y="120" width="240" height="128" style="fill:var(--c2)"/>
+      <rect x="500" y="62" width="240" height="186" style="fill:var(--c)"/>
+      <text x="120" y="198" text-anchor="middle" font-size="18" font-weight="800">1 · Conciencia</text>
+      <text x="120" y="220" text-anchor="middle" font-size="13.5">entiende qué hace el agente,</text>
+      <text x="120" y="238" text-anchor="middle" font-size="13.5">sus límites y sus resultados</text>
+      <text x="370" y="148" text-anchor="middle" font-size="18" font-weight="800" style="fill:#fff">2 · Competencia</text>
+      <text x="370" y="170" text-anchor="middle" font-size="13.5" style="fill:#fff">instruye, interpreta,</text>
+      <text x="370" y="188" text-anchor="middle" font-size="13.5" style="fill:#fff">detecta errores y decide</text>
+      <text x="620" y="90" text-anchor="middle" font-size="17" font-weight="800" style="fill:#fff">3 · Colaboración</text>
+      <text x="620" y="110" text-anchor="middle" font-size="17" font-weight="800" style="fill:#fff">estratégica</text>
+      <text x="620" y="134" text-anchor="middle" font-size="13.5" style="fill:#fff">rediseña su trabajo,</text>
+      <text x="620" y="152" text-anchor="middle" font-size="13.5" style="fill:#fff">propone mejoras,</text>
+      <text x="620" y="170" text-anchor="middle" font-size="13.5" style="fill:#fff">sensor de calidad</text>
+      <text x="370" y="104" text-anchor="middle" class="t-mano" font-size="18" style="fill:#2f6db5">analista de operaciones: le basta</text>
+      <text x="620" y="215" text-anchor="middle" class="t-mano" font-size="19" style="fill:#fff">líder de área</text>
+      <text x="620" y="236" text-anchor="middle" class="t-mano" font-size="16" style="fill:#fff">(comunica arriba y abajo)</text>
+    </svg>
+    <p class="nota" style="margin-top:1mm">No todos los roles llegan al nivel 3: el plan de formación se diseña por rol.</p>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 125">
+      <text x="0" y="48" font-size="48" font-weight="800" style="fill:var(--c)">2,4 veces</text>
+      <text x="0" y="74" font-size="13.5">más adopción con una narrativa clara</text>
+      <text x="0" y="92" font-size="13.5">(por qué cambia, qué rol tiene el agente)</text>
+      <text x="0" y="116" class="t-mano" font-size="18" style="fill:#2f6db5">Deloitte · frente a solo formación técnica</text>
+
+      <text x="380" y="48" font-size="48" font-weight="800" style="fill:var(--c)">39%</text>
+      <text x="380" y="74" font-size="13.5">de las habilidades centrales</text>
+      <text x="380" y="92" font-size="13.5">habrá cambiado para 2030</text>
+      <text x="380" y="116" class="t-mano" font-size="18" style="fill:#2f6db5">WEF, Future of Jobs 2025</text>
+
+      <text x="575" y="48" font-size="48" font-weight="800" style="fill:var(--c)">+34%</text>
+      <text x="575" y="74" font-size="13.5">retención de talento con</text>
+      <text x="575" y="92" font-size="13.5">programas de transición</text>
+      <text x="575" y="116" class="t-mano" font-size="18" style="fill:#2f6db5">WEF · hasta un 34%</text>
+    </svg>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 4 · hoja 4 de 6</span><span>Sección 4.4</span></div>
+</div>
+
+<!-- ============ HOJA 5 ============ -->
+<div class="pag m4">
+  <div>
+    <h3><span class="sec">4.5</span>Nuevos roles del equipo híbrido</h3>
+    <svg viewBox="0 0 740 330">
+      <g stroke-width="1.8" stroke-dasharray="5 4" style="stroke:var(--c2)">
+        <line x1="370" y1="165" x2="150" y2="42"/><line x1="370" y1="165" x2="590" y2="42"/>
+        <line x1="370" y1="165" x2="130" y2="165"/><line x1="370" y1="165" x2="610" y2="165"/>
+        <line x1="370" y1="165" x2="370" y2="290"/>
+      </g>
+      <circle cx="370" cy="165" r="66" style="fill:var(--c)"/>
+      <text x="370" y="154" text-anchor="middle" font-size="22" font-weight="800" style="fill:#fff">AIAM</text>
+      <text x="370" y="178" text-anchor="middle" font-size="12.5" style="fill:#fff">conecta todo;</text>
+      <text x="370" y="194" text-anchor="middle" font-size="12.5" style="fill:#fff">responde ante</text>
+      <text x="370" y="208" text-anchor="middle" font-size="12.5" style="fill:#fff">la dirección</text>
+
+      <rect x="10" y="8" width="270" height="66" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+      <text x="24" y="33" font-size="16" font-weight="800">Agent Owner</text>
+      <text x="24" y="54" font-size="13">dueño de agentes concretos;</text>
+      <text x="24" y="69" font-size="13" style="fill:#5c6475">primer contacto ante incidencias</text>
+
+      <rect x="462" y="8" width="270" height="66" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+      <text x="474" y="33" font-size="16" font-weight="800">Workflow Designer</text>
+      <text x="474" y="54" font-size="13">diseña AS-IS, TO-BE y handoffs;</text>
+      <text x="474" y="69" font-size="13" style="fill:#5c6475">aplica el método de 5 pasos</text>
+
+      <rect x="2" y="132" width="235" height="66" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+      <text x="16" y="157" font-size="16" font-weight="800">Quality Reviewer</text>
+      <text x="16" y="178" font-size="13">revisa muestras: deriva,</text>
+      <text x="16" y="193" font-size="13" style="fill:#5c6475">alucinaciones, errores</text>
+
+      <rect x="502" y="132" width="235" height="66" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+      <text x="518" y="157" font-size="16" font-weight="800">Change Champion</text>
+      <text x="518" y="178" font-size="13">referente de adopción;</text>
+      <text x="518" y="193" font-size="13" style="fill:#5c6475">aliado ante la resistencia</text>
+
+      <rect x="215" y="258" width="310" height="66" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+      <text x="229" y="283" font-size="16" font-weight="800">Ethics Reviewer</text>
+      <text x="229" y="304" font-size="13">sesgo, privacidad, equidad, políticas;</text>
+      <text x="229" y="319" font-size="13" style="fill:#5c6475">puede activar el circuit breaker</text>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1fr 1fr">
+    <div class="postit">Equipo pequeño: una persona puede tener varios roles. Lo clave: cada responsabilidad, asignada a alguien.</div>
+    <p class="nota">Sin dueño claro → improvisación → <b>agent sprawl</b> y fallos silenciosos (Módulo 3)</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">4.6</span>Indicadores: 3 capas a la vez</h3>
+    <div class="capas">
+      <span></span><span class="cab">mide</span><span class="cab" style="color:var(--red)">señal de alerta</span><span class="cab" style="color:var(--c)">acción del AIAM</span>
+      <span class="cp">Equipo humano</span><span class="mi">satisfacción, carga cognitiva, adopción, escalaciones</span><span class="al">más quejas, menos uso voluntario, horas extra</span><span class="ac">revisar adopción, formación, entrevistas 1 a 1</span>
+      <span class="cp">Sistema híbrido</span><span class="mi">completitud autónoma, tiempo de ciclo, handoffs, errores</span><span class="al">handoffs repetidos en el mismo punto, ciclo estancado</span><span class="ac">revisar taxonomía y handoffs; auditar prompt y datos</span>
+      <span class="cp">Negocio</span><span class="mi">volumen, costo por transacción, satisfacción del cliente, ROI</span><span class="al">baja el NPS, suben costos, pipeline estancado</span><span class="ac">buscar la causa raíz, revisar el TO-BE, escalar a la junta de gobierno</span>
+    </div>
+    <p class="nota" style="margin-top:2mm">Ninguna capa basta sola.</p>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 4 · hoja 5 de 6</span><span>Secciones 4.5 y 4.6</span></div>
+</div>
+
+<!-- ============ HOJA 6 ============ -->
+<div class="pag m4">
+  <div>
+    <h3><span class="sec">4.6</span>Caso real: Accenture</h3>
+    <svg viewBox="0 0 740 110">
+      <text x="0" y="46" font-size="44" font-weight="800" style="fill:var(--c)">300.000</text>
+      <text x="0" y="72" font-size="13.5">profesionales formados para</text>
+      <text x="0" y="90" font-size="13.5">trabajar con agentes</text>
+
+      <text x="255" y="46" font-size="44" font-weight="800" style="fill:var(--c)">3.000 M</text>
+      <text x="255" y="72" font-size="13.5">de dólares en Datos e IA</text>
+      <text x="255" y="94" class="t-mano" font-size="18" style="fill:#2f6db5">en 2024</text>
+
+      <text x="510" y="46" font-size="44" font-weight="800" style="fill:#2e7d4f">+30%</text>
+      <text x="510" y="72" font-size="13.5">velocidad de entrega</text>
+      <text x="510" y="90" font-size="13.5">de proyectos de software</text>
+    </svg>
+  </div>
+
+  <div class="aa" style="grid-template-columns:1fr 1fr; column-gap:6mm">
+    <span class="cab" style="color:var(--blue)">los agentes</span><span class="cab" style="color:var(--c)">los desarrolladores</span>
+    <span class="a" style="background:#e8f0fa">código repetitivo, revisión automatizada, documentación, pruebas unitarias</span>
+    <span class="b">arquitectura, lógica de negocio, clientes, diseño de alto nivel</span>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1.1fr 1fr">
+    <p class="nota">Meta: no recortar personal, sino entregar más sin subir los costos en proporción. Los jefes de proyecto hicieron de AIAM en cada sprint. La retención del talento con más experiencia siguió sobre el promedio del sector.</p>
+    <div class="postit" style="transform:rotate(1deg)">El éxito vino del diseño de roles, flujos y criterios de delegación. Ningún agente sin Agent Owner.</div>
+  </div>
+
+  <div class="glosario">
+    <h4>Siglas y términos en inglés</h4>
+    <p class="aviso">Explicaciones breves para repasar; varias no vienen en el curso.</p>
+    <dl>
+      <dt>AS-IS</dt><dd>"como está": el proceso actual</dd>
+      <dt>TO-BE</dt><dd>"como será": el proceso rediseñado</dd>
+      <dt>handoff</dt><dd>traspaso de una tarea del agente al humano, o al revés</dd>
+      <dt>SLA</dt><dd>Service Level Agreement: plazo de respuesta acordado</dd>
+      <dt>FAQs</dt><dd>Frequently Asked Questions: preguntas frecuentes</dd>
+      <dt>backtesting</dt><dd>probar un análisis con datos del pasado</dd>
+      <dt>tickets</dt><dd>registros de un problema o solicitud</dd>
+      <dt>onboarding</dt><dd>incorporación y orientación de alguien nuevo</dd>
+      <dt>Agent Owner</dt><dd>responsable de uno o más agentes</dd>
+      <dt>Workflow Designer</dt><dd>diseñador de los flujos de trabajo</dd>
+      <dt>Quality Reviewer</dt><dd>revisor de la calidad de los resultados</dd>
+      <dt>Change Champion</dt><dd>impulsor del cambio dentro del equipo</dd>
+      <dt>Ethics Reviewer</dt><dd>revisor de los riesgos éticos</dd>
+      <dt>circuit breaker</dt><dd>"interruptor": detiene al agente de inmediato</dd>
+      <dt>agent sprawl</dt><dd>agentes que se multiplican sin control ni dueño</dd>
+      <dt>prompt</dt><dd>instrucción escrita que recibe el agente</dd>
+      <dt>NPS</dt><dd>Net Promoter Score: cuánto recomiendan los clientes</dd>
+      <dt>ROI</dt><dd>Return on Investment: retorno de la inversión</dd>
+      <dt>pipeline</dt><dd>cartera de ventas u oportunidades en curso</dd>
+      <dt>sprint</dt><dd>ciclo corto de trabajo (unas 2 semanas)</dd>
+      <dt>WEF</dt><dd>World Economic Forum: Foro Económico Mundial</dd>
+    </dl>
+  </div>
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 4 · hoja 6 de 6</span><span>Sección 4.6 (caso) · términos</span></div>
+</div>
+
+</body></html>

@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Apuntes AIAM: Módulo 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="apuntes.css">
+</head><body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="m3-fc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6f4fa0"/></marker>
+  <marker id="m3-fg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5c6475"/></marker>
+  <marker id="m3-fr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker>
+  <marker id="m3-fv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker>
+</defs></svg>
+
+<style>
+.m3 .fallos{ display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; }
+.m3 .fallo{ background:#fff; border:1.5px solid var(--c3); border-top:2mm solid var(--c); border-radius:2mm; padding:3mm 3.5mm; font-size:9.3pt; line-height:1.35; display:flex; flex-direction:column; gap:2mm; }
+.m3 .fallo .n{ font-family:Caveat, cursive; font-size:30pt; font-weight:700; color:var(--c); line-height:.8; }
+.m3 .fallo .t{ font-weight:800; font-size:10.5pt; line-height:1.2; }
+.m3 .fallo .t small{ display:block; font-weight:400; font-size:8pt; color:var(--muted); }
+.m3 .fallo .ej{ font-family:Caveat, cursive; font-size:14pt; line-height:1.05; color:var(--blue); }
+.m3 .fallo .det{ background:var(--cs); border-radius:1.5mm; padding:1.6mm 2.2mm; font-size:8.8pt; margin-top:auto; }
+.m3 .fallo .det b{ color:var(--c); }
+.m3 .senales{ grid-template-columns:42mm 1fr 1fr; column-gap:3mm; }
+.m3 .senales .a{ border-left:1.3mm solid var(--green); background:#e9f4ee; }
+.m3 .senales .b{ border-left:1.3mm solid var(--red); background:#fbeceb; }
+.m3 .senales .dim{ font-size:14pt; color:var(--ink); }
+.m3 .fuentes{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:4mm; }
+.m3 .tens{ display:grid; grid-template-columns:1fr 9mm 1fr; row-gap:1.6mm; font-size:10pt; font-weight:800; align-items:center; }
+.m3 .tens span{ background:var(--cs); border-radius:1.5mm; padding:1.2mm 2.2mm; text-align:center; }
+.m3 .tens i{ font-style:normal; text-align:center; color:var(--c); font-size:14pt; }
+.m3 .fuente-c{ background:#fff; border-left:1.5mm solid var(--c); border-radius:1.5mm; padding:3mm 4mm; font-size:9.3pt; line-height:1.4; }
+.m3 .fuente-c .q{ font-family:Caveat, cursive; font-size:15pt; color:var(--c); line-height:1.05; display:block; margin-bottom:1.5mm; }
+</style>
+
+<!-- ============ HOJA 1 ============ -->
+<div class="pag m3">
+  <div>
+    <h1><small>MÓDULO 3 · APUNTES</small>Supervisar al agente</h1>
+    <p class="sub">Supervisión, auditoría y performance del agente</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">3.1</span>La paradoja de la supervisión</h3>
+    <svg viewBox="0 0 740 250">
+      <!-- platillo izquierdo -->
+      <rect x="10" y="10" width="320" height="130" rx="12" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="170" y="40" text-anchor="middle" font-size="18" font-weight="800" style="fill:#c0392b">Demasiada supervisión</text>
+      <text x="170" y="66" text-anchor="middle" font-size="14">destruye el valor de la autonomía</text>
+      <text x="170" y="98" text-anchor="middle" class="t-mano" font-size="18" style="fill:#2f6db5">Nivel 4 que pide permiso para todo</text>
+      <text x="170" y="120" text-anchor="middle" class="t-mano" font-size="18" style="fill:#2f6db5">= un Nivel 1, pero más caro</text>
+
+      <rect x="410" y="10" width="320" height="130" rx="12" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="570" y="40" text-anchor="middle" font-size="18" font-weight="800" style="fill:#c0392b">Muy poca supervisión</text>
+      <text x="570" y="66" text-anchor="middle" font-size="14">crea riesgo silencioso</text>
+      <text x="570" y="98" text-anchor="middle" class="t-mano" font-size="18" style="fill:#2f6db5">Nivel 3 sin métricas de negocio:</text>
+      <text x="570" y="120" text-anchor="middle" class="t-mano" font-size="18" style="fill:#2f6db5">semanas de errores sin que nadie lo vea</text>
+
+      <!-- balanza -->
+      <line x1="60" y1="170" x2="680" y2="170" stroke-width="5" stroke-linecap="round" style="stroke:var(--c)"/>
+      <line x1="170" y1="140" x2="170" y2="170" stroke-width="2" style="stroke:var(--c2)"/>
+      <line x1="570" y1="140" x2="570" y2="170" stroke-width="2" style="stroke:var(--c2)"/>
+      <path d="M370,172 L340,222 L400,222 z" style="fill:var(--c)"/>
+      <text x="370" y="246" text-anchor="middle" class="t-mano" font-size="22" font-weight="700" style="fill:var(--c)">el punto justo: supervisar resultados</text>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:.8fr 1.2fr">
+    <svg viewBox="0 0 300 120">
+      <text x="0" y="52" font-size="56" font-weight="800" style="fill:var(--c)">69%</text>
+      <text x="0" y="78" font-size="14">de los expertos: la IA agentic exige</text>
+      <text x="0" y="96" font-size="14">un management nuevo</text>
+      <text x="0" y="117" class="t-mano" font-size="17" style="fill:#2f6db5">MIT SMR y BCG, 2025</text>
+    </svg>
+    <svg viewBox="0 0 440 120">
+      <text x="0" y="16" class="t-mano" font-size="19" font-weight="700" style="fill:var(--c)">El primer cambio: qué se supervisa</text>
+      <rect x="0" y="32" width="170" height="74" rx="9" fill="#eef0f4"/>
+      <text x="85" y="60" text-anchor="middle" font-size="15" font-weight="800">Actividades</text>
+      <text x="85" y="84" text-anchor="middle" font-size="12.5">¿qué está haciendo?</text>
+      <line x1="176" y1="69" x2="256" y2="69" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m3-fc)"/>
+      <rect x="262" y="32" width="178" height="74" rx="9" stroke-width="2" style="fill:var(--cs); stroke:var(--c)"/>
+      <text x="351" y="60" text-anchor="middle" font-size="15" font-weight="800" style="fill:var(--c)">Resultados</text>
+      <text x="351" y="84" text-anchor="middle" font-size="12.5">¿qué valor genera?</text>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1.15fr 1fr">
+    <div class="postit">Regla: supervise los resultados con rigor; intervenga en los procesos solo cuando los resultados lo justifiquen.</div>
+    <p class="nota">Revisar cada conversación y cada log crea fricción, empeora al agente y frustra al equipo. <span style="color:var(--muted); font-size:13pt">(Kate Kellogg, MIT Sloan, 2025)</span></p>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 3 · hoja 1 de 6</span><span>Sección 3.1</span></div>
+</div>
+
+<!-- ============ HOJA 2 ============ -->
+<div class="pag m3">
+  <div>
+    <h3><span class="sec">3.2</span>Métricas técnicas frente a métricas de negocio</h3>
+    <p style="margin-bottom:3mm">Error más frecuente: medir <b>lo fácil</b> en vez de <span class="hl">lo que importa</span>.</p>
+    <svg viewBox="0 0 740 170">
+      <rect x="0" y="10" width="300" height="150" rx="12" fill="#fff" stroke="#2e7d4f" stroke-width="1.8"/>
+      <text x="150" y="38" text-anchor="middle" font-size="15" font-weight="800" style="fill:#2e7d4f">Lo técnico: todo verde</text>
+      <circle cx="28" cy="70" r="7" fill="#2e7d4f"/><text x="46" y="75" font-size="14"><tspan font-weight="800">99,9%</tspan> de uptime</text>
+      <circle cx="28" cy="102" r="7" fill="#2e7d4f"/><text x="46" y="107" font-size="14"><tspan font-weight="800">0,3 s</tspan> de latencia</text>
+      <circle cx="28" cy="134" r="7" fill="#2e7d4f"/><text x="46" y="139" font-size="14"><tspan font-weight="800">0,1%</tspan> de error técnico</text>
+
+      <line x1="308" y1="85" x2="428" y2="85" stroke-width="2.5" stroke="#5c6475" marker-end="url(#m3-fg)"/>
+      <text x="368" y="74" text-anchor="middle" class="t-mano" font-size="19" style="fill:#2f6db5">y a la vez…</text>
+
+      <rect x="440" y="10" width="300" height="150" rx="12" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="590" y="38" text-anchor="middle" font-size="15" font-weight="800" style="fill:#c0392b">El negocio: en rojo</text>
+      <circle cx="468" cy="70" r="7" fill="#c0392b"/><text x="486" y="75" font-size="14">satisfacción del cliente ↓</text>
+      <circle cx="468" cy="102" r="7" fill="#c0392b"/><text x="486" y="107" font-size="14">costo por caso ↑</text>
+      <circle cx="468" cy="134" r="7" fill="#c0392b"/><text x="486" y="139" font-size="14">escalamientos que paralizan</text>
+    </svg>
+  </div>
+
+  <div>
+    <p class="mano" style="font-size:20pt; font-weight:700; color:var(--c); margin-bottom:2mm">Las dos capas</p>
+    <div class="aa">
+      <span></span><span class="cab" style="color:var(--muted)">Técnicas</span><span></span><span class="cab" style="color:var(--c)">De negocio</span>
+      <span class="dim">dueño</span><span class="a">ingeniería o IT</span><span class="f">·</span><span class="b">el AI Agent Manager</span>
+      <span class="dim">pregunta</span><span class="a">¿funciona el sistema?</span><span class="f">·</span><span class="b">¿genera valor el agente?</span>
+      <span class="dim">se revisan</span><span class="a">en tiempo real, con alertas</span><span class="f">·</span><span class="b">diaria o semanal, con tendencia</span>
+      <span class="dim">ejemplos</span><span class="a">latencia, uptime, tokens por minuto, error de API</span><span class="f">·</span><span class="b">resolución autónoma, CSAT, costo por caso, tiempo de ciclo, escalamiento, NPS</span>
+      <span class="dim">si fallan</span><span class="a">el agente puede fallar técnicamente</span><span class="f">·</span><span class="b">pierde dinero sin fallar técnicamente</span>
+      <span class="dim">al C-suite</span><span class="a">no le importan directamente</span><span class="f">·</span><span class="b">son el lenguaje del reporte</span>
+    </div>
+  </div>
+
+  <div class="alerta" style="width:78%; margin-left:auto">
+    <p class="mano">Causa raíz</p>
+    <p>Sin métricas de negocio aparece la <span class="hl">AI Productivity Paradox</span> <span style="color:var(--muted)">(Gartner)</span>: se invierte en agentes y el retorno no se ve.</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">3.2</span>Los 5 KPI esenciales <span class="fuente">(agentes de Nivel 3 a 4)</span></h3>
+    <svg viewBox="0 0 740 150">
+      <g font-size="14">
+        <rect x="0" y="10" width="138" height="130" rx="10" stroke-width="1.6" fill="#fff" style="stroke:var(--c)"/>
+        <circle cx="69" cy="10" r="14" style="fill:var(--c)"/><text x="69" y="15" text-anchor="middle" font-weight="800" style="fill:#fff">1</text>
+        <text x="69" y="48" text-anchor="middle" font-weight="800">Resolución</text><text x="69" y="66" text-anchor="middle" font-weight="800">autónoma</text>
+        <text x="69" y="96" text-anchor="middle" font-size="12">% de casos sin</text><text x="69" y="113" text-anchor="middle" font-size="12">intervención humana</text>
+
+        <rect x="150" y="10" width="138" height="130" rx="10" stroke-width="1.6" fill="#fff" style="stroke:var(--c)"/>
+        <circle cx="219" cy="10" r="14" style="fill:var(--c)"/><text x="219" y="15" text-anchor="middle" font-weight="800" style="fill:#fff">2</text>
+        <text x="219" y="48" text-anchor="middle" font-weight="800">Escalamiento</text>
+        <text x="219" y="96" text-anchor="middle" font-size="12">% derivado a humanos</text><text x="219" y="113" text-anchor="middle" font-size="12">y su tendencia</text>
+
+        <rect x="300" y="10" width="138" height="130" rx="10" stroke-width="1.6" fill="#fff" style="stroke:var(--c)"/>
+        <circle cx="369" cy="10" r="14" style="fill:var(--c)"/><text x="369" y="15" text-anchor="middle" font-weight="800" style="fill:#fff">3</text>
+        <text x="369" y="48" text-anchor="middle" font-weight="800">Tiempo de</text><text x="369" y="66" text-anchor="middle" font-weight="800">resolución</text>
+        <text x="369" y="96" text-anchor="middle" font-size="12">promedio, frente al</text><text x="369" y="113" text-anchor="middle" font-size="12">baseline sin agente</text>
+
+        <rect x="450" y="10" width="138" height="130" rx="10" stroke-width="1.6" fill="#fff" style="stroke:var(--c)"/>
+        <circle cx="519" cy="10" r="14" style="fill:var(--c)"/><text x="519" y="15" text-anchor="middle" font-weight="800" style="fill:#fff">4</text>
+        <text x="519" y="48" text-anchor="middle" font-weight="800">Costo por caso</text>
+        <text x="519" y="96" text-anchor="middle" font-size="12">inversión total</text><text x="519" y="113" text-anchor="middle" font-size="12">÷ casos atendidos</text>
+
+        <rect x="600" y="10" width="140" height="130" rx="10" stroke-width="1.6" style="fill:var(--cs); stroke:var(--c)"/>
+        <circle cx="670" cy="10" r="14" style="fill:var(--c)"/><text x="670" y="15" text-anchor="middle" font-weight="800" style="fill:#fff">5</text>
+        <text x="670" y="48" text-anchor="middle" font-weight="800">Calidad</text><text x="670" y="66" text-anchor="middle" font-weight="800">del output</text>
+        <text x="670" y="96" text-anchor="middle" font-size="12">CSAT, errores tras</text><text x="670" y="113" text-anchor="middle" font-size="12">el proceso u otra</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 3 · hoja 2 de 6</span><span>Sección 3.2</span></div>
+</div>
+
+<!-- ============ HOJA 3 ============ -->
+<div class="pag m3">
+  <div>
+    <h3><span class="sec">3.3</span>Los 3 fallos silenciosos <span class="fuente">(HBR, mayo de 2026)</span></h3>
+    <p style="margin-bottom:3mm">Por fuera todo parece <b>normal</b>; el daño se ve <span class="hl">cuando ya ocurrió</span>.</p>
+    <div class="fallos">
+      <div class="fallo">
+        <span class="n">1</span>
+        <span class="t">Errores silenciosos<small>silent errors</small></span>
+        <span>Tarea "completada", pero con fallas de fondo.</span>
+        <span class="ej">Resume bien el 97% del contrato… y omite las cláusulas de indemnización.</span>
+        <span class="det"><b>Detecte:</b> revise al azar entre el 5% y el 10% de los casos, con criterio de negocio.</span>
+      </div>
+      <div class="fallo">
+        <span class="n">2</span>
+        <span class="t">Deriva de comportamiento<small>behavioral drift</small></span>
+        <span>Se aleja poco a poco de sus instrucciones. <b>El más difícil de ver.</b></span>
+        <span class="ej">De empático y formal… a informal e impersonal.</span>
+        <span class="det"><b>Detecte:</b> tendencia del CSAT y comparación con el baseline de los primeros 30 días.</span>
+      </div>
+      <div class="fallo">
+        <span class="n">3</span>
+        <span class="t">Alucinación con consecuencia real<small>dato falso que alguien usa</small></span>
+        <span>Un dato inventado alimenta una decisión automática.</span>
+        <span class="ej">Deuda mal calculada → se rechaza el crédito de un cliente correcto.</span>
+        <span class="det"><b>Detecte:</b> verificación obligatoria antes de decisiones irreversibles o de alto impacto.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <div>
+    <h3><span class="sec">3.4</span>¿Intervengo o dejo correr?</h3>
+    <svg viewBox="0 0 740 200">
+      <rect x="0" y="62" width="120" height="56" rx="28" style="fill:var(--c)"/>
+      <text x="60" y="86" text-anchor="middle" font-size="13.5" font-weight="800" style="fill:#fff">Cambia una</text>
+      <text x="60" y="104" text-anchor="middle" font-size="13.5" font-weight="800" style="fill:#fff">señal</text>
+      <line x1="122" y1="90" x2="150" y2="90" stroke-width="2.2" style="stroke:var(--c)" marker-end="url(#m3-fc)"/>
+
+      <rect x="152" y="54" width="200" height="72" rx="8" stroke-width="1.6" style="fill:var(--cs); stroke:var(--c)"/>
+      <text x="252" y="80" text-anchor="middle" font-size="14" font-weight="800">¿Cambió algo externo?</text>
+      <text x="252" y="100" text-anchor="middle" font-size="12">regulación, producto</text>
+      <text x="252" y="116" text-anchor="middle" font-size="12">o política</text>
+      <line x1="252" y1="126" x2="252" y2="150" stroke-width="2.2" stroke="#c0392b" marker-end="url(#m3-fr)"/>
+      <text x="262" y="143" font-size="12" font-weight="800" style="fill:#c0392b">SÍ</text>
+      <rect x="172" y="152" width="160" height="44" rx="8" fill="#fbeceb" stroke="#c0392b" stroke-width="1.6"/>
+      <text x="252" y="179" text-anchor="middle" font-size="14" font-weight="800" style="fill:#c0392b">INTERVENIR siempre</text>
+
+      <line x1="354" y1="90" x2="386" y2="90" stroke-width="2.2" style="stroke:var(--c)" marker-end="url(#m3-fc)"/>
+      <text x="369" y="82" text-anchor="middle" font-size="12" font-weight="800" style="fill:var(--c)">NO</text>
+
+      <rect x="388" y="54" width="200" height="72" rx="8" stroke-width="1.6" style="fill:var(--cs); stroke:var(--c)"/>
+      <text x="488" y="80" text-anchor="middle" font-size="14" font-weight="800">¿Es un patrón?</text>
+      <text x="488" y="100" text-anchor="middle" font-size="12">sostenido, repetido o junto</text>
+      <text x="488" y="116" text-anchor="middle" font-size="12">a un cambio del agente</text>
+      <line x1="488" y1="126" x2="488" y2="150" stroke-width="2.2" stroke="#c0392b" marker-end="url(#m3-fr)"/>
+      <text x="498" y="143" font-size="12" font-weight="800" style="fill:#c0392b">SÍ</text>
+      <rect x="418" y="152" width="140" height="44" rx="8" fill="#fbeceb" stroke="#c0392b" stroke-width="1.6"/>
+      <text x="488" y="179" text-anchor="middle" font-size="14" font-weight="800" style="fill:#c0392b">INTERVENIR</text>
+
+      <line x1="590" y1="90" x2="618" y2="90" stroke-width="2.2" stroke="#2e7d4f" marker-end="url(#m3-fv)"/>
+      <text x="604" y="82" text-anchor="middle" font-size="12" font-weight="800" style="fill:#2e7d4f">NO</text>
+      <rect x="620" y="54" width="120" height="72" rx="8" fill="#e9f4ee" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="680" y="82" text-anchor="middle" font-size="14" font-weight="800" style="fill:#2e7d4f">DEJAR</text>
+      <text x="680" y="100" text-anchor="middle" font-size="14" font-weight="800" style="fill:#2e7d4f">CORRER</text>
+      <text x="680" y="118" text-anchor="middle" font-size="11.5">ruido normal</text>
+
+      <text x="0" y="22" class="t-mano" font-size="19" style="fill:#2f6db5">intervenir antes de tiempo destruye la autonomía; no intervenir deja crecer el fallo</text>
+    </svg>
+  </div>
+
+  <div class="postit" style="width:62%; margin-left:auto; transform:rotate(1deg)">Pregunta clave: ¿es ruido estadístico o es un patrón?</div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 3 · hoja 3 de 6</span><span>Secciones 3.3 y 3.4</span></div>
+</div>
+
+<!-- ============ HOJA 4 ============ -->
+<div class="pag m3">
+  <div>
+    <h3><span class="sec">3.4</span>Las 5 señales: qué hacer con cada una</h3>
+  <div class="aa senales">
+    <span></span><span class="cab" style="color:var(--green)">Dejar correr si…</span><span class="cab" style="color:var(--red)">Intervenir si…</span>
+    <span class="dim">Escalamiento +5%</span><span class="a">está en el rango histórico (más o menos 2 semanas)</span><span class="b">pasa el umbral o dura 3 o más días</span>
+    <span class="dim">CSAT −0,2 en una semana</span><span class="a">es estacional o hay un evento externo documentado</span><span class="b">coincide con cambio de instrucciones, volumen o tipo de casos</span>
+    <span class="dim">Tiempo de resolución +20%</span><span class="a">es un pico puntual de volumen</span><span class="b">es sostenido y sin cambio de volumen</span>
+    <span class="dim">Cambio externo</span><span class="a">no aplica</span><span class="b">siempre: actualizar instrucciones antes de que actúe</span>
+    <span class="dim">3 errores en 50 casos</span><span class="a">son de categorías distintas, sin patrón</span><span class="b">comparten categoría: falla en las instrucciones</span>
+  </div>
+  </div>
+
+  <div>
+    <h3><span class="sec">3.5</span>El dashboard ejecutivo</h3>
+    <p style="margin-bottom:3mm">Es para <b>gobernar el negocio</b>, no para ver la infraestructura. Prueba: ¿sé en <span class="hl">menos de 90 segundos</span> qué agente necesita mi atención?</p>
+    <svg viewBox="0 0 740 290">
+      <rect x="0" y="0" width="740" height="290" rx="12" fill="#fff" stroke="#5c6475" stroke-width="2"/>
+      <circle cx="20" cy="18" r="5" fill="#c0392b"/><circle cx="36" cy="18" r="5" fill="#e0b000"/><circle cx="52" cy="18" r="5" fill="#2e7d4f"/>
+      <line x1="0" y1="34" x2="740" y2="34" stroke="#5c6475" stroke-width="1.2"/>
+
+      <!-- Panel 1 -->
+      <rect x="14" y="46" width="220" height="110" rx="8" style="fill:var(--cs)"/>
+      <text x="26" y="68" font-size="14" font-weight="800" style="fill:var(--c)">1 · Estado del portafolio</text>
+      <circle cx="44" cy="98" r="11" fill="#2e7d4f"/><circle cx="74" cy="98" r="11" fill="#2e7d4f"/><circle cx="104" cy="98" r="11" fill="#e0b000"/><circle cx="134" cy="98" r="11" fill="#c0392b"/>
+      <text x="26" y="134" font-size="12.5">semáforo por agente</text>
+      <text x="164" y="104" class="t-mano" font-size="20" font-weight="700" style="fill:#2f6db5">15 s</text>
+
+      <!-- Panel 2 -->
+      <rect x="246" y="46" width="236" height="110" rx="8" style="fill:var(--cs)"/>
+      <text x="258" y="68" font-size="14" font-weight="800" style="fill:var(--c)">2 · KPI de negocio</text>
+      <polyline points="262,124 292,112 322,116 352,98 382,94 412,84" fill="none" stroke-width="2.5" style="stroke:var(--c)"/>
+      <line x1="262" y1="110" x2="470" y2="110" stroke="#5c6475" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="420" y="104" font-size="11" style="fill:#5c6475">baseline</text>
+      <text x="258" y="146" font-size="12.5">frente al baseline · últimas 2 semanas</text>
+
+      <!-- Panel 3 -->
+      <rect x="494" y="46" width="232" height="110" rx="8" style="fill:var(--cs)"/>
+      <text x="506" y="68" font-size="14" font-weight="800" style="fill:var(--c)">3 · Calidad del output</text>
+      <text x="506" y="94" font-size="12.5">muestreo semanal: casos</text>
+      <text x="506" y="112" font-size="12.5">revisados y tipos de error</text>
+      <text x="506" y="142" class="t-mano" font-size="16" style="fill:#2f6db5">única forma de ver el drift a tiempo</text>
+
+      <!-- Panel 4 -->
+      <rect x="14" y="168" width="340" height="108" rx="8" style="fill:var(--cs)"/>
+      <text x="26" y="190" font-size="14" font-weight="800" style="fill:var(--c)">4 · Anomalías y alertas</text>
+      <text x="26" y="216" font-size="12.5">lista priorizada · hora · descripción</text>
+      <text x="26" y="236" font-size="12.5">· acción recomendada</text>
+      <text x="26" y="264" class="t-mano" font-size="17" style="fill:#c0392b">ninguna alerta sin acción recomendada</text>
+
+      <!-- Panel 5 -->
+      <rect x="366" y="168" width="360" height="108" rx="8" stroke-width="2" style="fill:var(--c3); stroke:var(--c)"/>
+      <text x="378" y="190" font-size="14" font-weight="800" style="fill:var(--cd)">5 · ROI acumulado</text>
+      <text x="378" y="216" font-size="12.5">horas ahorradas · casos resueltos solos</text>
+      <text x="378" y="236" font-size="12.5">· impacto en NPS · menos costo operativo</text>
+      <text x="378" y="264" class="t-mano" font-size="17" font-weight="700" style="fill:var(--cd)">el argumento ante el C-suite</text>
+    </svg>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 3 · hoja 4 de 6</span><span>Secciones 3.4 y 3.5</span></div>
+</div>
+
+<!-- ============ HOJA 5 ============ -->
+<div class="pag m3">
+  <div>
+    <h3><span class="sec">3.6</span>El Governance Board Agentic <span class="fuente">(Kate Kellogg, MIT Sloan, 2025)</span></h3>
+    <div class="fila" style="grid-template-columns:1fr 1fr; align-items:start">
+      <svg viewBox="0 0 420 250">
+        <g stroke-width="1.6" stroke-dasharray="5 4" style="stroke:var(--c2)">
+          <line x1="210" y1="120" x2="80" y2="30"/><line x1="210" y1="120" x2="340" y2="30"/>
+          <line x1="210" y1="120" x2="70" y2="200"/><line x1="210" y1="120" x2="350" y2="200"/>
+          <line x1="210" y1="120" x2="210" y2="215"/>
+        </g>
+        <circle cx="210" cy="120" r="64" style="fill:var(--c)"/>
+        <text x="210" y="108" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">comité</text>
+        <text x="210" y="127" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">interfuncional</text>
+        <text x="210" y="146" text-anchor="middle" font-size="11" style="fill:#fff">quincenal o mensual</text>
+        <g font-size="12.5" font-weight="800">
+          <rect x="4" y="8" width="152" height="40" rx="8" fill="#fff" stroke-width="1.5" style="stroke:var(--c)"/>
+          <text x="80" y="25" text-anchor="middle">AI Agent Managers</text><text x="80" y="41" text-anchor="middle" font-weight="400" font-size="11">de áreas clave</text>
+          <rect x="268" y="8" width="148" height="40" rx="8" fill="#fff" stroke-width="1.5" style="stroke:var(--c)"/>
+          <text x="342" y="33" text-anchor="middle">IT y Seguridad</text>
+          <rect x="0" y="180" width="136" height="40" rx="8" fill="#fff" stroke-width="1.5" style="stroke:var(--c)"/>
+          <text x="68" y="205" text-anchor="middle">Legal y Riesgo</text>
+          <rect x="284" y="180" width="136" height="40" rx="8" fill="#fff" stroke-width="1.5" style="stroke:var(--c)"/>
+          <text x="352" y="205" text-anchor="middle">RRHH y Talento</text>
+          <rect x="150" y="206" width="120" height="40" rx="8" stroke-width="1.5" style="fill:var(--cs); stroke:var(--c)"/>
+          <text x="210" y="223" text-anchor="middle">patrocinador</text><text x="210" y="239" text-anchor="middle" font-weight="400" font-size="11">del C-suite</text>
+        </g>
+      </svg>
+      <div>
+        <p class="mano" style="font-size:17pt; font-weight:700; color:var(--c); line-height:1">Equilibra 4 tensiones</p>
+        <p style="font-size:8pt; color:var(--muted); margin-bottom:2mm">MIT SMR y BCG, 2025</p>
+        <div class="tens">
+          <span>velocidad</span><i>⇄</i><span>seguridad</span>
+          <span>autonomía</span><i>⇄</i><span>control</span>
+          <span>eficiencia</span><i>⇄</i><span>ética</span>
+          <span>innovación</span><i>⇄</i><span>estabilidad</span>
+        </div>
+        <p class="nota" style="font-size:14pt; margin-top:2mm">sin Board: decisiones sueltas y contradictorias, el riesgo se acumula</p>
+      </div>
+    </div>
+    <p style="font-size:9.5pt; margin-top:2mm"><b>Revisa</b> los agentes activos · <b>aprueba</b> despliegues de alto riesgo · <b>analiza</b> incidentes · <b>actualiza</b> estándares. <span class="mano" style="font-size:14pt; color:var(--blue)">El AIAM presenta su portafolio y escala lo que supera su autoridad.</span></p>
+  </div>
+
+  <div>
+    <h3><span class="sec">3.7</span>La AI Productivity Paradox</h3>
+    <div class="fila" style="grid-template-columns:.85fr 1.15fr">
+      <div class="alerta">
+        <p class="mano">más del 40%</p>
+        <p>de los proyectos agentic se cancelarán antes de 2027 <span style="color:var(--muted)">(Gartner)</span>. No falla la tecnología: <b>el valor no se puede medir</b>.</p>
+      </div>
+      <p class="nota">Nadie fijó la línea base, nadie eligió las métricas antes de desplegar, nadie tiene el mandato de demostrar el ROI.</p>
+    </div>
+  </div>
+
+  <div class="aa">
+    <span></span><span class="cab" style="color:var(--muted)">Sin AIAM dedicado</span><span></span><span class="cab" style="color:var(--c)">Con AIAM dedicado</span>
+    <span class="dim">antes</span><span class="a">despliega sin baseline</span><span class="f">→</span><span class="b">métricas y baseline antes de desplegar</span>
+    <span class="dim">mide</span><span class="a">uptime y latencia</span><span class="f">→</span><span class="b">resolución, costo por caso, CSAT</span>
+    <span class="dim">fallos</span><span class="a">los ve cuando ya son crisis</span><span class="f">→</span><span class="b">los ve semanas antes</span>
+    <span class="dim">portafolio</span><span class="a">agent sprawl, sin ROI</span><span class="f">→</span><span class="b">ROI por agente, visible</span>
+    <span class="dim">resultado</span><span class="a">cancela por "falta de impacto"</span><span class="f">→</span><span class="b">demuestra impacto con datos</span>
+  </div>
+
+  <div class="fuentes">
+    <div class="fuente-c"><span class="q">"Sin métricas compartidas y robustas, es imposible probar valor o detectar nuevos riesgos."</span>Kate Kellogg, MIT Sloan, 2025</div>
+    <div class="fuente-c"><span class="q">Escalan los que comparten métricas de negocio.</span><b>1.221</b> ejecutivos encuestados. <span style="color:var(--muted)">MIT SMR y BCG, 2025</span></div>
+    <div class="fuente-c"><span class="q">No trate al agente como a un empleado.</span>Mida casos <b>end-to-end</b>, no tareas sueltas. <span style="color:var(--muted)">HBR, mayo de 2026</span></div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 3 · hoja 5 de 6</span><span>Secciones 3.6 y 3.7</span></div>
+</div>
+
+<!-- ============ HOJA 6 ============ -->
+<div class="pag m3">
+  <div>
+    <h3><span class="sec">3.8</span>Caso real: Salesforce Agentforce</h3>
+    <p style="margin-bottom:3mm">Salesforce usó <b>su propia plataforma de agentes</b> en su servicio al cliente y en ventas.</p>
+    <svg viewBox="0 0 740 260">
+      <text x="0" y="56" font-size="56" font-weight="800" style="fill:var(--c)">74%</text>
+      <text x="0" y="82" font-size="14">de los casos de servicio al cliente</text>
+      <text x="0" y="100" font-size="14">resueltos sin un humano</text>
+      <text x="390" y="56" font-size="46" font-weight="800" style="fill:#2e7d4f">60 M USD</text>
+      <text x="390" y="82" font-size="14">en pipeline de ventas anualizado,</text>
+      <text x="390" y="100" font-size="14">generado en 4 meses</text>
+
+      <g transform="translate(0,140)">
+        <rect x="0" y="10" width="200" height="66" rx="9" fill="#eef0f4"/>
+        <text x="100" y="38" text-anchor="middle" font-size="14" font-weight="800">1 · Línea base</text>
+        <text x="100" y="58" text-anchor="middle" font-size="12">casos y horas sin agente</text>
+        <line x1="204" y1="43" x2="262" y2="43" stroke-width="2.2" style="stroke:var(--c)" marker-end="url(#m3-fc)"/>
+        <rect x="266" y="10" width="200" height="66" rx="9" fill="#eef0f4"/>
+        <text x="366" y="38" text-anchor="middle" font-size="14" font-weight="800">2 · Desplegar</text>
+        <text x="366" y="58" text-anchor="middle" font-size="12">el agente</text>
+        <line x1="470" y1="43" x2="528" y2="43" stroke-width="2.2" style="stroke:var(--c)" marker-end="url(#m3-fc)"/>
+        <rect x="532" y="10" width="208" height="66" rx="9" stroke-width="2" style="fill:var(--cs); stroke:var(--c)"/>
+        <text x="636" y="38" text-anchor="middle" font-size="14" font-weight="800" style="fill:var(--c)">3 · Medir la diferencia</text>
+        <text x="636" y="58" text-anchor="middle" font-size="12">frente a la línea base</text>
+        <text x="0" y="110" class="t-mano" font-size="19" style="fill:#2f6db5">desde el día 1: solo métricas de negocio, nunca uptime ni latencia</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1fr 1fr">
+    <div class="postit">Un solo indicador en el dashboard semanal: casos resueltos sin humano esta semana frente a la anterior.</div>
+    <p class="nota">Lección: lo que se mide define lo que se demuestra. Y lo que se demuestra en lenguaje de negocio sobrevive al presupuesto.</p>
+  </div>
+
+  <div class="glosario">
+    <h4>Siglas y términos en inglés</h4>
+    <p class="aviso">Explicaciones breves para repasar; varias no vienen en el curso.</p>
+    <dl>
+      <dt>KPI</dt><dd>Key Performance Indicator: indicador clave de resultado</dd>
+      <dt>CSAT</dt><dd>Customer Satisfaction: nota de satisfacción del cliente</dd>
+      <dt>NPS</dt><dd>Net Promoter Score: cuánto recomendarían la empresa</dd>
+      <dt>ROI</dt><dd>Return on Investment: retorno de la inversión</dd>
+      <dt>baseline</dt><dd>línea base: cómo estaba todo antes del agente</dd>
+      <dt>dashboard</dt><dd>tablero con los indicadores principales</dd>
+      <dt>uptime</dt><dd>tiempo que un sistema está funcionando</dd>
+      <dt>log</dt><dd>registro de todo lo que hizo el agente</dd>
+      <dt>tokens</dt><dd>trozos de texto que procesa la IA</dd>
+      <dt>API</dt><dd>conexión entre dos programas</dd>
+      <dt>IT</dt><dd>Information Technology: área de tecnología</dd>
+      <dt>output</dt><dd>lo que entrega el agente: resultado o respuesta</dd>
+      <dt>behavioral drift</dt><dd>deriva: el agente se aleja poco a poco de sus instrucciones</dd>
+      <dt>silent errors</dt><dd>errores silenciosos: fallan sin dar alarma</dd>
+      <dt>C-suite</dt><dd>alta dirección (CEO, CFO y otros)</dd>
+      <dt>Governance Board</dt><dd>comité de gobierno de los agentes</dd>
+      <dt>AI Productivity Paradox</dt><dd>se invierte en IA y no se ve el retorno</dd>
+      <dt>agent sprawl</dt><dd>agentes que se multiplican sin orden ni control</dd>
+      <dt>end-to-end</dt><dd>de principio a fin, sin cortes</dd>
+      <dt>pipeline de ventas</dt><dd>negocios en curso que pueden cerrarse</dd>
+      <dt>MIT SMR</dt><dd>MIT Sloan Management Review, revista del MIT</dd>
+      <dt>BCG</dt><dd>Boston Consulting Group, consultora</dd>
+      <dt>agentic</dt><dd>basado en agentes de IA que deciden y actúan</dd>
+      <dt>HBR</dt><dd>Harvard Business Review, revista de negocios</dd>
+    </dl>
+  </div>
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 3 · hoja 6 de 6</span><span>Sección 3.8 · términos</span></div>
+</div>
+
+</body></html>

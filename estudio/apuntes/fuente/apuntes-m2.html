@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Apuntes AIAM: Módulo 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="apuntes.css">
+</head><body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="m2-fc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7f7f"/></marker>
+  <marker id="m2-fg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5c6475"/></marker>
+  <marker id="m2-fr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker>
+  <symbol id="m2-bot" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3.5"><rect x="6" y="14" width="36" height="28" rx="7"/><path d="M24,14 v-6"/><circle cx="24" cy="5" r="3"/></g><circle cx="18" cy="28" r="3.5" fill="currentColor"/><circle cx="30" cy="28" r="3.5" fill="currentColor"/></symbol>
+  <symbol id="m2-per" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3.5"><circle cx="24" cy="14" r="8"/><path d="M8,44 c0,-12 7,-18 16,-18 c9,0 16,6 16,18"/></g></symbol>
+</defs></svg>
+
+<style>
+.m2 .gris{ color:var(--muted); }
+.m2 .chico{ font-size:8.5pt; color:var(--muted); }
+.m2 .aa{ grid-template-columns:26mm 1fr 8mm 1fr; }
+.m2 .tarjeta{ border:1.6px solid var(--c); border-radius:3mm; background:#fff; padding:3.5mm 4.5mm; }
+.m2 .tarjeta .mano{ font-size:18pt; font-weight:700; color:var(--c); line-height:1; margin-bottom:1.5mm; }
+.m2 svg .t-mano text{ font-family:Caveat, cursive; }
+.m2 .tarjeta p{ font-size:9.5pt; line-height:1.45; }
+</style>
+
+<!-- ============ HOJA 1 ============ -->
+<div class="pag m2">
+  <div>
+    <h1><small>MÓDULO 2 · APUNTES</small>Diseñar y activar agentes</h1>
+    <p class="sub">El arte del onboarding agentic: incorporar bien al agente antes de que trabaje solo</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">2.1</span>El onboarding decide el resultado</h3>
+    <svg viewBox="0 0 740 206">
+      <text x="0" y="16" class="t-mano" font-size="20" style="fill:#2f6db5">nadie lo haría con una persona…</text>
+      <rect x="0" y="28" width="150" height="48" rx="9" fill="#eef0f4"/>
+      <use href="#m2-per" x="10" y="38" width="28" height="28" style="color:#5c6475"/>
+      <text x="44" y="57" font-size="14.5" font-weight="800">Empleado</text>
+      <line x1="156" y1="52" x2="452" y2="52" stroke="#5c6475" stroke-width="2" marker-end="url(#m2-fg)"/>
+      <text x="304" y="44" text-anchor="middle" font-size="13.5">directo a clientes el día 1</text>
+      <text x="304" y="70" text-anchor="middle" font-size="11.5" style="fill:#5c6475">sin orientación, sin rol claro, sin accesos</text>
+      <rect x="460" y="28" width="280" height="48" rx="9" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="600" y="58" text-anchor="middle" font-size="15" font-weight="800" style="fill:#c0392b">receta para el fracaso</text>
+
+      <text x="0" y="110" class="t-mano" font-size="20" style="fill:#2f6db5">…pero así se activa la mayoría de los agentes</text>
+      <rect x="0" y="136" width="150" height="48" rx="9" stroke-width="2" style="fill:var(--cs); stroke:var(--c)"/>
+      <use href="#m2-bot" x="10" y="146" width="28" height="28" style="color:#2f7f7f"/>
+      <text x="44" y="165" font-size="14.5" font-weight="800" style="fill:var(--c)">Agente</text>
+      <line x1="156" y1="160" x2="452" y2="160" stroke-width="2" style="stroke:var(--c)" marker-end="url(#m2-fc)"/>
+      <text x="304" y="152" text-anchor="middle" font-size="13.5">a producción sin onboarding</text>
+      <text x="304" y="178" text-anchor="middle" font-size="11.5" style="fill:#5c6475">“que la tecnología resuelva lo no definido”</text>
+      <rect x="460" y="120" width="280" height="82" rx="9" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="478" y="144" font-size="13.5">resultados inconsistentes</text>
+      <text x="478" y="167" font-size="13.5">riesgos no anticipados</text>
+      <text x="478" y="190" font-size="13.5">pérdida de confianza</text>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1.15fr 1fr">
+    <p><b>HBR, marzo 2026</b> <span class="gris">“Create an Onboarding Plan for AI Agents”</span>: uno de los errores <span class="hl">más costosos y evitables</span>.</p>
+    <div class="postit">No falla la tecnología: falla la falta de estructura al activarlo.</div>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 200">
+      <rect x="0" y="0" width="330" height="196" rx="12" fill="#fff" stroke="#9aa1ae" stroke-width="1.5"/>
+      <text x="20" y="32" font-size="18" font-weight="800">Deployment técnico</text>
+      <text x="20" y="52" font-size="11.5" style="fill:#5c6475">poner el sistema en marcha</text>
+      <text x="20" y="88" font-size="14">verifica que el sistema</text>
+      <text x="20" y="108" font-size="14"><tspan font-weight="800">funciona</tspan></text>
+      <text x="20" y="150" font-size="13" style="fill:#5c6475">lo revisa: el equipo técnico</text>
+      <text x="20" y="178" class="t-mano" font-size="18" style="fill:#2f6db5">¿ejecuta las instrucciones?</text>
+
+      <text x="370" y="112" text-anchor="middle" font-size="40" font-weight="800" style="fill:var(--c)">≠</text>
+
+      <rect x="410" y="0" width="330" height="196" rx="12" stroke-width="2.5" style="fill:var(--cs); stroke:var(--c)"/>
+      <text x="430" y="32" font-size="18" font-weight="800" style="fill:var(--c)">Onboarding agentic</text>
+      <text x="430" y="52" font-size="11.5" style="fill:#5c6475">incorporar y validar al agente</text>
+      <text x="430" y="80" font-size="14">el agente <tspan font-weight="800">entiende</tspan> su propósito</text>
+      <text x="430" y="101" font-size="14"><tspan font-weight="800">respeta</tspan> sus límites</text>
+      <text x="430" y="122" font-size="14"><tspan font-weight="800">genera</tspan> el valor de negocio</text>
+      <text x="430" y="150" font-size="13" font-weight="800" style="fill:var(--c)">lo revisa: el AI Agent Manager</text>
+      <text x="430" y="178" class="t-mano" font-size="18" style="fill:#2f6db5">¿son las instrucciones correctas?</text>
+    </svg>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 196">
+      <text x="0" y="40" font-size="17" font-weight="800" style="fill:#5c6475">software estático</text>
+      <line x1="0" y1="34" x2="148" y2="34" stroke="#c0392b" stroke-width="2.5"/>
+      <text x="0" y="62" font-size="12.5" style="fill:#5c6475">“se instala y corre”</text>
+      <line x1="60" y1="96" x2="268" y2="96" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m2-fc)"/>
+      <text x="0" y="128" class="t-mano" font-size="17" style="fill:#2f6db5">HBR, marzo 2026:</text>
+      <text x="0" y="148" class="t-mano" font-size="17" style="fill:#2f6db5">“Think of Them Like</text>
+      <text x="0" y="168" class="t-mano" font-size="17" style="fill:#2f6db5">Team Members”</text>
+      <circle cx="345" cy="96" r="70" style="fill:var(--c)"/>
+      <text x="345" y="92" text-anchor="middle" font-size="16" font-weight="800" style="fill:#fff">colega</text>
+      <text x="345" y="112" text-anchor="middle" font-size="16" font-weight="800" style="fill:#fff">especializado</text>
+      <g stroke-width="1.8" stroke-dasharray="5 4" style="stroke:var(--c2)">
+        <line x1="412" y1="74" x2="478" y2="22"/><line x1="415" y1="88" x2="478" y2="70"/>
+        <line x1="415" y1="104" x2="478" y2="122"/><line x1="412" y1="118" x2="478" y2="170"/>
+      </g>
+      <g font-size="14">
+        <rect x="480" y="4" width="260" height="36" rx="8" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/><text x="494" y="27">expectativas claras</text>
+        <rect x="480" y="52" width="260" height="36" rx="8" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/><text x="494" y="75">contexto del negocio</text>
+        <rect x="480" y="104" width="260" height="36" rx="8" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/><text x="494" y="127">límites explícitos</text>
+        <rect x="480" y="152" width="260" height="36" rx="8" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/><text x="494" y="175">retroalimentación</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 2 · hoja 1 de 6</span><span>Sección 2.1</span></div>
+</div>
+
+<!-- ============ HOJA 2 ============ -->
+<div class="pag m2">
+  <div>
+    <h3><span class="sec">2.2</span>La identidad del agente: 6 parámetros</h3>
+    <svg viewBox="0 0 740 300">
+      <rect x="1" y="1" width="738" height="298" rx="16" fill="#fff" stroke-width="2.5" style="stroke:var(--c)"/>
+      <path d="M1,17 a16,16 0 0 1 16,-16 h706 a16,16 0 0 1 16,16 v33 h-738z" style="fill:var(--c)"/>
+      <use href="#m2-bot" x="18" y="7" width="36" height="36" style="color:#fff"/>
+      <text x="66" y="33" font-size="18" font-weight="800" letter-spacing="1.5" style="fill:#fff">IDENTIDAD DEL AGENTE</text>
+      <text x="720" y="34" text-anchor="end" class="t-mano" font-size="22" style="fill:#fff">antes de la 1.ª instrucción</text>
+      <g font-size="12.5">
+        <g transform="translate(20,72)">
+          <circle cx="14" cy="10" r="14" style="fill:var(--c)"/><text x="14" y="16" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">1</text>
+          <text x="36" y="16" font-size="16" font-weight="800">Nombre y rol</text>
+          <text x="0" y="48">qué problema resuelve,</text><text x="0" y="67">para quién, en qué contexto</text>
+          <text x="0" y="89" class="t-mano" font-size="16" style="fill:#2f6db5">en una sola oración</text>
+        </g>
+        <g transform="translate(262,72)">
+          <circle cx="14" cy="10" r="14" style="fill:var(--c)"/><text x="14" y="16" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">2</text>
+          <text x="36" y="16" font-size="16" font-weight="800">Alcance</text>
+          <text x="0" y="48">procesos, datos y sistemas</text><text x="0" y="67">que abarca… <tspan font-weight="800">y los que no</tspan></text>
+          <text x="0" y="89" class="t-mano" font-size="16" style="fill:#2f6db5">sin límites, deriva</text>
+        </g>
+        <g transform="translate(504,72)">
+          <circle cx="14" cy="10" r="14" style="fill:var(--c)"/><text x="14" y="16" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">3</text>
+          <text x="36" y="16" font-size="16" font-weight="800">Permisos de acceso</text>
+          <text x="0" y="48">sistemas, bases de datos,</text><text x="0" y="67">APIs y herramientas</text>
+          <text x="0" y="89" class="t-mano" font-size="16" style="fill:#2f6db5">solo lo necesario, ninguno más</text>
+        </g>
+        <line x1="20" y1="178" x2="720" y2="178" stroke-width="1" stroke-dasharray="4 4" style="stroke:var(--c3)"/>
+        <g transform="translate(20,192)">
+          <circle cx="14" cy="10" r="14" style="fill:var(--c)"/><text x="14" y="16" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">4</text>
+          <text x="36" y="16" font-size="16" font-weight="800">Restricciones</text>
+          <text x="0" y="48">lo que <tspan font-weight="800">NO</tspan> puede hacer</text><text x="0" y="67">bajo ninguna circunstancia</text>
+          <text x="0" y="89" class="t-mano" font-size="16" style="fill:#2f6db5">ej.: pasar un umbral de dinero</text>
+        </g>
+        <g transform="translate(262,192)">
+          <circle cx="14" cy="10" r="14" style="fill:var(--c)"/><text x="14" y="16" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">5</text>
+          <text x="36" y="16" font-size="16" font-weight="800">Escalamiento</text>
+          <text x="0" y="48">cuándo pasa el control</text><text x="0" y="67">a un humano</text>
+          <text x="0" y="89" class="t-mano" font-size="16" style="fill:#2f6db5">casos ambiguos, alto riesgo…</text>
+        </g>
+        <g transform="translate(504,192)">
+          <circle cx="14" cy="10" r="14" style="fill:var(--c)"/><text x="14" y="16" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">6</text>
+          <text x="36" y="16" font-size="16" font-weight="800">Métricas de éxito</text>
+          <text x="0" y="48">cómo se mide su aporte</text><text x="0" y="67">al negocio</text>
+          <text x="0" y="89" class="t-mano" font-size="16" style="fill:#2f6db5">las define el AIAM, no TI</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1fr 1.2fr">
+    <p class="nota">No es burocracia: es la arquitectura de gobernanza.</p>
+    <p class="chico">Qué puede hacer · con qué recursos · bajo qué condiciones · <b>quién responde</b> por sus acciones.</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">2.3</span>Permisos mínimos <span class="fuente">(least-privilege)</span></h3>
+    <svg viewBox="0 0 740 306">
+      <text x="178" y="14" text-anchor="middle" font-size="16" font-weight="800" style="fill:#c0392b">Sin permisos mínimos</text>
+      <circle cx="178" cy="116" r="90" fill="#fdf0ee" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 4"/>
+      <use href="#m2-bot" x="158" y="96" width="40" height="40" style="color:#c0392b"/>
+      <text x="178" y="72" text-anchor="middle" font-size="12.5">clientes</text>
+      <text x="134" y="156" text-anchor="middle" font-size="12.5">finanzas</text>
+      <text x="218" y="156" text-anchor="middle" font-size="12.5">operaciones</text>
+      <g font-size="13" text-anchor="middle">
+        <text x="178" y="224">un error afecta varios sistemas</text>
+        <text x="178" y="249">manipulación: impacto masivo</text>
+        <text x="178" y="270">auditoría difusa y costosa</text>
+        <text x="178" y="296" class="t-mano" font-size="17" style="fill:#c0392b">el AIAM responde por lo no previsto</text>
+      </g>
+
+      <line x1="370" y1="10" x2="370" y2="300" stroke="#d9d4c7" stroke-width="1.5"/>
+
+      <text x="562" y="14" text-anchor="middle" font-size="16" font-weight="800" style="fill:var(--c)">Con permisos mínimos</text>
+      <circle cx="562" cy="116" r="90" fill="none" stroke="#c9ccd3" stroke-width="1.2" stroke-dasharray="3 5"/>
+      <circle cx="562" cy="116" r="40" stroke-width="2.5" style="fill:var(--cs); stroke:var(--c)"/>
+      <use href="#m2-bot" x="545" y="96" width="34" height="34" style="color:#2f7f7f"/>
+      <text x="562" y="62" text-anchor="middle" font-size="12" style="fill:#5c6475">solo su tarea</text>
+      <text x="562" y="186" text-anchor="middle" font-size="12" style="fill:#5c6475">perímetro definido</text>
+      <g font-size="13" text-anchor="middle">
+        <text x="562" y="228">el error queda contenido</text>
+        <text x="562" y="249">superficie de fallo mínima</text>
+        <text x="562" y="270">auditoría clara: hizo lo documentado</text>
+        <text x="562" y="296" class="t-mano" font-size="17" style="fill:var(--c)">el AIAM mantiene control y credibilidad</text>
+      </g>
+    </svg>
+  </div>
+
+  <div>
+    <h3 style="font-size:19pt">No dependa del vendor</h3>
+    <div class="fila" style="grid-template-columns:1fr 1fr">
+      <svg viewBox="0 0 340 150">
+        <text x="0" y="56" font-size="60" font-weight="800" style="fill:var(--c)">30</text>
+        <text x="84" y="32" font-size="14">sistemas agentic</text>
+        <text x="84" y="52" font-size="14">“de frontera” auditados</text>
+        <text x="0" y="92" class="t-mano" font-size="20" style="fill:#2f6db5">AI Agent Index 2025</text>
+        <text x="0" y="116" font-size="11.5" style="fill:#5c6475">Cambridge · MIT · Harvard Law</text>
+        <text x="0" y="134" font-size="11.5" style="fill:#5c6475">Stanford · UPenn</text>
+      </svg>
+      <div class="postit" style="transform:rotate(1deg)">La mayoría comparte poca o ninguna información de seguridad. La protección la pone el AIAM, desde el diseño.</div>
+    </div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 2 · hoja 2 de 6</span><span>Secciones 2.2 y 2.3</span></div>
+</div>
+
+<!-- ============ HOJA 3 ============ -->
+<div class="pag m2">
+  <div>
+    <h3><span class="sec">2.3</span>Regla práctica antes de desplegar</h3>
+    <svg viewBox="0 30 740 126">
+      <rect x="0" y="36" width="420" height="116" rx="12" fill="#fff" stroke-width="2" style="stroke:var(--c)"/>
+      <text x="20" y="66" font-size="14.5">¿Podría este agente, con sus permisos</text>
+      <text x="20" y="89" font-size="14.5">actuales, causar un daño que yo <tspan font-weight="800">no</tspan></text>
+      <text x="20" y="112" font-size="14.5"><tspan font-weight="800">podría explicar</tspan> ante el CEO</text>
+      <text x="20" y="135" font-size="14.5">ni ante un cliente?</text>
+      <line x1="424" y1="94" x2="520" y2="94" stroke="#c0392b" stroke-width="2" marker-end="url(#m2-fr)"/>
+      <text x="472" y="84" text-anchor="middle" class="t-mano" font-size="19" style="fill:#c0392b">sí / tal vez</text>
+      <rect x="526" y="50" width="214" height="88" rx="10" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="540" y="78" font-size="14" font-weight="800" style="fill:#c0392b">permisos excesivos</text>
+      <text x="540" y="102" font-size="13">reduzca el alcance</text>
+      <text x="540" y="122" font-size="13">antes de producción</text>
+    </svg>
+  </div>
+
+  <div>
+    <h3><span class="sec">2.4</span>Onboarding humano ≠ onboarding agentic</h3>
+    <p class="chico" style="margin-bottom:3mm">Se toma prestado del humano: dar contexto, fijar expectativas, validar que entendió.</p>
+    <div class="aa">
+      <span></span><span class="cab" style="color:var(--muted)">Colaborador humano</span><span></span><span class="cab" style="color:var(--c)">Agente de IA</span>
+      <span class="dim">contexto</span><span class="a">lo construye con el tiempo</span><span class="f">→</span><span class="b">explícito y documentado desde el día 1</span>
+      <span class="dim">ambigüedad</span><span class="a">pregunta, intuye, juzga</span><span class="f">→</span><span class="b">opera literal: resultado impredecible</span>
+      <span class="dim">errores</span><span class="a">aprende solo de ellos</span><span class="f">→</span><span class="b">si no se corrigen en las instrucciones, se repiten</span>
+      <span class="dim">motivación</span><span class="a">propia: ambición, valores</span><span class="f">→</span><span class="b">ninguna: ni más ni menos de lo instruido</span>
+      <span class="dim">rol</span><span class="a">lo renegocia o lo amplía</span><span class="f">→</span><span class="b">lo definido; cambiarlo exige rediseño</span>
+      <span class="dim">éxito</span><span class="a">lo interpreta con flexibilidad</span><span class="f">→</span><span class="b">explícito y medible: solo métricas</span>
+    </div>
+  </div>
+
+  <div class="alerta" style="width:78%; margin-left:auto">
+    <p class="mano">Error más frecuente</p>
+    <p>Tratar al agente como si aprendiera por intuición. Opera <span class="hl">exactamente dentro</span> de lo definido… y exactamente fuera si se definió mal.</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">2.5</span>Instrucciones: job description + SOP</h3>
+    <svg viewBox="0 0 740 150">
+      <rect x="0" y="6" width="210" height="80" rx="10" fill="#fff" stroke="#9aa1ae" stroke-width="1.6"/>
+      <text x="105" y="36" text-anchor="middle" font-size="16" font-weight="800">Job description</text>
+      <text x="105" y="58" text-anchor="middle" font-size="12.5">el qué y el para qué</text>
+      <text x="105" y="76" text-anchor="middle" font-size="11" style="fill:#5c6475">descripción del cargo</text>
+      <text x="240" y="58" text-anchor="middle" font-size="34" font-weight="800" style="fill:var(--c)">+</text>
+      <rect x="270" y="6" width="210" height="80" rx="10" fill="#fff" stroke="#9aa1ae" stroke-width="1.6"/>
+      <text x="375" y="36" text-anchor="middle" font-size="16" font-weight="800">SOP</text>
+      <text x="375" y="58" text-anchor="middle" font-size="12.5">el cómo, paso a paso</text>
+      <text x="375" y="76" text-anchor="middle" font-size="11" style="fill:#5c6475">procedimiento estándar</text>
+      <text x="510" y="58" text-anchor="middle" font-size="34" font-weight="800" style="fill:var(--c)">=</text>
+      <rect x="540" y="6" width="200" height="80" rx="10" style="fill:var(--c)"/>
+      <text x="640" y="40" text-anchor="middle" font-size="16" font-weight="800" style="fill:#fff">instrucciones</text>
+      <text x="640" y="62" text-anchor="middle" font-size="16" font-weight="800" style="fill:#fff">del agente</text>
+      <text x="0" y="122" class="t-mano" font-size="18" style="fill:#c0392b">solo JD: sin guía operativa</text>
+      <text x="270" y="122" class="t-mano" font-size="18" style="fill:#c0392b">solo SOP: pasos sin entender el objetivo</text>
+    </svg>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 2 · hoja 3 de 6</span><span>Secciones 2.3 a 2.5</span></div>
+</div>
+
+<!-- ============ HOJA 4 ============ -->
+<div class="pag m2">
+  <div>
+    <svg viewBox="0 0 740 470">
+      <text x="0" y="18" class="t-mano" font-size="22" font-weight="700" style="fill:var(--c)">2.5 · Los 7 componentes de las instrucciones</text>
+      <text x="734" y="18" text-anchor="end" class="t-mano" font-size="19" style="fill:#2f6db5">ejemplo: soporte de una empresa B2B</text>
+      <path d="M0,34 h300 l26,26 v406 h-326z" fill="#fff" stroke-width="2" style="stroke:var(--c)"/>
+      <path d="M300,34 v26 h26" fill="none" stroke-width="2" style="stroke:var(--c)"/>
+      <g font-size="15">
+        <g transform="translate(16,62)"><circle cx="13" cy="22" r="13" style="fill:var(--c)"/><text x="13" y="27" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">1</text><text x="36" y="27" font-weight="800">Contexto</text></g>
+        <g transform="translate(16,118)"><circle cx="13" cy="22" r="13" style="fill:var(--c)"/><text x="13" y="27" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">2</text><text x="36" y="27" font-weight="800">Objetivo principal</text></g>
+        <g transform="translate(16,174)"><circle cx="13" cy="22" r="13" style="fill:var(--c)"/><text x="13" y="27" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">3</text><text x="36" y="27" font-weight="800">Proceso paso a paso</text></g>
+        <g transform="translate(16,230)"><circle cx="13" cy="22" r="13" style="fill:var(--c)"/><text x="13" y="27" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">4</text><text x="36" y="27" font-weight="800">Herramientas y accesos</text></g>
+        <g transform="translate(16,286)"><circle cx="13" cy="22" r="13" style="fill:var(--c)"/><text x="13" y="27" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">5</text><text x="36" y="27" font-weight="800">Restricciones</text></g>
+        <g transform="translate(16,342)"><circle cx="13" cy="22" r="13" style="fill:var(--c)"/><text x="13" y="27" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">6</text><text x="36" y="27" font-weight="800">Escalamiento</text></g>
+        <g transform="translate(16,398)"><circle cx="13" cy="22" r="13" style="fill:var(--c)"/><text x="13" y="27" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">7</text><text x="36" y="27" font-weight="800">Métricas de éxito</text></g>
+      </g>
+      <g stroke-width="1.4" stroke-dasharray="4 4" style="stroke:var(--c2)">
+        <line x1="290" y1="84" x2="350" y2="84"/><line x1="290" y1="140" x2="350" y2="140"/><line x1="290" y1="196" x2="350" y2="196"/>
+        <line x1="290" y1="252" x2="350" y2="252"/><line x1="290" y1="308" x2="350" y2="308"/><line x1="290" y1="364" x2="350" y2="364"/><line x1="290" y1="420" x2="350" y2="420"/>
+      </g>
+      <g class="t-mano" font-size="17" style="fill:#2f6db5">
+        <text x="358" y="80">Customer Success; clientes que reportan</text><text x="358" y="98">problemas técnicos en el portal de soporte</text>
+        <text x="358" y="136">resolver el 80% de los tickets de nivel 1</text><text x="358" y="154">sin humano, en menos de 3 minutos promedio</text>
+        <text x="358" y="192">cada paso: qué hacer, con qué herramienta</text><text x="358" y="210">y con qué criterio decidir</text>
+        <text x="358" y="248">CRM: historial del cliente</text><text x="358" y="266">base de conocimiento: soluciones documentadas</text>
+        <text x="358" y="296">no cambiar la cuenta sin confirmación humana</text><text x="358" y="314">no compartir datos de otros clientes</text><text x="358" y="332">no ofrecer descuentos no autorizados</text>
+        <text x="358" y="360">escalar si: no hay solución documentada,</text><text x="358" y="378">menciona cancelación o pasan más de 8 minutos</text>
+        <text x="358" y="416">resolución autónoma ≥ 80% · CSAT ≥ 4,2 de 5</text><text x="358" y="434">escalamiento ≤ 20% · tiempo promedio ≤ 3 min</text>
+      </g>
+    </svg>
+  </div>
+
+  <div>
+    <h3><span class="sec">2.6</span>Criterios de aceptación: 5 filtros</h3>
+    <svg viewBox="0 0 740 262">
+      <text x="0" y="20" font-size="13.5" font-weight="800" style="fill:#5c6475">agente configurado</text>
+      <line x1="140" y1="15" x2="610" y2="15" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m2-fc)"/>
+      <text x="740" y="20" text-anchor="end" font-size="13.5" font-weight="800" style="fill:var(--c)">producción</text>
+      <g font-size="12.5">
+        <g transform="translate(0,38)">
+          <rect width="140" height="220" rx="10" fill="#fff" stroke-width="1.8" style="stroke:var(--c)"/>
+          <circle cx="24" cy="26" r="13" style="fill:var(--c)"/><text x="24" y="31" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">1</text>
+          <text x="12" y="68" font-size="15" font-weight="800">Funcional</text>
+          <text x="12" y="106">¿completa bien</text><text x="12" y="124">sus tareas?</text>
+          <text x="12" y="156" style="fill:#5c6475">casos reales, no</text><text x="12" y="174" style="fill:#5c6475">solo los “perfectos”</text>
+        </g>
+        <g transform="translate(150,38)">
+          <rect width="140" height="220" rx="10" fill="#fff" stroke-width="1.8" style="stroke:var(--c)"/>
+          <circle cx="24" cy="26" r="13" style="fill:var(--c)"/><text x="24" y="31" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">2</text>
+          <text x="12" y="68" font-size="15" font-weight="800">Límites</text>
+          <text x="12" y="86" font-size="11" style="fill:#5c6475">boundary testing</text>
+          <text x="12" y="106">¿respeta sus</text><text x="12" y="124">restricciones</text><text x="12" y="142">bajo presión?</text>
+          <text x="12" y="174" style="fill:#5c6475">casos de borde,</text><text x="12" y="192" style="fill:#5c6475">fuera de alcance</text>
+        </g>
+        <g transform="translate(300,38)">
+          <rect width="140" height="220" rx="10" fill="#fff" stroke-width="1.8" style="stroke:var(--c)"/>
+          <circle cx="24" cy="26" r="13" style="fill:var(--c)"/><text x="24" y="31" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">3</text>
+          <text x="12" y="68" font-size="15" font-weight="800">Adversarial</text>
+          <text x="12" y="86" font-size="11" style="fill:#5c6475">ataque a propósito</text>
+          <text x="12" y="106">¿y si intentan</text><text x="12" y="124">engañarlo o</text><text x="12" y="142">manipularlo?</text>
+          <text x="12" y="174" style="fill:#5c6475">la mayoría tiene</text><text x="12" y="192" style="fill:#5c6475">vulnerabilidades aquí</text>
+          <text x="12" y="210" font-size="11" style="fill:#5c6475">(AI Agent Index 2025)</text>
+        </g>
+        <g transform="translate(450,38)">
+          <rect width="140" height="220" rx="10" stroke-width="2.5" fill="#fff" stroke="#c0392b"/>
+          <circle cx="24" cy="26" r="13" fill="#c0392b"/><text x="24" y="31" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">4</text>
+          <text x="12" y="68" font-size="15" font-weight="800">Escalamiento</text>
+          <text x="12" y="106">¿escala en cada</text><text x="12" y="124">condición</text><text x="12" y="142">del SOP?</text>
+          <text x="12" y="174" style="fill:#c0392b" font-weight="800">si no escala, es</text><text x="12" y="192" style="fill:#c0392b" font-weight="800">el más peligroso</text>
+        </g>
+        <g transform="translate(600,38)">
+          <rect width="140" height="220" rx="10" fill="#fff" stroke-width="1.8" style="stroke:var(--c)"/>
+          <circle cx="24" cy="26" r="13" style="fill:var(--c)"/><text x="24" y="31" text-anchor="middle" font-size="13" font-weight="800" style="fill:#fff">5</text>
+          <text x="12" y="68" font-size="15" font-weight="800">Métricas</text>
+          <text x="12" y="86" font-size="15" font-weight="800">de negocio</text>
+          <text x="12" y="106">¿da el resultado</text><text x="12" y="124">de negocio</text><text x="12" y="142">esperado?</text>
+          <text x="12" y="174" style="fill:#5c6475">no basta con</text><text x="12" y="192" style="fill:#5c6475">que “funcione”</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1.1fr 1fr">
+    <div class="postit">No “¿funciona?”, sino: ¿hace lo correcto, para las personas correctas, dentro de los límites correctos, con el valor esperado?</div>
+    <p class="nota" style="font-size:15pt">Como un QA, pero desde el negocio: lo valida el AIAM, no el equipo técnico.<br>
+    Si no se mide en pruebas, no se medirá en producción.</p>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 2 · hoja 4 de 6</span><span>Secciones 2.5 y 2.6</span></div>
+</div>
+
+<!-- ============ HOJA 5 ============ -->
+<div class="pag m2">
+  <div>
+    <h3><span class="sec">2.7</span>Agent sprawl: el riesgo silencioso</h3>
+    <svg viewBox="0 0 740 250">
+      <text x="0" y="16" font-size="12" style="fill:#5c6475">agentes que se multiplican sin orden</text>
+      <g style="color:#9aa1ae">
+        <use href="#m2-bot" x="20" y="48" width="44" height="44"/><use href="#m2-bot" x="178" y="28" width="38" height="38"/>
+        <use href="#m2-bot" x="250" y="62" width="44" height="44"/><use href="#m2-bot" x="70" y="140" width="40" height="40"/>
+        <use href="#m2-bot" x="196" y="150" width="44" height="44"/><use href="#m2-bot" x="290" y="170" width="34" height="34"/>
+      </g>
+      <g class="t-mano" font-size="17" style="fill:#2f6db5">
+        <text x="66" y="66">¿de quién es?</text>
+        <text x="184" y="114">¿para qué sirve?</text>
+        <text x="0" y="122">¿métricas?</text>
+        <text x="114" y="210">¿y quién lo gobierna?</text>
+      </g>
+      <text x="0" y="244" font-size="12" style="fill:#5c6475">nace cuando cada área despliega por su cuenta y los pilotos pasan a producción sin onboarding</text>
+      <g font-size="13">
+        <rect x="380" y="10" width="360" height="62" rx="9" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+        <text x="394" y="35" font-weight="800">Redundancia</text><text x="394" y="56">varios agentes hacen casi lo mismo</text>
+        <rect x="380" y="82" width="360" height="62" rx="9" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+        <text x="394" y="107" font-weight="800">Gobernanza sin dueño</text><text x="394" y="128">nadie responde por el error</text>
+        <rect x="380" y="154" width="360" height="62" rx="9" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+        <text x="394" y="179" font-weight="800">ROI fragmentado</text><text x="394" y="200">se invierte más de lo que genera</text>
+      </g>
+      <text x="726" y="38" text-anchor="end" class="t-mano" font-size="19" style="fill:var(--c)">3 costos</text>
+    </svg>
+  </div>
+
+  <div class="alerta" style="width:80%">
+    <p class="mano">más del 40%</p>
+    <p>de los proyectos agentic se cancelarán antes de 2027 <span class="gris">(Gartner)</span>. Su principal causa: el <b>agent sprawl</b>.</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">2.7</span>Cómo prevenirlo: 3 mecanismos</h3>
+    <svg viewBox="0 0 740 300">
+      <g>
+        <rect x="0" y="0" width="236" height="296" rx="12" fill="#fff" stroke-width="1.8" style="stroke:var(--c)"/>
+        <text x="16" y="30" font-size="15" font-weight="800" style="fill:var(--c)">1 · Registro central</text>
+        <g font-size="12.5">
+          <line x1="16" y1="48" x2="220" y2="48" style="stroke:var(--c3)"/>
+          <text x="16" y="70">nombre y función</text><line x1="16" y1="80" x2="220" y2="80" style="stroke:var(--c3)"/>
+          <text x="16" y="102">nivel de autonomía</text><line x1="16" y1="112" x2="220" y2="112" style="stroke:var(--c3)"/>
+          <text x="16" y="134">área responsable</text><line x1="16" y1="144" x2="220" y2="144" style="stroke:var(--c3)"/>
+          <text x="16" y="166">AIAM designado</text><line x1="16" y1="176" x2="220" y2="176" style="stroke:var(--c3)"/>
+          <text x="16" y="198">última validación</text><line x1="16" y1="208" x2="220" y2="208" style="stroke:var(--c3)"/>
+          <text x="16" y="230">métricas actuales</text><line x1="16" y1="240" x2="220" y2="240" style="stroke:var(--c3)"/>
+        </g>
+        <text x="16" y="268" class="t-mano" font-size="16" style="fill:#2f6db5">sin él: ¿cuántos hay?</text>
+        <text x="16" y="286" class="t-mano" font-size="16" style="fill:#2f6db5">¿para qué? ¿quién responde?</text>
+      </g>
+      <g transform="translate(252,0)">
+        <rect x="0" y="0" width="236" height="296" rx="12" fill="#fff" stroke-width="1.8" style="stroke:var(--c)"/>
+        <text x="16" y="30" font-size="15" font-weight="800" style="fill:var(--c)">2 · Aceptación</text>
+        <text x="16" y="50" font-size="15" font-weight="800" style="fill:var(--c)">obligatoria</text>
+        <g transform="translate(88,66)" fill="none" stroke-width="4" style="stroke:var(--c)">
+          <rect x="0" y="26" width="60" height="46" rx="8" style="fill:var(--cs)"/><path d="M12,26 v-10 a18,18 0 0 1 36,0 v10"/>
+        </g>
+        <text x="118" y="128" text-anchor="middle" font-size="12" font-weight="800" style="fill:var(--c)">5 filtros</text>
+        <text x="16" y="172" font-size="13">ninguno pasa sin</text>
+        <text x="16" y="191" font-size="13">la validación de 2.6</text>
+        <text x="16" y="218" font-size="13"><tspan font-weight="800">política</tspan>, no recomendación</text>
+        <text x="16" y="256" class="t-mano" font-size="17" style="fill:#c0392b">la presión de velocidad:</text>
+        <text x="16" y="276" class="t-mano" font-size="17" style="fill:#c0392b">el enemigo número uno</text>
+      </g>
+      <g transform="translate(504,0)">
+        <rect x="0" y="0" width="236" height="296" rx="12" fill="#fff" stroke-width="1.8" style="stroke:var(--c)"/>
+        <text x="16" y="30" font-size="15" font-weight="800" style="fill:var(--c)">3 · Auditoría</text>
+        <text x="16" y="50" font-size="15" font-weight="800" style="fill:var(--c)">trimestral</text>
+        <path d="M118,70 a42,42 0 1 1 -40,30" fill="none" stroke-width="3" style="stroke:var(--c2)" marker-end="url(#m2-fc)"/>
+        <text x="118" y="117" text-anchor="middle" font-size="13" font-weight="800" style="fill:var(--c)">cada 3</text>
+        <text x="118" y="133" text-anchor="middle" font-size="13" font-weight="800" style="fill:var(--c)">meses</text>
+        <text x="16" y="194" font-size="13">¿sigue generando valor?</text>
+        <text x="16" y="216" font-size="13">¿tiene dueño claro?</text>
+        <text x="16" y="238" font-size="13">¿se desvió de su función?</text>
+        <text x="16" y="276" class="t-mano" font-size="16" style="fill:#2f6db5">gobierno del negocio, no de TI</text>
+      </g>
+    </svg>
+  </div>
+
+  <div>
+    <h3>Lo que dice la investigación</h3>
+    <div class="fila" style="grid-template-columns:1fr 1fr; align-items:stretch">
+      <div class="tarjeta">
+        <p class="mano">HBR, marzo 2026</p>
+        <p>Sin plan formal: <b>más errores</b>, más escalamientos no planificados, <b>menos confianza</b> del equipo humano.</p>
+        <p style="margin-top:2mm">Los éxitos comparten 3 cosas: contexto explícito · límites y escalamiento <b>probados antes</b> · <span class="hl">valida el AIAM</span>, no TI.</p>
+      </div>
+      <div class="tarjeta">
+        <p class="mano">AI Agent Index 2025</p>
+        <p>La brecha de gobernanza <b>no es tecnológica: es de management</b>.</p>
+        <p style="margin-top:2mm">La tecnología para controlar existe; falta el perfil que <span class="hl">exija, diseñe y mantenga</span> esos controles.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 2 · hoja 5 de 6</span><span>Sección 2.7</span></div>
+</div>
+
+<!-- ============ HOJA 6 ============ -->
+<div class="pag m2">
+  <div>
+    <h3><span class="sec">2.8</span>Caso real: Klarna <span class="fuente">(fintech · febrero 2024)</span></h3>
+    <svg viewBox="0 0 740 120">
+      <text x="0" y="50" font-size="46" font-weight="800" style="fill:var(--c)">2,3 M</text>
+      <text x="0" y="76" font-size="13.5">conversaciones en el 1.er mes</text>
+      <text x="0" y="100" class="t-mano" font-size="17" style="fill:#2f6db5">plataforma con más de 150 M usuarios</text>
+      <text x="268" y="50" font-size="46" font-weight="800" style="fill:var(--c)">= 700</text>
+      <text x="268" y="76" font-size="13.5">agentes a tiempo completo</text>
+      <text x="500" y="50" font-size="40" font-weight="800" style="fill:#2e7d4f">40 M USD</text>
+      <text x="500" y="76" font-size="13.5">ahorro anual estimado</text>
+      <text x="500" y="100" class="t-mano" font-size="17" style="fill:#2f6db5">en servicio al cliente</text>
+    </svg>
+  </div>
+
+  <div>
+    <svg viewBox="0 0 740 150">
+      <text x="0" y="18" class="t-mano" font-size="21" font-weight="700" style="fill:var(--c)">la clave no fue el modelo: fue el onboarding</text>
+      <g font-size="12.5">
+        <rect x="0" y="34" width="176" height="112" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+        <text x="12" y="58" font-size="14" font-weight="800" style="fill:var(--c)">Alcance</text>
+        <text x="12" y="82">solo pedidos,</text><text x="12" y="100">pagos y</text><text x="12" y="118">devoluciones</text>
+        <rect x="188" y="34" width="176" height="112" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+        <text x="200" y="58" font-size="14" font-weight="800" style="fill:var(--c)">Restricciones</text>
+        <text x="200" y="82">no disputas de</text><text x="200" y="100">alto valor ni</text><text x="200" y="118">comunicaciones</text><text x="200" y="136">legales</text>
+        <rect x="376" y="34" width="176" height="112" rx="10" fill="#fff" stroke-width="1.6" style="stroke:var(--c)"/>
+        <text x="388" y="58" font-size="14" font-weight="800" style="fill:var(--c)">Escalamiento</text>
+        <text x="388" y="82">frustración sobre</text><text x="388" y="100">un umbral o pide</text><text x="388" y="118">hablar con persona</text>
+        <rect x="564" y="34" width="176" height="112" rx="10" stroke-width="2.2" style="fill:var(--cs); stroke:var(--c)"/>
+        <text x="576" y="58" font-size="14" font-weight="800" style="fill:var(--c)">Métricas</text>
+        <text x="576" y="82">las definieron los</text><text x="576" y="100">managers de</text><text x="576" y="118">operaciones</text>
+        <text x="576" y="137" font-size="11" style="fill:#5c6475">4 semanas validando</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="postit" style="width:80%; transform:rotate(-.8deg)">Lección: alguien con dominio del negocio definió qué podía hacer, qué no, cuándo escalar y cómo medir… antes del primer día.</div>
+
+  <div class="glosario">
+    <h4>Siglas y términos en inglés</h4>
+    <p class="aviso">Explicaciones breves para repasar; varias no vienen en el curso.</p>
+    <dl>
+      <dt>AIAM</dt><dd>AI Agent Manager: gestor de agentes</dd>
+      <dt>HBR</dt><dd>Harvard Business Review (revista)</dd>
+      <dt>agentic</dt><dd>basado en agentes de IA</dd>
+      <dt>onboarding</dt><dd>incorporación: preparar a alguien antes de que empiece a trabajar</dd>
+      <dt>deployment</dt><dd>despliegue: poner un sistema a funcionar</dd>
+      <dt>least-privilege</dt><dd>permisos mínimos: solo el acceso estrictamente necesario</dd>
+      <dt>vendor</dt><dd>proveedor que vende la tecnología</dd>
+      <dt>API</dt><dd>Application Programming Interface: conexión entre sistemas</dd>
+      <dt>job description (JD)</dt><dd>descripción del cargo</dd>
+      <dt>SOP</dt><dd>Standard Operating Procedure: procedimiento paso a paso</dd>
+      <dt>Customer Success</dt><dd>área que ayuda a los clientes a lograr resultados</dd>
+      <dt>B2B</dt><dd>business to business: empresa que vende a empresas</dd>
+      <dt>ticket</dt><dd>solicitud de soporte registrada</dd>
+      <dt>CRM</dt><dd>Customer Relationship Management: datos de clientes</dd>
+      <dt>CSAT</dt><dd>Customer Satisfaction: nota de satisfacción del cliente</dd>
+      <dt>QA</dt><dd>Quality Assurance: control de calidad antes de entregar</dd>
+      <dt>boundary testing</dt><dd>pruebas de límites con casos de borde</dd>
+      <dt>agent sprawl</dt><dd>proliferación de agentes sin dueño ni gobierno</dd>
+      <dt>ROI</dt><dd>Return on Investment: retorno de la inversión</dd>
+      <dt>management</dt><dd>gestión, dirección</dd>
+      <dt>fintech</dt><dd>empresa de servicios financieros con tecnología</dd>
+      <dt>M USD</dt><dd>millones de dólares estadounidenses</dd>
+      <dt>CEO</dt><dd>Chief Executive Officer: gerente general</dd>
+      <dt>TI</dt><dd>tecnologías de la información (IT)</dd>
+    </dl>
+  </div>
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 2 · hoja 6 de 6</span><span>Sección 2.8 · términos</span></div>
+</div>
+
+
+</body></html>

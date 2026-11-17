@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Apuntes AIAM: Módulo 5</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="apuntes.css">
+</head><body>
+
+<style>
+  /* Estilos propios del Módulo 5 (solo afectan a .m5) */
+  .m5 .hz{ display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; align-items:start; }
+  .m5 .hz .cab{ color:#fff; border-radius:2mm 2mm 0 0; padding:2.5mm 3mm; }
+  .m5 .hz .cab b{ display:block; font-size:12pt; }
+  .m5 .hz .cab .h{ font-family:Caveat, cursive; font-size:26pt; font-weight:700; line-height:.9; }
+  .m5 .hz .cab .v{ font-size:9pt; font-weight:600; }
+  .m5 .hz .met{ background:#fff; border:1.4px solid var(--c3); border-top:none; border-radius:0 0 2mm 2mm;
+                padding:2.5mm 3mm; font-size:9.5pt; line-height:1.45; }
+  .m5 .hz .met .como{ display:block; margin-top:2mm; font-size:8pt; color:var(--muted); line-height:1.3; }
+  .m5 .hz .dice{ font-family:Caveat, cursive; font-size:15pt; line-height:1.05; color:var(--blue); margin-top:2.5mm; }
+  .m5 .ref{ border-left:1.4mm solid var(--c); background:#fff; padding:3mm 4mm; border-radius:0 2mm 2mm 0; }
+  .m5 .ref .num{ font-size:30pt; font-weight:800; color:var(--c); line-height:1; }
+  .m5 .ref .src{ font-family:Caveat, cursive; font-size:14pt; color:var(--blue); }
+  .m5 .par{ display:grid; grid-template-columns:1fr 9mm 1fr; align-items:center; row-gap:3mm; font-size:9.5pt; line-height:1.35; }
+  .m5 .par .a{ background:var(--gris); padding:2mm 3mm; border-radius:1.5mm; color:var(--muted); }
+  .m5 .par .b{ background:var(--cs); padding:2mm 3mm; border-radius:1.5mm; border-left:1.3mm solid var(--c); }
+  .m5 .par .f{ text-align:center; color:var(--c); font-weight:800; font-size:14pt; }
+  .m5 .par .cab{ font-family:Caveat, cursive; font-size:18pt; font-weight:700; }
+  .m5 .tres{ display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; }
+  .m5 .tres .n{ font-family:Caveat, cursive; font-size:22pt; font-weight:700; color:var(--c); line-height:1; }
+  .m5 .glosario dl{ font-size:8.5pt; row-gap:1.3mm; }
+  .m5 .tres p{ font-size:9.5pt; line-height:1.35; }
+</style>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="m5-fc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f6db5"/></marker>
+  <marker id="m5-fg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5c6475"/></marker>
+  <marker id="m5-fcs" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#2f6db5"/></marker>
+</defs></svg>
+
+<!-- ============ HOJA 1 ============ -->
+<div class="pag m5">
+  <div>
+    <h1><small>MÓDULO 5 · APUNTES</small>Impacto al negocio</h1>
+    <p class="sub">Medir, comunicar y escalar resultados</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">5.1</span>Por qué el ROI tradicional no alcanza</h3>
+    <p>El gran obstáculo de la <b>segunda fase</b>: demostrar valor <span class="hl">con métricas que la dirección entiende</span>.</p>
+  </div>
+
+  <svg viewBox="0 0 740 270">
+    <rect x="0" y="80" width="740" height="190" style="fill:var(--cs)"/>
+    <line x1="0" y1="80" x2="740" y2="80" stroke-width="2" stroke-dasharray="7 5" style="stroke:var(--c2)"/>
+    <polygon points="205,80 250,28 285,44 330,12 385,80" fill="#fff" stroke-width="2" style="stroke:var(--c)"/>
+    <polygon points="140,80 460,80 525,170 435,262 215,252 115,162" stroke-width="2" style="fill:var(--c3); stroke:var(--c)"/>
+    <text x="0" y="30" class="t-mano" font-size="19" style="fill:#2f6db5">BCG Henderson</text>
+    <text x="0" y="52" class="t-mano" font-size="19" style="fill:#2f6db5">Institute, 2025</text>
+    <text x="420" y="36" font-size="30" font-weight="800" style="fill:var(--c)">menos del 30%</text>
+    <text x="420" y="60" font-size="14">se ve: solo eficiencia operacional</text>
+    <text x="320" y="140" text-anchor="middle" font-size="26" font-weight="800" style="fill:var(--cd)">más del 70%, invisible</text>
+    <text x="320" y="172" text-anchor="middle" font-size="14.5">calidad · nuevas capacidades</text>
+    <text x="320" y="196" text-anchor="middle" font-size="14.5">menos riesgo · ventaja competitiva</text>
+    <text x="560" y="160" class="t-mano" font-size="20" style="fill:#2f6db5">no aparece en los</text>
+    <text x="560" y="184" class="t-mano" font-size="20" style="fill:#2f6db5">tableros de dirección</text>
+  </svg>
+
+  <svg viewBox="0 0 740 190">
+    <rect x="0" y="30" width="250" height="140" rx="10" fill="#eef0f4"/>
+    <text x="125" y="62" text-anchor="middle" font-size="19" font-weight="800">ROI clásico</text>
+    <text x="125" y="90" text-anchor="middle" font-size="14">(beneficio − inversión)</text>
+    <text x="125" y="112" text-anchor="middle" font-size="14">÷ inversión</text>
+    <text x="125" y="140" text-anchor="middle" font-size="11.5" style="fill:#5c6475">pensado para activos físicos</text>
+    <text x="125" y="157" text-anchor="middle" font-size="11.5" style="fill:#5c6475">y procesos predecibles</text>
+    <text x="262" y="18" class="t-mano" font-size="20" font-weight="700" style="fill:#c0392b">no captura bien:</text>
+    <g stroke="#5c6475" stroke-width="1.8" fill="none">
+      <path d="M252,100 C285,100 290,52 326,52" marker-end="url(#m5-fg)"/>
+      <path d="M252,100 L326,108" marker-end="url(#m5-fg)"/>
+      <path d="M252,100 C285,100 290,164 326,164" marker-end="url(#m5-fg)"/>
+    </g>
+    <g stroke-width="1.6" style="stroke:var(--c)" fill="#fff">
+      <rect x="330" y="28" width="410" height="48" rx="8"/>
+      <rect x="330" y="84" width="410" height="48" rx="8"/>
+      <rect x="330" y="140" width="410" height="48" rx="8"/>
+    </g>
+    <text x="344" y="48" font-size="15" font-weight="800" style="fill:var(--c)">Valor diferido</text>
+    <text x="344" y="67" font-size="13">ahorros que llegan meses después del piloto</text>
+    <text x="344" y="104" font-size="15" font-weight="800" style="fill:var(--c)">Valor habilitado</text>
+    <text x="344" y="123" font-size="13">capacidades nuevas que antes no existían</text>
+    <text x="344" y="160" font-size="15" font-weight="800" style="fill:var(--c)">Valor de opción</text>
+    <text x="344" y="179" font-size="13">escalar sin que los costos suban en proporción</text>
+  </svg>
+
+  <div class="fila" style="grid-template-columns:1fr 1fr">
+    <div class="alerta">
+      <p class="mano">más del 40%</p>
+      <p>de los proyectos de IA agentica, cancelados antes de 2027 <span style="color:var(--muted)">(Gartner)</span>. No fallan en lo técnico: <b>no saben explicar su valor</b>.</p>
+    </div>
+    <svg viewBox="0 0 330 120">
+      <text x="0" y="42" font-size="40" font-weight="800" style="fill:var(--c)">4,4 billones</text>
+      <text x="0" y="68" font-size="14">de dólares al año: valor potencial</text>
+      <text x="0" y="88" font-size="14">de la IA generativa, aún sin capturar</text>
+      <text x="0" y="114" class="t-mano" font-size="18" style="fill:#2f6db5">el AIAM cierra esa brecha</text>
+    </svg>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 5 · hoja 1 de 6</span><span>Sección 5.1</span></div>
+</div>
+
+<!-- ============ HOJA 2 ============ -->
+<div class="pag m5">
+  <div>
+    <h3><span class="sec">5.2</span>Los 3 horizontes de valor <span class="fuente">(BCG Henderson Institute)</span></h3>
+    <p>Medir según <b>cuándo</b> se ve el valor y <b>a quién</b> se le cuenta.</p>
+  </div>
+
+  <div>
+    <div class="hz">
+      <div style="margin-top:30mm">
+        <div class="cab" style="background:var(--c2)"><span class="h">H1</span><b>Eficiencia operacional</b><span class="v">0 a 6 meses</span></div>
+        <div class="met">tiempo de ciclo<br>costo por transacción<br>volumen procesado<br>tasa de error<br>horas humanas liberadas
+          <span class="como">se mide: baseline antes vs. después, mismo volumen y complejidad</span></div>
+        <p class="dice">"Lo mismo, mejor, más rápido y más barato."</p>
+      </div>
+      <div style="margin-top:15mm">
+        <div class="cab" style="background:var(--c)"><span class="h">H2</span><b>Calidad y capacidad</b><span class="v">6 a 18 meses</span></div>
+        <div class="met">NPS del cliente final<br>menos escalaciones<br>más volumen, mismo headcount<br>satisfacción del equipo
+          <span class="como">se mide: encuestas, dashboards, headcount vs. output</span></div>
+        <p class="dice">"Más y mejor sin crecer en estructura."</p>
+      </div>
+      <div>
+        <div class="cab" style="background:var(--cd)"><span class="h">H3</span><b>Transformación estratégica</b><span class="v">más de 18 meses</span></div>
+        <div class="met">nuevos servicios<br>market share ganado<br>menor time-to-market<br>retención de talento<br>ventaja competitiva
+          <span class="como">se mide: benchmarks de industria, proyecciones con y sin agentes</span></div>
+        <p class="dice">"Hacemos lo que antes era imposible a este costo."</p>
+      </div>
+    </div>
+    <svg viewBox="0 0 740 40" style="margin-top:3mm">
+      <line x1="0" y1="12" x2="728" y2="12" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m5-fc)"/>
+      <text x="370" y="36" text-anchor="middle" class="t-mano" font-size="20" style="fill:var(--c)">tiempo hasta que el valor se hace visible →</text>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1.1fr 1fr">
+    <div class="alerta">
+      <p class="mano">Error común</p>
+      <p>Mostrar <b>solo H1</b> los primeros 6 meses → la dirección cree que es "solo recorte de costos". Presente <span class="hl">los 3 horizontes desde la primera reunión</span>, aunque H2 y H3 sean proyecciones.</p>
+    </div>
+    <div class="ref">
+      <p class="num">3 veces</p>
+      <p>más continuidad de la inversión si se mide en varios horizontes.</p>
+      <p class="src">BCG Henderson Institute, 2025</p>
+    </div>
+  </div>
+
+  <div class="postit" style="width:70%; margin:0 auto">"La narrativa de valor importa tanto como los números."</div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 5 · hoja 2 de 6</span><span>Sección 5.2</span></div>
+</div>
+
+
+<!-- ============ HOJA 3 ============ -->
+<div class="pag m5">
+  <div>
+    <h3><span class="sec">5.3</span>El Business Case AIAM™</h3>
+    <p>La dirección no quiere saber <b>cómo funciona</b> el agente. Quiere saber:</p>
+  </div>
+
+  <svg viewBox="0 0 740 62">
+    <g stroke-width="1.6" style="stroke:var(--c2)" fill="#fff">
+      <rect x="0" y="6" width="176" height="46" rx="20"/><rect x="188" y="6" width="176" height="46" rx="20"/>
+      <rect x="376" y="6" width="176" height="46" rx="20"/><rect x="564" y="6" width="176" height="46" rx="20"/>
+    </g>
+    <text x="88" y="35" text-anchor="middle" font-size="13">¿qué problema resuelve?</text>
+    <text x="276" y="35" text-anchor="middle" font-size="13">¿cuánto cuesta?</text>
+    <text x="464" y="35" text-anchor="middle" font-size="13">¿cuánto vale?</text>
+    <text x="652" y="35" text-anchor="middle" font-size="13">¿riesgo de no actuar?</text>
+  </svg>
+
+  <svg viewBox="0 0 740 205">
+    <g stroke="#fff" stroke-width="2">
+      <path d="M0,0 H128 L150,35 L128,70 H0 Z" style="fill:var(--cd)"/>
+      <path d="M148,0 H276 L298,35 L276,70 H148 L170,35 Z" style="fill:var(--c)"/>
+      <path d="M296,0 H424 L446,35 L424,70 H296 L318,35 Z" style="fill:var(--c)"/>
+      <path d="M444,0 H572 L594,35 L572,70 H444 L466,35 Z" style="fill:var(--c)"/>
+      <path d="M592,0 H740 V70 H592 L614,35 Z" style="fill:var(--cd)"/>
+    </g>
+    <g font-weight="800" font-size="15" text-anchor="middle">
+      <text x="72" y="41" style="fill:#fff">1 · Baseline</text>
+      <text x="230" y="41" style="fill:#fff">2 · Inversión</text>
+      <text x="378" y="41" style="fill:#fff">3 · Retornos</text>
+      <text x="526" y="41" style="fill:#fff">4 · Riesgos</text>
+      <text x="675" y="41" style="fill:#fff">5 · Próxima fase</text>
+    </g>
+    <g font-size="12.5" text-anchor="middle">
+      <text x="72" y="96">el proceso hoy,</text><text x="72" y="114">sin agentes:</text>
+      <text x="72" y="132">tiempo, costo,</text><text x="72" y="150">calidad, capacidad</text>
+      <text x="230" y="96">costo total,</text><text x="230" y="114">incluidos los</text>
+      <text x="230" y="132">costos ocultos</text>
+      <text x="378" y="96">en los 3</text><text x="378" y="114">horizontes:</text>
+      <text x="378" y="132">primero tiempo,</text><text x="378" y="150">dinero, clientes</text>
+      <text x="526" y="96">probabilidad,</text><text x="526" y="114">impacto y</text>
+      <text x="526" y="132">control de cada uno</text>
+      <text x="675" y="96">escalar, expandir,</text><text x="675" y="114">invertir o pausar</text>
+    </g>
+    <g text-anchor="middle">
+      <text x="72" y="180" class="t-mano" font-size="18" style="fill:#2f6db5">antes del</text><text x="72" y="199" class="t-mano" font-size="18" style="fill:#2f6db5">primer agente</text>
+      <text x="230" y="180" class="t-mano" font-size="18" style="fill:#2f6db5">sea honesto</text>
+      <text x="378" y="180" class="t-mano" font-size="18" style="fill:#2f6db5">luego, cifras</text><text x="378" y="199" class="t-mano" font-size="18" style="fill:#2f6db5">financieras</text>
+      <text x="526" y="180" class="t-mano" font-size="18" style="fill:#2f6db5">= madurez</text><text x="526" y="199" class="t-mano" font-size="18" style="fill:#2f6db5">gerencial</text>
+      <text x="675" y="180" class="t-mano" font-size="18" style="fill:#2f6db5">termina con</text><text x="675" y="199" class="t-mano" font-size="18" style="fill:#2f6db5">una decisión</text>
+    </g>
+  </svg>
+
+  <div class="fila" style="grid-template-columns:1fr 1fr">
+    <div class="postit">Sin baseline documentado, toda mejora es anecdótica.</div>
+    <p class="nota">Costos ocultos: tiempo del equipo en el piloto, errores del agente mientras aprende, ajustes de proceso.</p>
+  </div>
+
+  <div>
+    <h3><span class="sec">5.4</span>Comunicar hacia arriba</h3>
+    <svg viewBox="0 0 740 150">
+      <rect x="0" y="10" width="235" height="110" rx="12" fill="#eef0f4"/>
+      <text x="117" y="40" text-anchor="middle" font-size="16" font-weight="800">Mundo operativo</text>
+      <text x="117" y="66" text-anchor="middle" font-size="13.5">métricas técnicas · logs</text>
+      <text x="117" y="86" text-anchor="middle" font-size="13.5">tasas de completitud</text>
+      <text x="117" y="106" text-anchor="middle" font-size="13.5">tokens procesados</text>
+      <rect x="505" y="10" width="235" height="110" rx="12" stroke-width="2" style="fill:var(--cs); stroke:var(--c)"/>
+      <text x="622" y="40" text-anchor="middle" font-size="16" font-weight="800" style="fill:var(--c)">La dirección</text>
+      <text x="622" y="66" text-anchor="middle" font-size="13.5">rentabilidad · riesgo</text>
+      <text x="622" y="86" text-anchor="middle" font-size="13.5">ventaja competitiva</text>
+      <text x="622" y="106" text-anchor="middle" font-size="13.5">crecimiento</text>
+      <line x1="245" y1="65" x2="495" y2="65" stroke-width="2.5" style="stroke:var(--c)" marker-start="url(#m5-fcs)" marker-end="url(#m5-fc)"/>
+      <circle cx="370" cy="65" r="40" style="fill:var(--c)"/>
+      <text x="370" y="62" text-anchor="middle" font-size="15" font-weight="800" style="fill:#fff">AIAM</text>
+      <text x="370" y="80" text-anchor="middle" font-size="11.5" style="fill:#fff">traduce</text>
+      <text x="370" y="142" text-anchor="middle" class="t-mano" font-size="19" style="fill:#2f6db5">no es comunicación genérica: es una competencia propia del rol</text>
+    </svg>
+  </div>
+
+  <div class="tres">
+    <div><p class="n">1 · Problema</p><p>ancle en el <b>problema de negocio</b> antes de la solución técnica</p></div>
+    <div><p class="n">2 · Unidades</p><p>valor en <b>unidades directivas</b>: dinero, tiempo del cliente, participación de mercado, riesgo regulatorio</p></div>
+    <div><p class="n">3 · Riesgo</p><p><b>anticipe</b>: ¿qué pasa si falla? ¿qué controles hay? ¿quién responde?</p></div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 5 · hoja 3 de 6</span><span>Secciones 5.3 y 5.4</span></div>
+</div>
+
+<!-- ============ HOJA 4 ============ -->
+<div class="pag m5">
+  <div>
+    <h3><span class="sec">5.4</span>Del lenguaje técnico al directivo</h3>
+    <div class="par">
+      <span class="cab" style="color:var(--muted)">Así habla el técnico</span><span></span><span class="cab" style="color:var(--c)">Así lo entiende la dirección</span>
+      <span class="a">"El agente procesa 1.200 solicitudes por día."</span><span class="f">→</span>
+      <span class="b">"Atendemos el <b>triple de clientes</b> sin contratar a nadie más."</span>
+      <span class="a">"Completitud autónoma del 84%, respuesta promedio de 1,3 segundos."</span><span class="f">→</span>
+      <span class="b">"<b>4 de cada 5</b> consultas, sin intervención humana, en menos de 2 segundos. El equipo se dedica al 20% que pide criterio."</span>
+      <span class="a">"3 casos de behavioral drift activaron el circuit breaker y se corrigieron."</span><span class="f">→</span>
+      <span class="b">"Detectamos y corregimos <b>3 anomalías</b> antes de afectar a ningún cliente. El control funciona."</span>
+    </div>
+  </div>
+
+  <svg viewBox="0 0 740 165">
+    <text x="0" y="20" class="t-mano" font-size="23" font-weight="700" style="fill:var(--c)">¿Cada cuánto reportar?</text>
+    <text x="0" y="46" class="t-mano" font-size="18" style="fill:#2f6db5">a la dirección, en ciclos estratégicos: reportar de más agota su atención</text>
+    <line x1="0" y1="74" x2="728" y2="74" stroke-width="2" stroke="#9aa1ae" marker-end="url(#m5-fg)"/>
+    <circle cx="80" cy="74" r="11" fill="#9aa1ae"/>
+    <circle cx="270" cy="74" r="11" style="fill:var(--c2)"/>
+    <circle cx="460" cy="74" r="11" style="fill:var(--c)"/>
+    <path d="M650,60 l7,14 l-7,14 l-7,-14 z" fill="#c0392b"/>
+    <g text-anchor="middle">
+      <text x="80" y="112" font-size="15" font-weight="800">tiempo real</text>
+      <text x="80" y="132" font-size="12.5">dashboards técnicos,</text><text x="80" y="149" font-size="12.5">solo para el AIAM</text>
+      <text x="270" y="112" font-size="15" font-weight="800">mensual</text>
+      <text x="270" y="132" font-size="12.5">proyectos en</text><text x="270" y="149" font-size="12.5">fase piloto</text>
+      <text x="460" y="112" font-size="15" font-weight="800">trimestral</text>
+      <text x="460" y="132" font-size="12.5">operación</text><text x="460" y="149" font-size="12.5">estable</text>
+      <text x="650" y="112" font-size="15" font-weight="800">puntual</text>
+      <text x="650" y="132" font-size="12.5">incidencias graves</text><text x="650" y="149" font-size="12.5">o hitos de escala</text>
+    </g>
+  </svg>
+
+  <div class="ref">
+    <p><span class="num" style="font-size:24pt">40%</span>&nbsp; de quienes hoy pilotan agentes los habrán cancelado para 2027: no supieron explicar el retorno estratégico.</p>
+    <p style="margin-top:1.5mm"><span class="hl">La gobernanza del valor es tan crítica como la gobernanza técnica.</span> <span class="src">Gartner, Predicts 2025</span></p>
+  </div>
+
+  <div>
+    <h3><span class="sec">5.5</span>Del piloto a la plataforma</h3>
+    <div class="fila" style="grid-template-columns:1.3fr 1fr">
+      <svg viewBox="0 0 440 120">
+        <rect x="0" y="30" width="110" height="60" rx="10" fill="#eef0f4"/>
+        <text x="55" y="56" text-anchor="middle" font-size="14" font-weight="800">piloto</text>
+        <text x="55" y="76" text-anchor="middle" font-size="12">8 personas</text>
+        <line x1="116" y1="60" x2="226" y2="60" stroke-width="2" stroke-dasharray="6 4" stroke="#c0392b" marker-end="url(#m5-fg)"/>
+        <text x="171" y="48" text-anchor="middle" font-size="22" font-weight="800" style="fill:#c0392b">≠</text>
+        <g style="fill:var(--c2)">
+          <rect x="236" y="4" width="34" height="24" rx="4"/><rect x="276" y="4" width="34" height="24" rx="4"/><rect x="316" y="4" width="34" height="24" rx="4"/><rect x="356" y="4" width="34" height="24" rx="4"/><rect x="396" y="4" width="34" height="24" rx="4"/>
+          <rect x="236" y="34" width="34" height="24" rx="4"/><rect x="276" y="34" width="34" height="24" rx="4"/><rect x="316" y="34" width="34" height="24" rx="4"/><rect x="356" y="34" width="34" height="24" rx="4"/><rect x="396" y="34" width="34" height="24" rx="4"/>
+          <rect x="236" y="64" width="34" height="24" rx="4"/><rect x="276" y="64" width="34" height="24" rx="4"/><rect x="316" y="64" width="34" height="24" rx="4"/><rect x="356" y="64" width="34" height="24" rx="4"/><rect x="396" y="64" width="34" height="24" rx="4"/>
+        </g>
+        <text x="333" y="112" text-anchor="middle" font-size="13">50 equipos, varios países</text>
+      </svg>
+      <p class="nota">Un piloto exitoso no garantiza la escala: la escala es <b>otra iniciativa</b>, no su extensión automática.</p>
+    </div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 5 · hoja 4 de 6</span><span>Secciones 5.4 y 5.5</span></div>
+</div>
+
+<!-- ============ HOJA 5 ============ -->
+<div class="pag m5">
+  <div>
+    <h3><span class="sec">5.5</span>Las 4 condiciones para escalar</h3>
+    <svg viewBox="0 0 740 265">
+      <path d="M20,62 L370,8 L720,62 Z" stroke-width="2" style="fill:var(--c); stroke:var(--cd)"/>
+      <text x="370" y="52" text-anchor="middle" font-size="18" font-weight="800" style="fill:#fff">Escala sostenible</text>
+      <g stroke-width="1.6" style="fill:var(--cs); stroke:var(--c)">
+        <rect x="40" y="68" width="150" height="132"/><rect x="215" y="68" width="150" height="132"/>
+        <rect x="390" y="68" width="150" height="132"/><rect x="565" y="68" width="150" height="132"/>
+      </g>
+      <g text-anchor="middle">
+        <text x="115" y="96" font-size="24" font-weight="800" style="fill:var(--c)">1</text>
+        <text x="115" y="120" font-size="14" font-weight="800">Gobernanza</text>
+        <text x="115" y="146" font-size="12">junta activa,</text><text x="115" y="163" font-size="12">roles y criterios</text>
+        <text x="115" y="186" class="t-mano" font-size="16" style="fill:#2f6db5">antes de escalar</text>
+        <text x="290" y="96" font-size="24" font-weight="800" style="fill:var(--c)">2</text>
+        <text x="290" y="120" font-size="14" font-weight="800">Datos de calidad</text>
+        <text x="290" y="146" font-size="12">igual o mejor</text><text x="290" y="163" font-size="12">que en el piloto</text>
+        <text x="290" y="186" class="t-mano" font-size="16" style="fill:#2f6db5">auditar antes</text>
+        <text x="465" y="96" font-size="24" font-weight="800" style="fill:var(--c)">3</text>
+        <text x="465" y="120" font-size="14" font-weight="800">Equipo habilitado</text>
+        <text x="465" y="146" font-size="12">roles asignados</text><text x="465" y="163" font-size="12">y formados</text>
+        <text x="465" y="186" class="t-mano" font-size="16" style="fill:#2f6db5">si no: sobre-dependencia</text>
+        <text x="640" y="96" font-size="24" font-weight="800" style="fill:var(--c)">4</text>
+        <text x="640" y="120" font-size="14" font-weight="800">Métricas de escala</text>
+        <text x="640" y="146" font-size="12">consistencia, variación,</text><text x="640" y="163" font-size="12">adopción, costo marginal</text>
+        <text x="640" y="186" class="t-mano" font-size="16" style="fill:#2f6db5">distintas del piloto</text>
+      </g>
+      <rect x="20" y="200" width="700" height="12" style="fill:var(--cd)"/>
+      <text x="370" y="240" text-anchor="middle" font-size="13.5" style="fill:#c0392b"><tspan font-weight="800">Si falta una:</tspan> agent sprawl · fallos silenciosos en cascada · desconfianza</text>
+      <text x="370" y="260" text-anchor="middle" font-size="12" style="fill:#5c6475">roles de la junta de gobierno: Agent Owners · Ethics Reviewers · AIAM™</text>
+    </svg>
+  </div>
+
+  <div>
+    <h3><span class="sec">5.5</span>Modelo de madurez agentic</h3>
+    <svg viewBox="0 0 740 300">
+      <rect x="0" y="190" width="235" height="110" style="fill:var(--c2)"/>
+      <rect x="252" y="120" width="235" height="180" style="fill:var(--c)"/>
+      <rect x="504" y="50" width="236" height="250" style="fill:var(--cd)"/>
+      <g text-anchor="middle">
+        <text x="117" y="215" font-size="12" font-weight="800" style="fill:#fff">NIVEL 1</text>
+        <text x="117" y="236" font-size="17" font-weight="800" style="fill:#fff">Exploración</text>
+        <text x="117" y="260" font-size="12.5" style="fill:#fff">pilotos aislados,</text>
+        <text x="117" y="278" font-size="12.5" style="fill:#fff">owner informal</text>
+        <text x="369" y="145" font-size="12" font-weight="800" style="fill:#fff">NIVEL 2</text>
+        <text x="369" y="166" font-size="17" font-weight="800" style="fill:#fff">Escala Controlada</text>
+        <text x="369" y="192" font-size="12.5" style="fill:#fff">dueños asignados,</text>
+        <text x="369" y="210" font-size="12.5" style="fill:#fff">taxonomías, business cases,</text>
+        <text x="369" y="228" font-size="12.5" style="fill:#fff">métricas de 3 horizontes</text>
+        <text x="622" y="75" font-size="12" font-weight="800" style="fill:#fff">NIVEL 3</text>
+        <text x="622" y="96" font-size="17" font-weight="800" style="fill:#fff">Plataforma Estratégica</text>
+        <text x="622" y="122" font-size="12.5" style="fill:#fff">agentes como portafolio,</text>
+        <text x="622" y="140" font-size="12.5" style="fill:#fff">función de AI Management,</text>
+        <text x="622" y="158" font-size="12.5" style="fill:#fff">nuevos modelos de negocio</text>
+      </g>
+      <path d="M60,182 Q70,124 244,130" fill="none" stroke-width="2" style="stroke:var(--c)" marker-end="url(#m5-fc)"/>
+      <path d="M312,112 Q322,54 496,60" fill="none" stroke-width="2" style="stroke:var(--c)" marker-end="url(#m5-fc)"/>
+      <text x="0" y="100" font-size="12.5" font-weight="800" style="fill:var(--c)">AIAMs formales +</text>
+      <text x="0" y="117" font-size="12.5" font-weight="800" style="fill:var(--c)">Junta de Gobierno Agentic</text>
+      <text x="252" y="30" font-size="12.5" font-weight="800" style="fill:var(--c)">plataforma unificada + datos</text>
+      <text x="252" y="47" font-size="12.5" font-weight="800" style="fill:var(--c)">estándar + revisión trimestral</text>
+      <text x="0" y="20" class="t-mano" font-size="19" style="fill:#2f6db5">flecha = palanca para subir</text>
+    </svg>
+    <div class="tres" style="margin-top:3mm; gap:4mm">
+      <div><p class="mano" style="font-size:16pt; color:var(--red)">se estanca si hay…</p><p style="font-size:9pt">agentes duplicados, datos no comparables, mucha resistencia cultural</p></div>
+      <div><p class="mano" style="font-size:16pt; color:var(--red)">se estanca si hay…</p><p style="font-size:9pt">equipos inconsistentes, mantenimiento cada vez más caro, cuesta mostrar H3</p></div>
+      <div><p class="mano" style="font-size:16pt; color:var(--red)">se estanca si hay…</p><p style="font-size:9pt">dificultad para innovar sin romper lo que funciona, dependencia de agentes críticos</p>
+        <p class="nota" style="font-size:14pt; margin-top:1mm">palanca: programa de innovación con recursos propios + redundancia</p></div>
+    </div>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 5 · hoja 5 de 6</span><span>Sección 5.5</span></div>
+</div>
+
+<!-- ============ HOJA 6 ============ -->
+<div class="pag m5" style="gap:5mm">
+  <div>
+    <h3><span class="sec">5.5</span>Caso real: UPS ORION <span class="fuente">(rutas de entrega)</span></h3>
+    <svg viewBox="0 0 740 250">
+      <line x1="0" y1="40" x2="728" y2="40" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m5-fc)"/>
+      <circle cx="20" cy="40" r="9" style="fill:var(--c)"/>
+      <text x="0" y="20" font-size="15" font-weight="800">2003 · piloto</text>
+      <text x="370" y="28" text-anchor="middle" class="t-mano" font-size="20" style="fill:#2f6db5">10 años midiendo y contando el valor</text>
+      <text x="740" y="20" text-anchor="end" font-size="15" font-weight="800">escala completa</text>
+      <text x="0" y="78" font-size="14">55.000 rutas en EE. UU. · 120 millas diarias por conductor</text>
+      <text x="0" y="100" font-size="14"><tspan font-weight="800">1 milla menos</tspan> por conductor al día = <tspan font-weight="800">50 millones de dólares</tspan> al año</text>
+      <rect x="0" y="120" width="235" height="56" rx="8" style="fill:var(--c2)"/>
+      <rect x="252" y="120" width="235" height="56" rx="8" style="fill:var(--c)"/>
+      <rect x="504" y="120" width="236" height="56" rx="8" style="fill:var(--cd)"/>
+      <g text-anchor="middle">
+        <text x="117" y="143" font-size="14" font-weight="800" style="fill:#fff">H1 · menos costo</text>
+        <text x="117" y="163" font-size="12.5" style="fill:#fff">por milla</text>
+        <text x="369" y="143" font-size="14" font-weight="800" style="fill:#fff">H2 · menos CO₂</text>
+        <text x="369" y="163" font-size="12.5" style="fill:#fff">ventaja regulatoria y de imagen</text>
+        <text x="622" y="143" font-size="14" font-weight="800" style="fill:#fff">H3 · 15% más volumen</text>
+        <text x="622" y="163" font-size="12.5" style="fill:#fff">sin más flota</text>
+      </g>
+      <text x="0" y="214" font-size="30" font-weight="800" style="fill:var(--c)">100 M millas</text>
+      <text x="0" y="238" font-size="13">menos al año</text>
+      <text x="252" y="214" font-size="30" font-weight="800" style="fill:#2e7d4f">400 M USD</text>
+      <text x="252" y="238" font-size="13">de ahorro directo al año</text>
+      <text x="504" y="214" font-size="30" font-weight="800" style="fill:#2e7d4f">100.000 t</text>
+      <text x="504" y="238" font-size="13">de CO₂ menos al año</text>
+    </svg>
+  </div>
+
+  <div class="fila" style="grid-template-columns:1fr 1.25fr">
+    <p style="font-size:11pt; line-height:1.5">el agente <b>recomienda</b><br>el conductor <b>decide</b> <span style="color:var(--muted)">(puede desviarse)</span></p>
+    <div class="postit" style="transform:rotate(1deg)">Éxito gerencial, no tecnológico: manda la calidad del management, no la del algoritmo.</div>
+  </div>
+
+  <div>
+    <h3><span class="sec">5.6</span>El futuro del rol</h3>
+    <svg viewBox="0 0 740 125">
+      <line x1="0" y1="20" x2="728" y2="20" stroke-width="2.5" style="stroke:var(--c)" marker-end="url(#m5-fc)"/>
+      <circle cx="110" cy="20" r="9" style="fill:var(--c2)"/><circle cx="370" cy="20" r="9" style="fill:var(--c)"/><circle cx="630" cy="20" r="9" style="fill:var(--cd)"/>
+      <g text-anchor="middle">
+        <text x="110" y="52" font-size="14" font-weight="800">12 a 24 meses</text>
+        <text x="110" y="74" font-size="12.5">el puente entre IA</text><text x="110" y="92" font-size="12.5">y negocio</text>
+        <text x="370" y="52" font-size="14" font-weight="800">2 a 5 años</text>
+        <text x="370" y="74" font-size="12.5">especialidades: operaciones,</text><text x="370" y="92" font-size="12.5">finanzas, RRHH, ventas</text>
+        <text x="630" y="52" font-size="14" font-weight="800">largo plazo</text>
+        <text x="630" y="74" font-size="12.5">parte de toda la gerencia,</text><text x="630" y="92" font-size="12.5">como datos o talento</text>
+      </g>
+      <text x="370" y="120" text-anchor="middle" class="t-mano" font-size="20" style="fill:#2f6db5">lo que no cambia: los agentes necesitan un manager… y ese manager eres tú</text>
+    </svg>
+  </div>
+
+  <div class="glosario">
+    <h4>Siglas y términos en inglés</h4>
+    <p class="aviso">Explicaciones breves para repasar; varias no vienen en el curso.</p>
+    <dl>
+      <dt>ROI</dt><dd>Return on Investment: retorno de la inversión</dd>
+      <dt>BCG</dt><dd>Boston Consulting Group, consultora</dd>
+      <dt>NPS</dt><dd>Net Promoter Score: índice de recomendación</dd>
+      <dt>baseline</dt><dd>línea base: medición antes del agente</dd>
+      <dt>business case</dt><dd>caso de negocio para la inversión</dd>
+      <dt>headcount</dt><dd>número de personas en plantilla</dd>
+      <dt>output</dt><dd>lo que se produce o entrega</dd>
+      <dt>market share</dt><dd>participación de mercado</dd>
+      <dt>time-to-market</dt><dd>tiempo hasta llegar al mercado</dd>
+      <dt>benchmark</dt><dd>referencia del sector para comparar</dd>
+      <dt>dashboard</dt><dd>tablero de indicadores</dd>
+      <dt>logs</dt><dd>registro de lo que hizo el agente</dd>
+      <dt>tokens</dt><dd>trocitos de texto que procesa la IA</dd>
+      <dt>behavioral drift</dt><dd>deriva: se aleja de sus instrucciones</dd>
+      <dt>circuit breaker</dt><dd>freno automático del agente</dd>
+      <dt>agent sprawl</dt><dd>agentes sin dueño ni gobierno</dd>
+      <dt>owner</dt><dd>dueño; Agent Owner: dueño del agente</dd>
+      <dt>Ethics Reviewer</dt><dd>revisor de ética de los agentes</dd>
+      <dt>AI Management</dt><dd>función que gestiona los agentes</dd>
+      <dt>management</dt><dd>gestión, dirección</dd>
+      <dt>ORION</dt><dd>On-Road Integrated Optimization and Navigation</dd>
+      <dt>UPS</dt><dd>United Parcel Service (envíos)</dd>
+      <dt>M · USD</dt><dd>millones · dólares estadounidenses</dd>
+      <dt>RRHH</dt><dd>recursos humanos</dd>
+    </dl>
+  </div>
+
+  <div class="pie"><span>AIAM™ · Apuntes del Módulo 5 · hoja 6 de 6</span><span>Secciones 5.5 y 5.6 · términos</span></div>
+</div>
+
+</body></html>

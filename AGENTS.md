@@ -111,6 +111,17 @@ Hay tres archivos de gestión y cada uno tiene un propósito distinto. Todos se 
 
 No se guarda información del proyecto fuera de la carpeta (por ejemplo, en la memoria interna del agente): todo lo que deba persistir va en estos tres archivos, para que la carpeta pueda moverse o copiarse sin perder nada. Las fechas se escriben en formato absoluto (AAAA-MM-DD).
 
+## Apuntes visuales impresos
+
+Además del documento para escuchar, el usuario repasa con apuntes impresos en `estudio/apuntes/`. No son parte del documento que se escucha; son hojas A4 para leer en papel, al estilo de apuntes de clase.
+
+1. **Fuente y generación:** cada módulo es un archivo `estudio/apuntes/fuente/apuntes-mN.html` con hojas `<div class="pag mN">` y estilos comunes en `apuntes.css`. El script `estudio/apuntes/generar.py` crea `apuntes-modulo-N.pdf` y `apuntes-completos.pdf`, y avisa si alguna hoja se desborda. Con `--modulo N --png carpeta` genera un solo módulo y una imagen por hoja para revisarla.
+2. **Poco texto:** palabras clave y frases cortas, diagramas grandes y espacio en blanco. Cada hoja queda entre el 60% y el 90% llena. El usuario pidió explícitamente que no se vean aplastantes.
+3. **Diagramas antes que texto:** cada sección numerada lleva al menos un elemento visual (escalera, ciclo, árbol de decisión, comparación, mapa de conceptos, cifra grande, nota adhesiva). Letra manuscrita (Caveat) para títulos y notas; Inter para el resto.
+4. **Contenido:** se cubren todas las secciones numeradas, las cifras clave con su fuente y el caso real de cada módulo. Se omiten el checklist, las responsabilidades, la reflexión estratégica y las preguntas de validación. No se inventa nada: todo dato sale de `estudio/AI-Agent-Manager.md`.
+5. **Siglas y términos en inglés:** el usuario no conoce toda la jerga (preguntó qué es RPA). Cada módulo termina con un recuadro “Siglas y términos en inglés” que explica en una línea cada término usado, con el aviso de que varias explicaciones no vienen en el curso. Junto a un término difícil dentro de un diagrama se puede poner una aclaración corta en gris.
+6. **Técnica:** las flechas (`<marker>`) llevan color en hexadecimal e id con prefijo del módulo (`m2-fc`), porque los cinco módulos se unen en un solo PDF. El CSS propio de un módulo va dentro de `<body>` con selectores que empiezan por `.mN`.
+
 ## Flujo de trabajo de los agentes
 
 - Cada agente procesa **un módulo completo** y escribe su resultado en `<scratchpad>/out/moduloN.md` (empezando por el encabezado `## Módulo N. …`).
@@ -133,3 +144,4 @@ No se guarda información del proyecto fuera de la carpeta (por ejemplo, en la m
 - 2026-11-17 — Revisión de consistencia: regla adicional 13 movida a su lugar; reglas de formato 1 y 5 alineadas (“Preguntas de validación” va como `###`). En `AI-Agent-Manager.md` se unificaron los encabezados “Preguntas de validación” de los cinco módulos y el de responsabilidades del Módulo 2, según el PDF.
 - 2026-11-17 — Decisión del usuario: el documento convertido se movió de la raíz a la carpeta `estudio/` (`estudio/AI-Agent-Manager.md`).
 - 2026-11-17 — Nueva regla del usuario: `estudio/` es la carpeta de todos los archivos generados a partir del curso; la raíz queda solo para el PDF y los archivos de gestión.
+- 2026-11-17 — Nueva sección “Apuntes visuales impresos”: apuntes A4 por módulo en `estudio/apuntes/`, con poco texto, diagramas y un recuadro final de siglas y términos en inglés. Nueva entrada del Glosario: RPA.
