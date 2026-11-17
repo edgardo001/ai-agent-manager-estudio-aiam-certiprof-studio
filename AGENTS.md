@@ -8,7 +8,7 @@ Convertir `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (programa
 
 ## Contexto del usuario
 
-El usuario estudia este material escuchándolo con un programa text-to-speech; por eso el documento debe leerse bien en voz alta. Quiere poder buscar rápido los términos que no conoce: antes de responder cualquier consulta sobre el contenido, lee la sección “Preguntas del usuario: Preguntas frecuentes y Glosario” de este archivo y sigue su formato. El Glosario ya existe al final de `estudio/AI-Agent-Manager.md` (primera entrada: Accountability).
+El usuario estudia este material escuchándolo con un programa text-to-speech; por eso el documento debe leerse bien en voz alta. Quiere poder buscar rápido los términos y dudas que va consultando: antes de responder cualquier consulta sobre el contenido, lee la sección “Preguntas del usuario: Preguntas frecuentes y Glosario” de este archivo y sigue su formato y su largo estándar.
 
 ## Fuentes de trabajo
 
@@ -90,12 +90,17 @@ Nota: las rutas de abajo eran temporales (carpeta scratchpad de una sesión) y p
 
 ## Preguntas del usuario: Preguntas frecuentes y Glosario
 
-Cuando el usuario haga una pregunta sobre el contenido, la respuesta se responde en la conversación **y además** se agrega al final de `estudio/AI-Agent-Manager.md`, después del Módulo 5, en una de estas dos secciones:
+Cuando el usuario haga una pregunta sobre el contenido, se responde en la conversación **y además** se agrega a uno de estos dos archivos independientes (no al documento del curso):
 
-1. **`## Glosario`**: cuando la consulta es por una palabra, sigla o término específico (p. ej. “¿qué es agent sprawl?”, “¿qué significa CSAT?”). Cada entrada lleva el término como encabezado `### <Término>` seguido de un párrafo con la definición en español claro. Si el término aparece en el documento, se indica en qué módulo y sección (“Aparece en el Módulo 2, sección 2.7”). Las entradas se mantienen **en orden alfabético** para encontrarlas rápido.
-2. **`## Preguntas frecuentes`**: cuando la consulta es una pregunta conceptual o de comprensión (p. ej. “¿cuál es la diferencia entre un chatbot y un agente?”). Cada entrada lleva la pregunta como encabezado `### <Pregunta>` seguida de la respuesta en párrafos. Las entradas se agregan en el orden en que el usuario las hace.
+1. **`estudio/glosario.md`**: cuando la consulta es por una palabra, sigla o término específico (p. ej. “¿qué es agent sprawl?”). Cada entrada lleva el término como encabezado `## <Término>`. Las entradas se mantienen **en orden alfabético**.
+2. **`estudio/preguntas-frecuentes.md`**: cuando la consulta es conceptual o de comprensión (p. ej. “¿cuál es la diferencia entre un chatbot y un agente?”). Cada entrada lleva la pregunta como encabezado `## <Pregunta>`. Se agregan en el orden en que el usuario las hace.
 
-Orden de las secciones finales: primero “Preguntas frecuentes” y después “Glosario”. Las secciones solo se crean cuando existe la primera entrada (no se dejan secciones vacías). Las respuestas siguen las mismas reglas de formato del documento: solo encabezados y párrafos, sin tablas, viñetas ni emojis, y con números y símbolos escritos para voz. Si la respuesta usa información externa al PDF, se indica explícitamente (“Esto no aparece en el documento original: …”), para no confundirla con el contenido del curso. Si un término ya está en el Glosario, se amplía su entrada en vez de duplicarla.
+**Largo estándar (decisión del usuario):**
+- **Glosario, entre 80 y 120 palabras, un párrafo:** qué es (sigla completa y traducción), para qué sirve en el curso con un dato o ejemplo, y dónde aparece (módulo y sección principal, sin listar todo).
+- **Preguntas frecuentes, entre 150 y 250 palabras, dos o tres párrafos:** respuesta directa en una o dos oraciones; de tres a cinco ideas clave, una oración cada una (“Primero…, segundo…”); un ejemplo o cifra del curso; y dónde profundizar.
+- Si una consulta mezcla término y “cómo se hace”, la respuesta va en Preguntas frecuentes y el Glosario lleva una entrada corta que remite a ella.
+
+Las respuestas siguen las mismas reglas de formato del documento: solo encabezados y párrafos, sin tablas, viñetas ni emojis, y con números y símbolos escritos para voz. Si la respuesta usa información externa al PDF, se indica explícitamente con una frase corta (“esto no viene en el curso”), para no confundirla con el contenido del curso. Si un término ya está en el Glosario, se amplía su entrada en vez de duplicarla.
 
 ## Mantenimiento de los archivos del proyecto
 
@@ -147,4 +152,5 @@ Además del documento para escuchar, el usuario repasa con apuntes impresos en `
 - 2026-11-17 — Decisión del usuario: el documento convertido se movió de la raíz a la carpeta `estudio/` (`estudio/AI-Agent-Manager.md`).
 - 2026-11-17 — Nueva regla del usuario: `estudio/` es la carpeta de todos los archivos generados a partir del curso; la raíz queda solo para el PDF y los archivos de gestión.
 - 2026-11-17 — Nueva sección “Apuntes visuales impresos”: apuntes A4 por módulo en `estudio/apuntes/`, con poco texto, diagramas y un recuadro final de siglas y términos en inglés. Nueva entrada del Glosario: RPA.
-- 2026-11-17 — Nueva regla del usuario: `AGENTS.md`, `MEMORY.md` y `README.md` no superan las 200 líneas; si pasan el límite, se podan resumiendo sin perder lo importante.
+- 2026-11-17 — Nueva regla del usuario: `AGENTS.md`, `MEMORY.md` y `README.md` no superan las 200 líneas; si pasan el límite, se podan resumiendo sin perder lo importante. Primera pregunta en “Preguntas frecuentes” (¿Qué es un AI Agent Manager?) y nueva entrada del Glosario: C-suite.
+- 2026-11-17 — Decisión del usuario: Preguntas frecuentes y Glosario pasan a archivos independientes (`estudio/preguntas-frecuentes.md` y `estudio/glosario.md`) y se fija su largo estándar (80 a 120 palabras por término; 150 a 250 por pregunta). Las 13 entradas existentes se reescribieron con ese estándar.

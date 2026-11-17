@@ -7,6 +7,8 @@ Versión en prosa del curso **AI Agent Manager (AIAM™)** de Certiprof, prepara
 - `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`: el material original del curso (97 páginas, 5 módulos).
 - `estudio/`: la carpeta de los archivos generados a partir del curso. Por ahora contiene:
   - `estudio/AI-Agent-Manager.md`: el documento convertido, listo para escuchar. Es el archivo principal de estudio.
+  - `estudio/preguntas-frecuentes.md`: respuestas a las dudas de comprensión del usuario, en el orden en que las hizo.
+  - `estudio/glosario.md`: siglas y términos consultados, en orden alfabético.
   - `estudio/apuntes/`: apuntes visuales para imprimir y repasar, una serie de hojas A4 por módulo con diagramas y poco texto (`apuntes-modulo-N.pdf` y `apuntes-completos.pdf`). Se regeneran con `python estudio/apuntes/generar.py`, que necesita Chrome o Edge.
 - `AGENTS.md`: las reglas de conversión y de mantenimiento que debe seguir cualquier agente de IA que trabaje en este repositorio.
 - `MEMORY.md`: la memoria del proyecto: contexto, decisiones tomadas, estado actual, consultas realizadas y pendientes.
@@ -21,8 +23,6 @@ Sigue la misma estructura y numeración del PDF:
 - Módulo 3. Supervisión, Auditoría y Performance del Agente
 - Módulo 4. Rediseño de Procesos: Equipos Híbridos Humanos + Agentes
 - Módulo 5. Impacto al Negocio: Medir, Comunicar y Escalar Resultados
-- Preguntas frecuentes (se crea con la primera pregunta conceptual)
-- Glosario (términos consultados, en orden alfabético)
 
 Cada módulo incluye su objetivo de aprendizaje, todas las secciones, los casos reales, el checklist de competencias, las responsabilidades del AIAM™, la reflexión estratégica y las 10 preguntas de validación (solo la pregunta, la respuesta correcta y por qué es correcta).
 
@@ -38,7 +38,7 @@ El detalle completo de las reglas está en `AGENTS.md`.
 ## Cómo usarlo
 
 1. Abrir `estudio/AI-Agent-Manager.md` en el lector text-to-speech de preferencia.
-2. Cuando aparezca un término o una duda, preguntarle al agente de IA. La respuesta se agrega al final del documento, en “Glosario” o en “Preguntas frecuentes”, para poder volver a buscarla.
+2. Cuando aparezca un término o una duda, preguntarle al agente de IA. La respuesta se agrega a `estudio/glosario.md` (términos) o a `estudio/preguntas-frecuentes.md` (dudas de comprensión), con un largo pensado para escucharla en uno o dos minutos.
 
 ## Mantenimiento
 

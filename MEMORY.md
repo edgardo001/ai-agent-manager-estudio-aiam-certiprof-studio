@@ -6,7 +6,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 
 - Estudia el curso AI Agent Manager (AIAM™) de Certiprof escuchándolo con un lector text-to-speech.
 - Necesita que nada del contenido se pierda: todo concepto, cifra, fuente y ejemplo debe estar en el documento.
-- Quiere buscar rápido los términos y dudas que va consultando; por eso las respuestas se agregan al final del documento (Glosario y Preguntas frecuentes).
+- Quiere buscar rápido los términos y dudas que va consultando; por eso las respuestas se guardan en `estudio/glosario.md` y `estudio/preguntas-frecuentes.md`. Las prefiere breves: ni poco ni mucho texto.
 - Escribe en español; todas las respuestas y documentos van en español con tildes correctas.
 - Prefiere que se le consulte cuando hay dudas reales, en lugar de suponer.
 
@@ -17,7 +17,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — Se omiten la portada (página 1) y el cierre y las páginas de Certiprof (páginas 93 a 97).
 - 2026-11-17 — El archivo final se llama `AI-Agent-Manager.md` y está en la carpeta `estudio/`, no en la raíz del repositorio (decisión del usuario). La carpeta `estudio/` irá acumulando todos los archivos que se generen a partir del curso.
 - 2026-11-17 — Se corrigen erratas evidentes del PDF y se traducen al español las oraciones completas que habían quedado en inglés (inicio de la sección 4.3); los términos técnicos en inglés se mantienen. El usuario puede pedir restaurar el original en inglés.
-- 2026-11-17 — Las preguntas del usuario se agregan al final del documento: “Preguntas frecuentes” para dudas conceptuales y “Glosario” para términos, en orden alfabético.
+- 2026-11-17 — Las consultas del usuario se guardan en archivos propios: `estudio/preguntas-frecuentes.md` (dudas conceptuales) y `estudio/glosario.md` (términos, en orden alfabético). Antes estaban al final del documento del curso. Largo estándar: de 80 a 120 palabras por término y de 150 a 250 por pregunta, porque las primeras respuestas le resultaron demasiado largas.
 - 2026-11-17 — Se crean `README.md` y `MEMORY.md`, que junto con `AGENTS.md` se mantienen actualizados.
 - 2026-11-17 — Los commits de git (y las descripciones de pull requests) no llevan firmas de agentes, y no se menciona el nombre del asistente de IA en ninguna parte del proyecto. Regla registrada en `AGENTS.md`.
 - 2026-11-17 — El usuario renombró el PDF fuente: ahora se llama `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (antes `document.pdf`).
@@ -28,15 +28,24 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 
 ## Estado actual
 
-- `estudio/AI-Agent-Manager.md` completo: 5 módulos, unas 26.800 palabras (con el Glosario), 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
+- `estudio/AI-Agent-Manager.md` completo: 5 módulos, unas 26.500 palabras, 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Termina en el Módulo 5. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
 - Proceso usado: un agente por módulo para la conversión y una segunda pasada de auditoría por módulo contra el PDF, página por página.
-- Secciones finales: existe “Glosario”; “Preguntas frecuentes” aún no existe (se crea con la primera pregunta conceptual).
+- `estudio/preguntas-frecuentes.md`: 5 preguntas. `estudio/glosario.md`: 8 términos (Accountability, Audit trail, C-suite, CSAT, Onboarding agentic, PwC, RPA y SOP).
 - Apuntes visuales en `estudio/apuntes/` completos: 28 hojas A4 (Módulo 1, 4 hojas; módulos 2 a 5, 6 hojas cada uno), cada módulo con su recuadro de siglas y términos en inglés. Hay un PDF por módulo y `apuntes-completos.pdf`. Subidos a GitHub el 2026-11-17; `estudio/fichas/` queda fuera del repositorio por ahora.
 
 ## Consultas del usuario
 
 - 2026-11-17 — “Accountability” (a raíz de “accountability principal”, Módulo 1, sección 1.2). Agregado al Glosario.
 - 2026-11-17 — “RPA” (Módulo 1, sección 1.2, comparación entre RPA, chatbot y agente). Agregado al Glosario.
+- 2026-11-17 — “C-suite” (aparece en los módulos 1, 2 y 3). Agregado al Glosario.
+- 2026-11-17 — “¿Qué es un AI Agent Manager?”. Pregunta conceptual: con ella se creó la sección “Preguntas frecuentes”.
+- 2026-11-17 — “¿Cómo traduzco objetivos en gobernanza de agentes?”. Agregada a Preguntas frecuentes (seis pasos, con el ejemplo de soporte B2B de la sección 2.5).
+- 2026-11-17 — “PwC” (fuente citada en el Módulo 1, sección 1.4). Agregado al Glosario.
+- 2026-11-17 — “Necesito ejemplos de métricas de valor”. Agregada a Preguntas frecuentes (KPI set de 3.2, ejemplo de 2.5, horizontes de 5.2, capas de 4.6, casos reales y traducción de 5.4).
+- 2026-11-17 — “CSAT” (métrica de satisfacción del cliente, módulos 2 y 3). Agregado al Glosario.
+- 2026-11-17 — “¿Qué es un audit trail? ¿Cómo se hace, cómo se ejecuta?”. Respuesta completa en Preguntas frecuentes y entrada corta en el Glosario que remite a ella. Gran parte del “cómo” es práctica general y está marcada como externa al curso.
+- 2026-11-17 — “¿Cómo hago gestión estratégica?”. Agregada a Preguntas frecuentes: siete prácticas que sintetizan los cinco módulos (síntesis marcada como propia).
+- 2026-11-17 — “Onboarding agentic” y “SOP”. Agregados al Glosario.
 
 ## Pendientes y temas abiertos
 
