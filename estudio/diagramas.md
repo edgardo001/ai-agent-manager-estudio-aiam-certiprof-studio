@@ -61,3 +61,48 @@ flowchart TD
 ```
 
 Cómo leerlo en clave n8n: el disparador es el nodo que inicia el flujo; el agente de IA es el nodo AI Agent, con sus instrucciones como mensaje de sistema; el CRM y la base de conocimiento son sus herramientas, y no se le conecta ninguna otra, por los permisos mínimos; las restricciones y el escalamiento son nodos de condición, como IF o Switch; y el audit trail es un nodo que guarda cada ejecución. Lo que n8n no hace solo es lo de los bloques 1 y 3: diseñar, validar y supervisar, que es el trabajo del AI Agent Manager.
+
+## Caso real UPS ORION, visto como un flujo de n8n
+
+Muestra el caso UPS ORION de la sección 5.5: un agente que optimiza rutas de entrega, donde el agente recomienda y el conductor decide. A diferencia del ejemplo anterior, aquí el humano no interviene solo por excepción, sino en cada ruta. La forma de flujo de n8n no viene en el curso: es una analogía para entenderlo.
+
+```mermaid
+flowchart TD
+    subgraph ESC["1 · Del piloto a la escala, sección 5.5"]
+        P["Piloto de medición de rutas, 2003<br/>1 milla menos por conductor al día = 50 M USD al año"]
+        C{{"4 condiciones de escala<br/>gobernanza clara · datos de calidad<br/>equipos habilitados · métricas de consistencia"}}
+        S["Escala completa en 10 años<br/>55.000 rutas en EE. UU."]
+        P --> C
+        C -- "se cumplen" --> S
+    end
+
+    subgraph FLUJO["2 · Cada ruta, cada día: el flujo tipo n8n"]
+        T(["Disparador<br/>inicio de la jornada o cambio de condición"])
+        D[["Datos: rutas, clima y volumen"]]
+        A["Nodo agente de IA: ORION<br/>optimiza la ruta en tiempo real"]
+        REC["Envía la recomendación<br/>al dispositivo del conductor"]
+        H{{"El conductor decide<br/>¿sigue la ruta recomendada?"}}
+        SIG["Sigue la ruta del agente"]
+        DESV["Se desvía según su criterio<br/>el conductor retiene la autoridad"]
+        M[("Millas recorridas")]
+        T --> A
+        D <--> A
+        A --> REC --> H
+        H -- "sí" --> SIG --> M
+        H -- "no" --> DESV --> M
+    end
+
+    subgraph VAL["3 · Medir y comunicar el valor, Módulo 5"]
+        RES["Resultado a escala, cada año<br/>100 M de millas menos · 400 M USD de ahorro<br/>100.000 toneladas menos de CO₂"]
+        H1["H1 · menos costo por milla"]
+        H2["H2 · menos emisiones de CO₂<br/>ventaja regulatoria y reputacional"]
+        H3["H3 · 15% más volumen<br/>sin aumentar la flota"]
+        DIR["Business case a la dirección<br/>mantuvo la inversión durante 10 años"]
+        RES --> H1 & H2 & H3 --> DIR
+    end
+
+    S ==> T
+    M ==> RES
+```
+
+Cómo leerlo en clave n8n: el disparador inicia el flujo cada jornada o cuando cambian el tráfico, el clima o el volumen; el nodo de datos alimenta al agente; y el nodo de decisión no lo resuelve una máquina, sino el conductor. En n8n eso se parece a un paso que espera la respuesta de una persona. La lección del curso: el éxito de ORION no fue tecnológico, sino gerencial; la diferencia entre un piloto que muere y un sistema que genera 400 millones de dólares al año es la calidad del management, no la del algoritmo.
