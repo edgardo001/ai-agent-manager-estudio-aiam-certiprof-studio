@@ -15,7 +15,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — Cuestionarios: se conserva la pregunta, el texto completo de la respuesta correcta y la justificación de por qué es correcta. Se eliminan las alternativas incorrectas, pero se rescatan los conceptos que se explicaban al descartarlas.
 - 2026-11-17 — Se omiten duración y nivel de cada módulo. Se conservan en prosa los checklists, las reflexiones estratégicas y las responsabilidades del AIAM™.
 - 2026-11-17 — Se omiten la portada (página 1) y el cierre y las páginas de Certiprof (páginas 93 a 97).
-- 2026-11-17 — El archivo final se llama `AI-Agent-Manager.md`.
+- 2026-11-17 — El archivo final se llama `AI-Agent-Manager.md` y está en la carpeta `estudio/`, no en la raíz del repositorio (decisión del usuario). La carpeta `estudio/` irá acumulando todos los archivos que se generen a partir del curso.
 - 2026-11-17 — Se corrigen erratas evidentes del PDF y se traducen al español las oraciones completas que habían quedado en inglés (inicio de la sección 4.3); los términos técnicos en inglés se mantienen. El usuario puede pedir restaurar el original en inglés.
 - 2026-11-17 — Las preguntas del usuario se agregan al final del documento: “Preguntas frecuentes” para dudas conceptuales y “Glosario” para términos, en orden alfabético.
 - 2026-11-17 — Se crean `README.md` y `MEMORY.md`, que junto con `AGENTS.md` se mantienen actualizados.
@@ -26,7 +26,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 
 ## Estado actual
 
-- `AI-Agent-Manager.md` completo: 5 módulos, unas 26.800 palabras (con el Glosario), 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
+- `estudio/AI-Agent-Manager.md` completo: 5 módulos, unas 26.800 palabras (con el Glosario), 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
 - Proceso usado: un agente por módulo para la conversión y una segunda pasada de auditoría por módulo contra el PDF, página por página.
 - Secciones finales: existe “Glosario”; “Preguntas frecuentes” aún no existe (se crea con la primera pregunta conceptual).
 

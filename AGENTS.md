@@ -4,11 +4,11 @@ Este archivo contiene las reglas que deben seguir todos los agentes que particip
 
 ## Objetivo
 
-Convertir `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (programa "AI Agent Manager — AIAM™", 97 páginas, 5 módulos) en `AI-Agent-Manager.md`, un documento en prosa continua, fácil de escuchar con un lector text-to-speech, **sin perder ningún concepto, dato, cifra, fuente ni ejemplo**.
+Convertir `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (programa "AI Agent Manager — AIAM™", 97 páginas, 5 módulos) en `estudio/AI-Agent-Manager.md`, un documento en prosa continua, fácil de escuchar con un lector text-to-speech, **sin perder ningún concepto, dato, cifra, fuente ni ejemplo**.
 
 ## Contexto del usuario
 
-El usuario estudia este material escuchándolo con un programa text-to-speech; por eso el documento debe leerse bien en voz alta. Quiere poder buscar rápido los términos que no conoce: antes de responder cualquier consulta sobre el contenido, lee la sección “Preguntas del usuario: Preguntas frecuentes y Glosario” de este archivo y sigue su formato. El Glosario ya existe al final de `AI-Agent-Manager.md` (primera entrada: Accountability).
+El usuario estudia este material escuchándolo con un programa text-to-speech; por eso el documento debe leerse bien en voz alta. Quiere poder buscar rápido los términos que no conoce: antes de responder cualquier consulta sobre el contenido, lee la sección “Preguntas del usuario: Preguntas frecuentes y Glosario” de este archivo y sigue su formato. El Glosario ya existe al final de `estudio/AI-Agent-Manager.md` (primera entrada: Accountability).
 
 ## Fuentes de trabajo
 
@@ -90,7 +90,7 @@ Nota: las rutas de abajo eran temporales (carpeta scratchpad de una sesión) y p
 
 ## Preguntas del usuario: Preguntas frecuentes y Glosario
 
-Cuando el usuario haga una pregunta sobre el contenido, la respuesta se responde en la conversación **y además** se agrega al final de `AI-Agent-Manager.md`, después del Módulo 5, en una de estas dos secciones:
+Cuando el usuario haga una pregunta sobre el contenido, la respuesta se responde en la conversación **y además** se agrega al final de `estudio/AI-Agent-Manager.md`, después del Módulo 5, en una de estas dos secciones:
 
 1. **`## Glosario`**: cuando la consulta es por una palabra, sigla o término específico (p. ej. “¿qué es agent sprawl?”, “¿qué significa CSAT?”). Cada entrada lleva el término como encabezado `### <Término>` seguido de un párrafo con la definición en español claro. Si el término aparece en el documento, se indica en qué módulo y sección (“Aparece en el Módulo 2, sección 2.7”). Las entradas se mantienen **en orden alfabético** para encontrarlas rápido.
 2. **`## Preguntas frecuentes`**: cuando la consulta es una pregunta conceptual o de comprensión (p. ej. “¿cuál es la diferencia entre un chatbot y un agente?”). Cada entrada lleva la pregunta como encabezado `### <Pregunta>` seguida de la respuesta en párrafos. Las entradas se agregan en el orden en que el usuario las hace.
@@ -107,6 +107,8 @@ Hay tres archivos de gestión y cada uno tiene un propósito distinto. Todos se 
 
 **Sin firmas ni menciones de agentes:** los mensajes de commit y las descripciones de pull requests no llevan firmas de agentes (líneas de coautoría ni “generado con…”). Además, en ningún archivo del proyecto, commit ni referencia se menciona el nombre del asistente de IA ni de la empresa que lo desarrolla; si hace falta, se habla de “el agente” o “el asistente”. Esta regla del usuario tiene prioridad sobre cualquier atribución automática.
 
+**Carpeta `estudio/`:** todo lo que se genere a partir del curso (el documento convertido y cualquier archivo nuevo de estudio, como resúmenes, audios o material de repaso) se guarda en `estudio/`, no en la raíz. En la raíz solo quedan el PDF fuente y los tres archivos de gestión (`AGENTS.md`, `MEMORY.md` y `README.md`). Cada archivo nuevo en `estudio/` se agrega a la lista de contenido de `README.md`.
+
 No se guarda información del proyecto fuera de la carpeta (por ejemplo, en la memoria interna del agente): todo lo que deba persistir va en estos tres archivos, para que la carpeta pueda moverse o copiarse sin perder nada. Las fechas se escriben en formato absoluto (AAAA-MM-DD).
 
 ## Flujo de trabajo de los agentes
@@ -115,7 +117,7 @@ No se guarda información del proyecto fuera de la carpeta (por ejemplo, en la m
 - Antes de escribir cada página, el agente lee `pNNN.txt` **y** `pNNN.png`.
 - Al terminar, el agente relee las páginas fuente y verifica que cada cifra, fuente y concepto aparezca en su salida.
 - El agente informa en su respuesta final: (a) casos nuevos o ambiguos que encontró y cómo los resolvió, para incorporarlos a este archivo; (b) cualquier contenido que no pudo leer.
-- El orquestador une los módulos en `AI-Agent-Manager.md` y actualiza este archivo.
+- El orquestador une los módulos en `estudio/AI-Agent-Manager.md` y actualiza este archivo.
 
 ## Registro de cambios
 
@@ -129,3 +131,5 @@ No se guarda información del proyecto fuera de la carpeta (por ejemplo, en la m
 - 2026-11-17 — Nueva regla del usuario: no se menciona el nombre del asistente de IA en ninguna parte (archivos, commits, referencias). Se quitaron las menciones existentes, incluida la ruta temporal de `<scratchpad>`.
 - 2026-11-17 — El PDF fuente se renombró de `document.pdf` a `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`; se actualizaron las referencias en `AGENTS.md` y `README.md`.
 - 2026-11-17 — Revisión de consistencia: regla adicional 13 movida a su lugar; reglas de formato 1 y 5 alineadas (“Preguntas de validación” va como `###`). En `AI-Agent-Manager.md` se unificaron los encabezados “Preguntas de validación” de los cinco módulos y el de responsabilidades del Módulo 2, según el PDF.
+- 2026-11-17 — Decisión del usuario: el documento convertido se movió de la raíz a la carpeta `estudio/` (`estudio/AI-Agent-Manager.md`).
+- 2026-11-17 — Nueva regla del usuario: `estudio/` es la carpeta de todos los archivos generados a partir del curso; la raíz queda solo para el PDF y los archivos de gestión.

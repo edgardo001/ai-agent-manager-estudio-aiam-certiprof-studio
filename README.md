@@ -5,12 +5,13 @@ Versión en prosa del curso **AI Agent Manager (AIAM™)** de Certiprof, prepara
 ## Contenido
 
 - `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`: el material original del curso (97 páginas, 5 módulos).
-- `AI-Agent-Manager.md`: el documento convertido, listo para escuchar. Es el archivo principal de estudio.
+- `estudio/`: la carpeta de los archivos generados a partir del curso. Por ahora contiene:
+  - `estudio/AI-Agent-Manager.md`: el documento convertido, listo para escuchar. Es el archivo principal de estudio.
 - `AGENTS.md`: las reglas de conversión y de mantenimiento que debe seguir cualquier agente de IA que trabaje en este repositorio.
 - `MEMORY.md`: la memoria del proyecto: contexto, decisiones tomadas, estado actual, consultas realizadas y pendientes.
 - `README.md`: este archivo.
 
-## Estructura de `AI-Agent-Manager.md`
+## Estructura de `estudio/AI-Agent-Manager.md`
 
 Sigue la misma estructura y numeración del PDF:
 
@@ -35,7 +36,7 @@ El detalle completo de las reglas está en `AGENTS.md`.
 
 ## Cómo usarlo
 
-1. Abrir `AI-Agent-Manager.md` en el lector text-to-speech de preferencia.
+1. Abrir `estudio/AI-Agent-Manager.md` en el lector text-to-speech de preferencia.
 2. Cuando aparezca un término o una duda, preguntarle al agente de IA. La respuesta se agrega al final del documento, en “Glosario” o en “Preguntas frecuentes”, para poder volver a buscarla.
 
 ## Mantenimiento
