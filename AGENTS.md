@@ -6,7 +6,7 @@ Este archivo contiene las reglas que deben seguir todos los agentes que particip
 
 ## Objetivo
 
-Convertir `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (programa "AI Agent Manager — AIAM™", 97 páginas, 5 módulos) en `estudio/AI-Agent-Manager.md`, un documento en prosa continua, fácil de escuchar con un lector text-to-speech, **sin perder ningún concepto, dato, cifra, fuente ni ejemplo**.
+Convertir `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (programa "AI Agent Manager — AIAM™", 97 páginas, 5 módulos) en un documento en prosa continua, separado en cinco archivos, uno por módulo, en `estudio/modulos/` (`modulo-1-…md` a `modulo-5-…md`; el primero incluye el título general), fácil de escuchar con un lector text-to-speech, **sin perder ningún concepto, dato, cifra, fuente ni ejemplo**.
 
 ## Contexto del usuario
 
@@ -133,13 +133,13 @@ Además del documento para escuchar, el usuario repasa con apuntes impresos en `
 1. **Fuente y generación:** cada módulo es un archivo `estudio/apuntes/fuente/apuntes-mN.html` con hojas `<div class="pag mN">` y estilos comunes en `apuntes.css`. El script `estudio/apuntes/generar.py` crea `apuntes-modulo-N.pdf` y `apuntes-completos.pdf`, y avisa si alguna hoja se desborda. Con `--modulo N --png carpeta` genera un solo módulo y una imagen por hoja para revisarla.
 2. **Poco texto:** palabras clave y frases cortas, diagramas grandes y espacio en blanco. Cada hoja queda entre el 60% y el 90% llena. El usuario pidió explícitamente que no se vean aplastantes.
 3. **Diagramas antes que texto:** cada sección numerada lleva al menos un elemento visual (escalera, ciclo, árbol de decisión, comparación, mapa de conceptos, cifra grande, nota adhesiva). Letra manuscrita (Caveat) para títulos y notas; Inter para el resto.
-4. **Contenido:** se cubren todas las secciones numeradas, las cifras clave con su fuente y el caso real de cada módulo. Se omiten el checklist, las responsabilidades, la reflexión estratégica y las preguntas de validación. No se inventa nada: todo dato sale de `estudio/AI-Agent-Manager.md`.
+4. **Contenido:** se cubren todas las secciones numeradas, las cifras clave con su fuente y el caso real de cada módulo. Se omiten el checklist, las responsabilidades, la reflexión estratégica y las preguntas de validación. No se inventa nada: todo dato sale de los módulos de `estudio/modulos/`.
 5. **Siglas y términos en inglés:** el usuario no conoce toda la jerga (preguntó qué es RPA). Cada módulo termina con un recuadro “Siglas y términos en inglés” que explica en una línea cada término usado, con el aviso de que varias explicaciones no vienen en el curso. Junto a un término difícil dentro de un diagrama se puede poner una aclaración corta en gris.
 6. **Técnica:** las flechas (`<marker>`) llevan color en hexadecimal e id con prefijo del módulo (`m2-fc`), porque los cinco módulos se unen en un solo PDF. El CSS propio de un módulo va dentro de `<body>` con selectores que empiezan por `.mN`.
 
 ## Diagramas Mermaid a pedido
 
-Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el orden en que lo pide. Cada diagrama lleva un encabezado `## <Tema>`, una o dos oraciones que dicen qué muestra y de qué módulo y sección sale, y el bloque de código Mermaid. Las etiquetas van en español y son cortas. Todo dato sale de `estudio/AI-Agent-Manager.md`; lo que no venga del curso se marca. Antes de agregarlo, se valida que la sintaxis Mermaid sea correcta (por ejemplo, comillas en etiquetas con paréntesis, dos puntos o acentos problemáticos).
+Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el orden en que lo pide. Cada diagrama lleva un encabezado `## <Tema>`, una o dos oraciones que dicen qué muestra y de qué módulo y sección sale, y el bloque de código Mermaid. Las etiquetas van en español y son cortas. Todo dato sale de los módulos de `estudio/modulos/`; lo que no venga del curso se marca. Antes de agregarlo, se valida que la sintaxis Mermaid sea correcta (por ejemplo, comillas en etiquetas con paréntesis, dos puntos o acentos problemáticos).
 
 ## Plantillas de gestión
 
@@ -151,7 +151,7 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 - Antes de escribir cada página, el agente lee `pNNN.txt` **y** `pNNN.png`.
 - Al terminar, el agente relee las páginas fuente y verifica que cada cifra, fuente y concepto aparezca en su salida.
 - El agente informa en su respuesta final: (a) casos nuevos o ambiguos que encontró y cómo los resolvió, para incorporarlos a este archivo; (b) cualquier contenido que no pudo leer.
-- El orquestador une los módulos en `estudio/AI-Agent-Manager.md` y actualiza este archivo.
+- El orquestador guarda cada módulo en su archivo de `estudio/modulos/` y actualiza este archivo.
 
 ## Registro de cambios
 
@@ -175,3 +175,4 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 - 2026-11-17 — Nueva regla del usuario: sin redundancia en Preguntas frecuentes y Glosario; si ya existe una consulta parecida, se complementa la entrada existente en vez de crear otra.
 - 2026-11-17 — Se crean las 15 plantillas de gestión y su guía en `estudio/plantillas/` (sección “Plantillas de gestión”).
 - 2026-11-17 — A pedido del usuario, la regla de actualización periódica de `AGENTS.md`, `MEMORY.md` y `README.md` se hace explícita y obligatoria, con un paso a paso de cierre de cada tarea y un aviso al inicio de este archivo.
+- 2026-11-17 — Decisión del usuario: `estudio/AI-Agent-Manager.md` se separó en cinco archivos, uno por módulo, en `estudio/modulos/`, sin cambiar el contenido (unidos dan el documento original byte a byte). Toda referencia al “documento del curso” o a `AI-Agent-Manager.md` se refiere ahora a esos cinco archivos.

@@ -6,7 +6,7 @@ Versión en prosa del curso **AI Agent Manager (AIAM™)** de Certiprof, prepara
 
 - `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`: el material original del curso (97 páginas, 5 módulos).
 - `estudio/`: la carpeta de los archivos generados a partir del curso. Por ahora contiene:
-  - `estudio/AI-Agent-Manager.md`: el documento convertido, listo para escuchar. Es el archivo principal de estudio.
+  - `estudio/modulos/`: el documento convertido, listo para escuchar, separado en un archivo por módulo (`modulo-1-el-nuevo-rol-del-manager.md` a `modulo-5-impacto-al-negocio.md`). Es el material principal de estudio.
   - `estudio/preguntas-frecuentes.md`: respuestas a las dudas de comprensión del usuario, en el orden en que las hizo.
   - `estudio/glosario.md`: siglas y términos consultados, en orden alfabético.
   - `estudio/diagramas.md`: diagramas Mermaid de temas del curso, agregados a pedido; GitHub los muestra dibujados.
@@ -16,7 +16,7 @@ Versión en prosa del curso **AI Agent Manager (AIAM™)** de Certiprof, prepara
 - `MEMORY.md`: la memoria del proyecto: contexto, decisiones tomadas, estado actual, consultas realizadas y pendientes.
 - `README.md`: este archivo.
 
-## Estructura de `estudio/AI-Agent-Manager.md`
+## Estructura de `estudio/modulos/`
 
 Sigue la misma estructura y numeración del PDF:
 
@@ -39,7 +39,7 @@ El detalle completo de las reglas está en `AGENTS.md`.
 
 ## Cómo usarlo
 
-1. Abrir `estudio/AI-Agent-Manager.md` en el lector text-to-speech de preferencia.
+1. Abrir el módulo que corresponda de `estudio/modulos/` en el lector text-to-speech de preferencia.
 2. Cuando aparezca un término o una duda, preguntarle al agente de IA. La respuesta se agrega a `estudio/glosario.md` (términos) o a `estudio/preguntas-frecuentes.md` (dudas de comprensión), con un largo pensado para escucharla en uno o dos minutos.
 
 ## Mantenimiento

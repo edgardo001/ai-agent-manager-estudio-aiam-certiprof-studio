@@ -1,6 +1,6 @@
 # 00 · Guía de uso de las plantillas AIAM™
 
-Estas 15 plantillas convierten lo que enseña el curso en documentos de trabajo. Cada una explica para qué sirve, cuándo llenarla, quién la llena y la aprueba, con qué información y cómo, y trae un ejemplo lleno y los errores comunes que advierte el curso. Todo su contenido sale de `estudio/AI-Agent-Manager.md`; lo que no viene del curso está marcado como "(no viene en el curso)" o como "datos ficticios de ejemplo".
+Estas 15 plantillas convierten lo que enseña el curso en documentos de trabajo. Cada una explica para qué sirve, cuándo llenarla, quién la llena y la aprueba, con qué información y cómo, y trae un ejemplo lleno y los errores comunes que advierte el curso. Todo su contenido sale de los módulos del curso en `estudio/modulos/`; lo que no viene del curso está marcado como "(no viene en el curso)" o como "datos ficticios de ejemplo".
 
 ## El ciclo de vida en una mirada
 
