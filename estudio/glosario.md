@@ -8,7 +8,7 @@ Accountability es una palabra en inglés que significa responsabilidad de rendir
 
 ## Agent sprawl
 
-Sprawl significa crecimiento desordenado. Según la sección 2.7, el agent sprawl es la proliferación de agentes sin dueño claro, sin propósito documentado, sin métricas y sin gobierno coherente. Aparece cuando cada área despliega agentes por su cuenta o cuando un piloto pasa a producción sin onboarding. Cuesta de tres formas: agentes redundantes que hacen casi lo mismo, nadie que responda cuando uno se equivoca y una inversión que supera el valor generado. Gartner lo señala como la causa principal de que más del 40% de los proyectos agentic se cancelen antes de 2027. Se previene con un registro centralizado de agentes, aceptación obligatoria y auditoría trimestral. Aparece en el Módulo 2, sección 2.7.
+Sprawl significa crecimiento desordenado. Según la sección 2.7, el agent sprawl es la proliferación de agentes sin dueño claro, sin propósito documentado, sin métricas y sin gobierno coherente. Aparece cuando cada área despliega agentes por su cuenta o cuando un piloto pasa a producción sin onboarding. Cuesta de tres formas: agentes redundantes que hacen casi lo mismo, nadie que responda cuando uno se equivoca y una inversión que supera el valor generado. Gartner lo señala como la causa principal de que más del 40% de los proyectos agentic se cancelen antes de 2027. Se previene con un registro centralizado, aceptación obligatoria y auditoría trimestral. Aparece en el Módulo 2, sección 2.7. Hay ejemplos en el archivo de preguntas frecuentes.
 
 ## Audit trail
 
