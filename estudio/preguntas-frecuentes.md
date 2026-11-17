@@ -41,3 +41,13 @@ Gestionar estratégicamente un agente es preguntarse qué valor de negocio gener
 Con lo que enseñan los cinco módulos se puede ordenar en cinco prácticas; este orden no viene así en el curso. Primero, elegir dónde usar agentes según su impacto, identificando los tres a cinco mejores procesos candidatos. Segundo, dar a cada agente la gobernanza que corresponde a su nivel de autonomía. Tercero, supervisar resultados y no actividad, interviniendo solo cuando se pasa un umbral. Cuarto, comunicar el valor a la dirección con los tres horizontes y el business case. Y quinto, gestionar los agentes como un portafolio, con un registro y una revisión trimestral.
 
 La regla del curso, en la sección 3.1, es: supervisa los resultados con rigurosidad; interviene en los procesos solo cuando los resultados lo justifican. Un contraejemplo está en la pregunta de validación 7 del Módulo 1: decir que el Director de Tecnología no tiene tiempo es un argumento operativo, no estratégico.
+
+## ¿Cuáles son las métricas de éxito de un agente y cómo se aplican en la realidad?
+
+Las métricas de éxito son el sexto parámetro de la identidad del agente, según la sección 2.2: definen cómo se medirá su desempeño desde la perspectiva del negocio. Las define el AI Agent Manager, no el equipo técnico, y son también el último componente de las instrucciones del agente.
+
+Según el curso, cumplen tres condiciones. Primero, son explícitas, medibles y sin ambigüedad, porque el agente no interpreta intenciones. Segundo, llevan un número objetivo, como en el ejemplo de la sección 2.5: resolución autónoma mayor o igual al 80%, CSAT mayor o igual a 4,2 sobre 5, escalamiento menor o igual al 20% y resolución en 3 minutos o menos. Tercero, se definen antes de empezar, incluso antes del piloto, como pide la sección 4.3, y se comparan con el baseline. Salesforce, en la sección 3.8, decidió desde el primer día que serían exclusivamente de negocio.
+
+Esto no viene en el curso, pero sigue su lógica. Un agente de cobranza podría medirse por el porcentaje de deuda recuperada, los días promedio de cobro y las quejas por cada mil gestiones. Un agente que responde consultas internas de recursos humanos, por el porcentaje resuelto sin escalar, el tiempo de respuesta y la satisfacción de los empleados. Y un agente de ventas que califica clientes potenciales, por cuántos pasan a una reunión y las horas que ahorra a los vendedores.
+
+Más ejemplos del curso están en la pregunta sobre métricas de valor.
