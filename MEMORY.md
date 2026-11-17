@@ -31,7 +31,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 
 - `estudio/AI-Agent-Manager.md` completo: 5 módulos, unas 26.500 palabras, 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Termina en el Módulo 5. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
 - Proceso usado: un agente por módulo para la conversión y una segunda pasada de auditoría por módulo contra el PDF, página por página.
-- `estudio/preguntas-frecuentes.md`: 7 preguntas. `estudio/diagramas.md`: 2 diagramas (sistema agentic genérico y caso UPS ORION, ambos vistos como flujo de n8n). `estudio/glosario.md`: 8 términos (Accountability, Audit trail, C-suite, CSAT, Onboarding agentic, PwC, RPA y SOP).
+- `estudio/preguntas-frecuentes.md`: 7 preguntas. `estudio/diagramas.md`: 2 diagramas (sistema agentic genérico y caso UPS ORION, ambos vistos como flujo de n8n). `estudio/glosario.md`: 9 términos (Accountability, Audit trail, Boundary testing, C-suite, CSAT, Onboarding agentic, PwC, RPA y SOP).
 - Apuntes visuales en `estudio/apuntes/` completos: 28 hojas A4 (Módulo 1, 4 hojas; módulos 2 a 5, 6 hojas cada uno), cada módulo con su recuadro de siglas y términos en inglés. Hay un PDF por módulo y `apuntes-completos.pdf`. Subidos a GitHub el 2026-11-17; `estudio/fichas/` queda fuera del repositorio por ahora.
 
 ## Consultas del usuario
@@ -51,6 +51,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — “Ejemplos de cómo hacer auditoría de seguridad como Agent Manager”. Agregada a Preguntas frecuentes; los ejemplos de pruebas concretas no vienen en el curso y están marcados.
 - 2026-11-17 — Diagrama pedido: “qué debe tener un sistema agentic, como si lo hubiéramos desarrollado en n8n”. Agregado a `estudio/diagramas.md`, con la analogía de n8n marcada como externa al curso.
 - 2026-11-17 — Pidió otro ejemplo o caso de uso: se agregó el caso real UPS ORION (sección 5.5) como flujo de n8n, donde el agente recomienda y el conductor decide.
+- 2026-11-17 — “Boundary testing” con ejemplos. Agregado al Glosario.
 
 ## Pendientes y temas abiertos
 
