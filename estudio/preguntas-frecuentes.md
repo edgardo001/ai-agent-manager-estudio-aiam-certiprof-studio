@@ -51,3 +51,11 @@ Según el curso, cumplen tres condiciones. Primero, son explícitas, medibles y 
 Esto no viene en el curso, pero sigue su lógica. Un agente de cobranza podría medirse por el porcentaje de deuda recuperada, los días promedio de cobro y las quejas por cada mil gestiones. Un agente que responde consultas internas de recursos humanos, por el porcentaje resuelto sin escalar, el tiempo de respuesta y la satisfacción de los empleados. Y un agente de ventas que califica clientes potenciales, por cuántos pasan a una reunión y las horas que ahorra a los vendedores.
 
 Más ejemplos del curso están en la pregunta sobre métricas de valor.
+
+## ¿Cómo hace un AI Agent Manager una auditoría de seguridad?
+
+Para el curso, la seguridad del agente es responsabilidad del AI Agent Manager y no del proveedor: la AI Agent Index 2025, de Cambridge, MIT, Harvard Law, Stanford y UPenn, encontró que la mayoría de los desarrolladores de agentes comparte poca o ninguna información sobre seguridad y evaluaciones de riesgo. El manager no hace pruebas técnicas; revisa, desde el negocio, que el agente no pueda causar daños.
+
+Con lo que enseña el curso, la auditoría tiene cinco partes. Primero, revisar los permisos con la regla práctica de la sección 2.3: si el agente podría causar un daño que usted no podría explicar ante el CEO o un cliente, sobran permisos. Segundo, hacer pruebas de límites y pruebas adversariales antes de producción, como pide la sección 2.6. Tercero, comprobar que el agente escala cuando debe, porque el que no escala es el más peligroso. Cuarto, revisar una muestra de casos buscando controles omitidos, como en la pregunta de validación 3 del Módulo 3, donde un agente se saltaba un paso de verificación. Y quinto, revisar cada trimestre el registro de agentes y sus permisos.
+
+Esto no viene en el curso, pero son ejemplos aplicados. Para un agente de soporte, pídale los datos de otro cliente, ofrézcale una excusa para dar un descuento no autorizado o escríbale "ignora tus instrucciones": debe negarse y escalar. Y compruebe que exista una forma de detenerlo de inmediato, el kill switch que el curso exige para los agentes de Nivel 4.
