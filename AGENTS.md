@@ -129,6 +129,10 @@ Además del documento para escuchar, el usuario repasa con apuntes impresos en `
 5. **Siglas y términos en inglés:** el usuario no conoce toda la jerga (preguntó qué es RPA). Cada módulo termina con un recuadro “Siglas y términos en inglés” que explica en una línea cada término usado, con el aviso de que varias explicaciones no vienen en el curso. Junto a un término difícil dentro de un diagrama se puede poner una aclaración corta en gris.
 6. **Técnica:** las flechas (`<marker>`) llevan color en hexadecimal e id con prefijo del módulo (`m2-fc`), porque los cinco módulos se unen en un solo PDF. El CSS propio de un módulo va dentro de `<body>` con selectores que empiezan por `.mN`.
 
+## Diagramas Mermaid a pedido
+
+Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el orden en que lo pide. Cada diagrama lleva un encabezado `## <Tema>`, una o dos oraciones que dicen qué muestra y de qué módulo y sección sale, y el bloque de código Mermaid. Las etiquetas van en español y son cortas. Todo dato sale de `estudio/AI-Agent-Manager.md`; lo que no venga del curso se marca. Antes de agregarlo, se valida que la sintaxis Mermaid sea correcta (por ejemplo, comillas en etiquetas con paréntesis, dos puntos o acentos problemáticos).
+
 ## Flujo de trabajo de los agentes
 
 - Cada agente procesa **un módulo completo** y escribe su resultado en `<scratchpad>/out/moduloN.md` (empezando por el encabezado `## Módulo N. …`).
@@ -154,3 +158,4 @@ Además del documento para escuchar, el usuario repasa con apuntes impresos en `
 - 2026-11-17 — Nueva sección “Apuntes visuales impresos”: apuntes A4 por módulo en `estudio/apuntes/`, con poco texto, diagramas y un recuadro final de siglas y términos en inglés. Nueva entrada del Glosario: RPA.
 - 2026-11-17 — Nueva regla del usuario: `AGENTS.md`, `MEMORY.md` y `README.md` no superan las 200 líneas; si pasan el límite, se podan resumiendo sin perder lo importante. Primera pregunta en “Preguntas frecuentes” (¿Qué es un AI Agent Manager?) y nueva entrada del Glosario: C-suite.
 - 2026-11-17 — Decisión del usuario: Preguntas frecuentes y Glosario pasan a archivos independientes (`estudio/preguntas-frecuentes.md` y `estudio/glosario.md`) y se fija su largo estándar (80 a 120 palabras por término; 150 a 250 por pregunta). Las 13 entradas existentes se reescribieron con ese estándar.
+- 2026-11-17 — Se crea `estudio/diagramas.md` para diagramas Mermaid a pedido del usuario (sección “Diagramas Mermaid a pedido”).
