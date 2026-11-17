@@ -40,7 +40,7 @@ RPA es la sigla en inglés de Robotic Process Automation, automatización robót
 
 ## SOP
 
-SOP es la sigla en inglés de Standard Operating Procedure, procedimiento operativo estándar: un documento que explica paso a paso cómo se hace una tarea. En el curso, las instrucciones de un agente combinan una descripción del cargo, que dice qué hacer y para qué, con un SOP, que dice cómo hacerlo: cada paso indica qué hacer, con qué herramienta y con qué criterio decidir. Un buen SOP es el que un colega podría seguir sin pedir aclaraciones. Aparece sobre todo en el Módulo 2, sección 2.5.
+SOP es la sigla en inglés de Standard Operating Procedure, procedimiento operativo estándar: un documento que explica paso a paso cómo se hace una tarea. En el curso, es la mitad del framework JD+SOP con que se escriben las instrucciones de un agente: la descripción del cargo dice qué hacer y para qué, y el SOP dice cómo, paso a paso. Aparece sobre todo en el Módulo 2, sección 2.5. La explicación completa, con los siete componentes y su ejemplo, está en el archivo de preguntas frecuentes.
 
 ## Taxonomía de tareas
 
