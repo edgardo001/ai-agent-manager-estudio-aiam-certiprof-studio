@@ -1,0 +1,131 @@
+# AGENTS.md — Conversión de `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` a Markdown legible por text-to-speech
+
+Este archivo contiene las reglas que deben seguir todos los agentes que participan en la conversión. Se actualiza a medida que aparecen casos nuevos (ver "Registro de cambios" al final).
+
+## Objetivo
+
+Convertir `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (programa "AI Agent Manager — AIAM™", 97 páginas, 5 módulos) en `AI-Agent-Manager.md`, un documento en prosa continua, fácil de escuchar con un lector text-to-speech, **sin perder ningún concepto, dato, cifra, fuente ni ejemplo**.
+
+## Contexto del usuario
+
+El usuario estudia este material escuchándolo con un programa text-to-speech; por eso el documento debe leerse bien en voz alta. Quiere poder buscar rápido los términos que no conoce: antes de responder cualquier consulta sobre el contenido, lee la sección “Preguntas del usuario: Preguntas frecuentes y Glosario” de este archivo y sigue su formato. El Glosario ya existe al final de `AI-Agent-Manager.md` (primera entrada: Accountability).
+
+## Fuentes de trabajo
+
+Nota: las rutas de abajo eran temporales (carpeta scratchpad de una sesión) y pueden haber desaparecido. Si hace falta volver a consultar el PDF página por página, se regeneran desde `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` con Python: el texto con `pypdf` (`PdfReader(...).pages[i].extract_text()`) y las imágenes con `pypdfium2` (`page.render(scale=1.4).to_pil().save(...)`). El documento final ya está completo y no depende de esos archivos.
+
+
+- Texto extraído por página: `<scratchpad>/pages/pNNN.txt` (ej. `p007.txt`).
+- Imagen renderizada por página: `<scratchpad>/img/pNNN.png`. Úsala para entender la estructura visual (cards, tablas, cifras destacadas, columnas) cuando el texto extraído quede desordenado o ambiguo.
+- `<scratchpad>` = carpeta temporal de la sesión de trabajo en que se hizo la conversión (ya no existe; al regenerar los archivos se usa cualquier carpeta temporal).
+
+## Mapa de páginas
+
+| Módulo | Páginas | Título |
+|---|---|---|
+| Portada | 1 | Se omite |
+| Módulo 1 | 2–19 | El Nuevo Rol del Manager: De Supervisar Personas a Orquestar Agentes |
+| Módulo 2 | 20–40 | Diseñar y Activar Agentes: El Arte del Onboarding Agentic |
+| Módulo 3 | 41–59 | Supervisión, Auditoría y Performance del Agente |
+| Módulo 4 | 60–75 | Rediseño de Procesos: Equipos Híbridos Humanos + Agentes |
+| Módulo 5 | 76–92 | Impacto al Negocio: Medir, Comunicar y Escalar Resultados |
+| Cierre / Certiprof | 93–97 | Se omite |
+
+## Reglas de contenido
+
+1. **No perder nada.** Todo concepto, definición, cifra, porcentaje, fuente citada (autor, institución, año), ejemplo, caso real y advertencia debe aparecer en el resultado. Ante la duda, se incluye.
+2. **Ir página por página, en orden.** El orden del contenido en el `.md` debe seguir el orden del PDF. El texto que continúa de una página a la siguiente se une en un solo párrafo sin cortes (los saltos de página no existen en el `.md`).
+3. **Eliminar cabeceras y pies de página:** logo/“certiprof”, `www.certiprof.com`, número de página, “CERTIPROF® is a registered trademark…”, “AIAM™ VERSIÓN 052026”.
+4. **Eliminar metadatos de módulo:** “Duración estimada” y “Nivel”. (Los objetivos de aprendizaje y demás contenido sí se conservan.)
+5. **Tablas → párrafos.** Cada fila de una tabla se convierte en una o varias oraciones completas que nombren explícitamente lo que dicen las columnas. Ej.: tabla de competencias → “La primera competencia es la Dirección Estratégica, que en la práctica implica definir qué debe lograr el agente…”. Si la tabla tiene título, ese título introduce el párrafo. Nunca se omite una fila ni una celda.
+6. **Cards, recuadros, cifras destacadas, citas y cajas de “¿Qué dice la investigación?” → párrafos.** Se integra el contenido como prosa. Una cifra destacada (ej. “280%” + texto) se redacta como oración: “La demanda del skill cluster Agentic AI creció un 280% en un solo año…”. Se conserva la fuente y el título de la card cuando aporta contexto (ej. “Según Harvard Business Review, en el artículo de Srinivasan y Wei de febrero de 2026, titulado …”).
+7. **Listas y viñetas → párrafos.** Se redactan como oraciones encadenadas (“En primer lugar…, en segundo lugar…”) o como enumeración dentro de una oración. No se usan viñetas ni listas numeradas en el resultado.
+8. **Checklists de autoevaluación (☐ / ✓)** → párrafo en prosa que enumere todas las capacidades (“Al terminar este módulo, usted debería ser capaz de…”), sin perder ningún ítem.
+9. **Casos reales, Reflexión Estratégica Final, Responsabilidades del AIAM™** → se conservan como subsecciones con prosa.
+10. **Preguntas de validación:** por cada pregunta se escribe el enunciado completo (escenario + pregunta), luego “Respuesta correcta:” seguido del **texto completo** de la alternativa correcta (sin la letra), y luego “Por qué:” con la justificación de la respuesta correcta. **Se eliminan** las alternativas incorrectas y cualquier comentario sobre por qué las otras opciones son incorrectas (frases tipo “A es incorrecta porque…”, “C borra la distinción”). Si la justificación de la correcta no hace referencia a las otras, se mantiene íntegra.
+11. **No inventar ni resumir.** Se puede reformular la sintaxis para convertir tablas/cards/listas en prosa, pero no se agrega información que no esté en el PDF ni se condensa contenido. El texto que ya es prosa en el PDF se copia fiel, solo corrigiendo cortes de extracción (palabras partidas como “tal ento” → “talento”, guiones de corte de línea, espacios sobrantes).
+12. **Emojis y símbolos decorativos** (💡, ⏱, 🎯, ❌, ✓, ☐, 📋, flechas como “→” usadas en cifras) se eliminan o se reemplazan por palabras (“2024→2025” → “de 2024 a 2025”). Las siglas y marcas (AIAM™, HBR, CSAT, NPS, ROI…) se conservan.
+
+## Reglas de formato
+
+1. El documento final usa un `#` para el título general, `##` para cada módulo (“## Módulo 1. El Nuevo Rol del Manager: De Supervisar Personas a Orquestar Agentes”), `###` para cada sección numerada del PDF (“### 1.2 Agentes de IA, Chatbots y Automatización…”) y `####` para subsecciones (casos, cards con título propio, “Preguntas de validación”, cada pregunta “#### Pregunta 1” o similar si queda más claro).
+2. Mismo orden y misma numeración de secciones que el PDF.
+3. Sin tablas Markdown, sin viñetas, sin listas numeradas, sin bloques de cita (`>`), sin negritas decorativas excesivas. Solo encabezados y párrafos.
+4. Párrafos separados por una línea en blanco. Codificación UTF-8 con tildes correctas.
+5. **Jerarquía fija:** las secciones sin número que cuelgan del módulo (Objetivo de aprendizaje, Responsabilidades del AIAM™, Checklist / autoevaluación, Reflexión Estratégica Final, Preguntas de validación) van como `###`. Las cards o recuadros con título propio dentro de una sección (Regla práctica, ¿Qué dice la investigación?, Caso X…) van como `####`. Cada pregunta va como `#### Pregunta N`.
+
+## Reglas adicionales (incorporadas a partir del trabajo de los agentes)
+
+1. **Navegación entre módulos** (“Módulo 2 Completado. Continúe al Módulo 3…”) se elimina.
+2. **“Por qué” de las preguntas:** se elimina la frase que nombra la letra (“C es correcto porque…”, “B establece…”) y se reformula como “Esta respuesta…” o empezando directo por la razón. Toda mención a otras letras se elimina.
+3. **Erratas evidentes del PDF** (p. ej. “el enemy número uno” por “el enemigo número uno”) se corrigen, porque el lector de voz las pronunciaría mal. Los términos técnicos en inglés usados intencionalmente (agent sprawl, guardrails, onboarding…) se mantienen.
+4. **Notación de cifras para voz:** decimales con coma (“2.3 millones” → “2,3 millones”); “$40M” → “40 millones de dólares”; “40%+” → “más del 40%”; “≥80%” → “mayor o igual al 80%”; “4.2/5” → “4,2 sobre 5”; enumeraciones “(a) (b) (c)” o “(1) (2) (3)” → “primero, segundo, tercero”.
+5. **Tablas comparativas de dos columnas** (antes/después, humano/agente): un párrafo por fila o dimensión contrastando ambas columnas, o dos bloques paralelos con todos los ítems en orden.
+6. **Checklists** se redactan en tercera persona formal (“usted debería ser capaz de…”), no en primera persona.
+7. **Cards de caso:** “Industria” y “Resultado medible” pasan a un párrafo introductorio; “Lección para el AI Agent Manager” → “La lección para el AI Agent Manager es la siguiente: …”.
+8. **Formato numérico único (español):** decimales con coma (“1,3 segundos”, “4,4”), miles con punto (“55.000 rutas”, “1.200”). Moneda: “$4.4T” → “4,4 billones de dólares”; “$400M” → “400 millones de dólares”. Esta normalización se aplica a todo el documento final.
+9. **Rangos y fórmulas:** “12-24 meses” → “de 12 a 24 meses”; “18+ meses” → “más de 18 meses”; “(Beneficio – Inversión) / Inversión” → “el beneficio menos la inversión, dividido por la inversión”.
+10. **Cards de pares de ejemplo** (lenguaje técnico frente a directivo, etc.): subsección `####` con un párrafo por par (“En lenguaje técnico: … Traducido al lenguaje directivo: …”).
+11. **Referencias académicas destacadas:** subsección `#### Referencia académica N`, con la fuente en prosa (autor, año, título, editorial) y la cita textual entre comillas.
+12. **Respuestas que empiezan con raya** (“Nivel 1 — Exploración, porque…”) → se reemplaza la raya por coma.
+14. **Símbolos para voz:** “±2 semanas” → “más o menos 2 semanas”; “3+ días” → “3 o más días”; “5-10%” → “entre el 5% y el 10%”; “tokens/min” → “tokens por minuto”; “verde/amarillo/rojo” → “verde, amarillo o rojo”; “1-a-1” → “1 a 1”; “vs.” → “frente a”; las rayas (—) que separan incisos → comas o dos puntos.
+15. **Tablas con celda “N/A”:** se explica en prosa (“aquí no aplica dejar correr, porque…”), no se omite la fila.
+16. **Cards de tipos (p. ej. tipos de error):** un `####` por tipo, con párrafos que empiezan por “Qué son:”, “Ejemplo:”, “Señal de detección:”.
+17. **Responsabilidades numeradas (01, 02…)** → “La primera responsabilidad es…”, un párrafo por responsabilidad.
+18. **Encabezado de las preguntas de validación:** se conserva la descripción (“Diez preguntas de práctica basadas en rol”), pero se elimina la instrucción “Seleccione la opción que mejor aplique”, porque ya no hay alternativas.
+19. Una cifra que solo aparece en una alternativa incorrecta se pierde legítimamente al eliminar esa alternativa.
+20. El **Objetivo de aprendizaje** del inicio de cada módulo va como `###` (ver regla de formato 5).
+21. **Conceptos dentro de comentarios sobre alternativas incorrectas (prioridad sobre la regla 2):** si un comentario sobre una opción incorrecta contiene un concepto, criterio o dato que se aprende (p. ej. “el problema real es el criterio de evaluación, no el volumen de datos”; “el Nivel 1 tiene a los humanos como control”; “todos los niveles requieren gestión”), ese concepto **se conserva** en el “Por qué”, redactado como afirmación general y sin nombrar la letra ni describir la alternativa incorrecta. Solo se elimina lo que es pura descalificación de la opción (“A es irrelevante”, “B es negligencia”).
+22. **Enunciados que terminan en “…es:”** se reformulan como pregunta directa, porque las alternativas ya no los completan.
+23. **Fidelidad de cifras:** si el propio PDF da cifras distintas para el mismo dato en lugares diferentes (p. ej. McKinsey 4,4 billones en una card y “2,6 a 4,4 billones” en una pregunta), se conservan ambas tal como aparecen en cada lugar.
+24. **Encabezados de checklist y similares:** se respeta el título del PDF (“1.6 Checklist de Competencias, Módulo 1” si va numerado como `###`; “Lista de Competencias del Módulo 4” como `###` aunque no tenga número).
+25. **Checklists en primera persona** (“Puedo…”, “Soy capaz…”, “Entiendo…”): cada ítem se convierte a infinitivo dentro de “usted debería ser capaz de…”, y los posesivos “mi” pasan a “su”.
+26. **Ampliación de la regla 21:** cuando un comentario descalifica una alternativa por un motivo con contenido (“es un argumento operativo, no estratégico”, “es una falacia de apelación a la mayoría”, “es una sobre-reacción que destruye valor”, “confunde la eficiencia con la transformación”), ese motivo se conserva como afirmación general sobre la acción o idea errónea. Solo se descarta la etiqueta sin criterio (“es negligencia”, “es irrelevante”).
+27. **“Por qué” sin sujeto:** al quitar la letra, la frase no puede empezar con un verbo suelto (“aplica…”); se pone sujeto explícito: “Esta respuesta aplica…”, o “Esta conducta es…” cuando la pregunta pide identificar lo que debe evitarse.
+28. **Signo “+”** entre instituciones o conceptos (“MIT SMR + BCG”) → “y” o “más”. “24/7” → “las 24 horas, los 7 días de la semana”; “1:1” → “1 a 1”.
+29. **No agregar glosas que no están en el PDF** (p. ej. “4.4 trillion, en la notación anglosajona”).
+30. **Oraciones completas en inglés dentro de prosa en español** (restos sin traducir del original) se traducen fielmente para que el lector de voz en español las lea bien. Los términos técnicos en inglés usados a propósito se mantienen.
+31. **Tablas comparativas sin título:** se puede usar un `####` construido con los encabezados de columna (“Organización sin… frente a organización con…”), sin agregar información.
+32. Se respeta el título exacto del PDF en secciones finales (“Reflexión Estratégica” sin “Final” si así aparece). Una card con título que aparece antes de esas secciones (“Lo que este programa te ha dado”) va como `####`.
+13. En el “Por qué” se conservan las frases de razonamiento que no nombran letras de alternativas (p. ej. “No hay que retroceder al Nivel 1 ni saltar al Nivel 3…”), porque forman parte de la explicación.
+
+## Preguntas del usuario: Preguntas frecuentes y Glosario
+
+Cuando el usuario haga una pregunta sobre el contenido, la respuesta se responde en la conversación **y además** se agrega al final de `AI-Agent-Manager.md`, después del Módulo 5, en una de estas dos secciones:
+
+1. **`## Glosario`**: cuando la consulta es por una palabra, sigla o término específico (p. ej. “¿qué es agent sprawl?”, “¿qué significa CSAT?”). Cada entrada lleva el término como encabezado `### <Término>` seguido de un párrafo con la definición en español claro. Si el término aparece en el documento, se indica en qué módulo y sección (“Aparece en el Módulo 2, sección 2.7”). Las entradas se mantienen **en orden alfabético** para encontrarlas rápido.
+2. **`## Preguntas frecuentes`**: cuando la consulta es una pregunta conceptual o de comprensión (p. ej. “¿cuál es la diferencia entre un chatbot y un agente?”). Cada entrada lleva la pregunta como encabezado `### <Pregunta>` seguida de la respuesta en párrafos. Las entradas se agregan en el orden en que el usuario las hace.
+
+Orden de las secciones finales: primero “Preguntas frecuentes” y después “Glosario”. Las secciones solo se crean cuando existe la primera entrada (no se dejan secciones vacías). Las respuestas siguen las mismas reglas de formato del documento: solo encabezados y párrafos, sin tablas, viñetas ni emojis, y con números y símbolos escritos para voz. Si la respuesta usa información externa al PDF, se indica explícitamente (“Esto no aparece en el documento original: …”), para no confundirla con el contenido del curso. Si un término ya está en el Glosario, se amplía su entrada en vez de duplicarla.
+
+## Mantenimiento de los archivos del proyecto
+
+Hay tres archivos de gestión y cada uno tiene un propósito distinto. Todos se actualizan en la misma sesión en que ocurre el cambio, sin esperar a que el usuario lo pida:
+
+1. **`AGENTS.md` (este archivo): las reglas.** Se actualiza cuando aparece una regla nueva del usuario o un caso nuevo de conversión o formato. Cada cambio se anota en el “Registro de cambios” con su fecha.
+2. **`MEMORY.md`: la memoria del proyecto.** Se actualiza cuando el usuario toma una decisión, cuando cambia el estado del documento, cuando hace una consulta (se anota en “Consultas del usuario” con fecha y si fue al Glosario o a Preguntas frecuentes), y cuando se abre o se cierra un pendiente. Al empezar una sesión nueva, se lee junto con este archivo.
+3. **`README.md`: la presentación del repositorio.** Se actualiza cuando cambian los archivos del proyecto, la estructura del documento (por ejemplo, al crearse la sección de Preguntas frecuentes) o la forma de usarlo.
+
+**Sin firmas ni menciones de agentes:** los mensajes de commit y las descripciones de pull requests no llevan firmas de agentes (líneas de coautoría ni “generado con…”). Además, en ningún archivo del proyecto, commit ni referencia se menciona el nombre del asistente de IA ni de la empresa que lo desarrolla; si hace falta, se habla de “el agente” o “el asistente”. Esta regla del usuario tiene prioridad sobre cualquier atribución automática.
+
+No se guarda información del proyecto fuera de la carpeta (por ejemplo, en la memoria interna del agente): todo lo que deba persistir va en estos tres archivos, para que la carpeta pueda moverse o copiarse sin perder nada. Las fechas se escriben en formato absoluto (AAAA-MM-DD).
+
+## Flujo de trabajo de los agentes
+
+- Cada agente procesa **un módulo completo** y escribe su resultado en `<scratchpad>/out/moduloN.md` (empezando por el encabezado `## Módulo N. …`).
+- Antes de escribir cada página, el agente lee `pNNN.txt` **y** `pNNN.png`.
+- Al terminar, el agente relee las páginas fuente y verifica que cada cifra, fuente y concepto aparezca en su salida.
+- El agente informa en su respuesta final: (a) casos nuevos o ambiguos que encontró y cómo los resolvió, para incorporarlos a este archivo; (b) cualquier contenido que no pudo leer.
+- El orquestador une los módulos en `AI-Agent-Manager.md` y actualiza este archivo.
+
+## Registro de cambios
+
+- 2026-11-17 — Versión inicial. Decisiones del usuario: en preguntas se conserva pregunta + respuesta correcta + justificación de la correcta; se omiten duración/nivel; se incluyen checklists, reflexiones y responsabilidades en prosa; se omiten portada (p.1) y cierre/Certiprof (p.93–97); el archivo final se llama `AI-Agent-Manager.md`.
+- 2026-11-17 — Reglas adicionales 1 a 24, a partir de los informes de los agentes de cada módulo (formato numérico, símbolos, jerarquía, navegación, conceptos dentro de comentarios sobre alternativas incorrectas).
+- 2026-11-17 — Segunda pasada de auditoría por módulo contra el PDF: conceptos rescatados de los comentarios de alternativas incorrectas, formato unificado, reglas 25 a 32. Documento final unido: 5 módulos, 50 preguntas con 50 respuestas, sin tablas, listas ni citas.
+- 2026-11-17 — Se crean `README.md` y `MEMORY.md` y se agrega la sección “Mantenimiento de los archivos del proyecto”: los tres archivos se actualizan periódicamente y no se guarda información del proyecto fuera de la carpeta.
+- 2026-11-17 — Se agregó “Contexto del usuario” y la nota sobre fuentes temporales, para que la carpeta pueda moverse sin depender de memoria externa. Primera entrada del Glosario: Accountability.
+- 2026-11-17 — Nueva regla del usuario: las preguntas que haga se agregan al final del documento, en “Preguntas frecuentes” (preguntas conceptuales) o en “Glosario” (términos específicos, en orden alfabético).
+- 2026-11-17 — Nueva regla del usuario: los commits y pull requests no llevan firmas de agentes (sección “Mantenimiento de los archivos del proyecto”).
+- 2026-11-17 — Nueva regla del usuario: no se menciona el nombre del asistente de IA en ninguna parte (archivos, commits, referencias). Se quitaron las menciones existentes, incluida la ruta temporal de `<scratchpad>`.
+- 2026-11-17 — El PDF fuente se renombró de `document.pdf` a `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`; se actualizaron las referencias en `AGENTS.md` y `README.md`.
