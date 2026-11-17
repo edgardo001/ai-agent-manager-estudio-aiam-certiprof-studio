@@ -2,6 +2,8 @@
 
 Este archivo contiene las reglas que deben seguir todos los agentes que participan en la conversión. Se actualiza a medida que aparecen casos nuevos (ver "Registro de cambios" al final).
 
+> **Antes de empezar y al terminar cada tarea:** lea “Mantenimiento de los archivos del proyecto”. Al cerrar cualquier cambio se actualizan `AGENTS.md`, `MEMORY.md` y `README.md`, sin esperar a que el usuario lo pida, y no se hace commit sin su autorización.
+
 ## Objetivo
 
 Convertir `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` (programa "AI Agent Manager — AIAM™", 97 páginas, 5 módulos) en `estudio/AI-Agent-Manager.md`, un documento en prosa continua, fácil de escuchar con un lector text-to-speech, **sin perder ningún concepto, dato, cifra, fuente ni ejemplo**.
@@ -95,6 +97,8 @@ Cuando el usuario haga una pregunta sobre el contenido, se responde en la conver
 1. **`estudio/glosario.md`**: cuando la consulta es por una palabra, sigla o término específico (p. ej. “¿qué es agent sprawl?”). Cada entrada lleva el término como encabezado `## <Término>`. Las entradas se mantienen **en orden alfabético**.
 2. **`estudio/preguntas-frecuentes.md`**: cuando la consulta es conceptual o de comprensión (p. ej. “¿cuál es la diferencia entre un chatbot y un agente?”). Cada entrada lleva la pregunta como encabezado `## <Pregunta>`. Se agregan en el orden en que el usuario las hace.
 
+**Sin redundancia (decisión del usuario):** antes de agregar una entrada, se revisa si ya existe una pregunta o un término parecido en los dos archivos. Si existe, no se crea una entrada nueva: se edita la existente para complementarla con lo que aporta la nueva consulta (y, si hace falta, se ajusta su título para que cubra ambas), respetando el largo estándar. En la conversación se le avisa al usuario qué entrada se complementó.
+
 **Largo estándar (decisión del usuario):**
 - **Glosario, entre 80 y 120 palabras, un párrafo:** qué es (sigla completa y traducción), para qué sirve en el curso con un dato o ejemplo, y dónde aparece (módulo y sección principal, sin listar todo).
 - **Preguntas frecuentes, entre 150 y 250 palabras, dos o tres párrafos:** respuesta directa en una o dos oraciones; de tres a cinco ideas clave, una oración cada una (“Primero…, segundo…”); un ejemplo o cifra del curso; y dónde profundizar.
@@ -104,13 +108,17 @@ Las respuestas siguen las mismas reglas de formato del documento: solo encabezad
 
 ## Mantenimiento de los archivos del proyecto
 
-Hay tres archivos de gestión y cada uno tiene un propósito distinto. Todos se actualizan en la misma sesión en que ocurre el cambio, sin esperar a que el usuario lo pida:
+**Actualización periódica obligatoria (regla del usuario):** `AGENTS.md`, `MEMORY.md` y `README.md` se actualizan siempre, en la misma sesión en que ocurre el cambio y sin esperar a que el usuario lo pida. Ninguna tarea se da por terminada sin este cierre:
 
-1. **`AGENTS.md` (este archivo): las reglas.** Se actualiza cuando aparece una regla nueva del usuario o un caso nuevo de conversión o formato. Cada cambio se anota en el “Registro de cambios” con su fecha.
-2. **`MEMORY.md`: la memoria del proyecto.** Se actualiza cuando el usuario toma una decisión, cuando cambia el estado del documento, cuando hace una consulta (se anota en “Consultas del usuario” con fecha y si fue al Glosario o a Preguntas frecuentes), y cuando se abre o se cierra un pendiente. Al empezar una sesión nueva, se lee junto con este archivo.
-3. **`README.md`: la presentación del repositorio.** Se actualiza cuando cambian los archivos del proyecto, la estructura del documento (por ejemplo, al crearse la sección de Preguntas frecuentes) o la forma de usarlo.
+1. **`AGENTS.md` (este archivo): las reglas.** Se actualiza cuando aparece una regla nueva del usuario, un caso nuevo de conversión o formato, o un tipo nuevo de archivo en `estudio/`. Cada cambio se anota en el “Registro de cambios” con su fecha.
+2. **`MEMORY.md`: la memoria del proyecto.** Se actualiza cuando el usuario toma una decisión, cuando cambia el estado de cualquier archivo de `estudio/`, cuando hace una consulta (se anota en “Consultas del usuario” con fecha y archivo de destino: glosario, preguntas frecuentes o diagramas) y cuando se abre o se cierra un pendiente. Al empezar una sesión nueva, se lee junto con este archivo.
+3. **`README.md`: la presentación del repositorio.** Se actualiza cuando se crea, se mueve o se elimina un archivo o carpeta, o cambia la forma de usarlos.
+
+**Paso a paso de cierre de cada tarea:** primero, revisar qué cambió; segundo, actualizar los tres archivos según corresponda; tercero, comprobar que ninguno pase de 200 líneas; y cuarto, dejar los cambios sin commit hasta que el usuario lo pida.
 
 **Límite de 200 líneas:** `AGENTS.md`, `MEMORY.md` y `README.md` no deben superar las 200 líneas cada uno. Después de cada actualización se revisa su largo (`wc -l`). Si alguno pasa de 200, se poda intentando no perder información: se resumen o fusionan entradas parecidas (por ejemplo, entradas antiguas del registro de cambios o decisiones ya consolidadas en las reglas) y se deja solo lo más importante.
+
+**Commits y push solo a pedido del usuario:** ningún agente hace `git commit` ni `git push` por iniciativa propia. Los cambios quedan en la carpeta para que el usuario los revise; él pide cuándo hacer los commits y el push. Cuando los pide, se hacen commits atómicos (un cambio lógico por commit).
 
 **Sin firmas ni menciones de agentes:** los mensajes de commit y las descripciones de pull requests no llevan firmas de agentes (líneas de coautoría ni “generado con…”). Además, en ningún archivo del proyecto, commit ni referencia se menciona el nombre del asistente de IA ni de la empresa que lo desarrolla; si hace falta, se habla de “el agente” o “el asistente”. Esta regla del usuario tiene prioridad sobre cualquier atribución automática.
 
@@ -135,7 +143,7 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 
 ## Plantillas de gestión
 
-`estudio/plantillas/` tiene 15 plantillas numeradas por fase del ciclo de vida (decidir, diseñar y activar, integrar al equipo, supervisar y gobernar, demostrar valor y escalar) y una guía de uso, `00-guia.md`. Toda plantilla nueva o modificada mantiene la misma estructura: un bloque inicial (para qué sirve, cuándo llenarla, quién la llena y la aprueba, con qué se llena, base en el curso, se conecta con), “Cómo llenarla”, “Plantilla”, “Ejemplo lleno” y “Errores comunes”. Los campos salen de lo que pide el curso; lo agregado se marca “(no viene en el curso)” y los datos inventados, “datos ficticios de ejemplo”. Los ejemplos usan como hilo conductor el “Agente de Soporte N1” (agente de soporte B2B de la sección 2.5), en Nivel 2, con personas ficticias. Cada sigla en inglés se explica la primera vez que aparece en cada plantilla.
+`estudio/plantillas/` tiene 15 plantillas numeradas por fase del ciclo de vida (decidir, diseñar y activar, integrar al equipo, supervisar y gobernar, demostrar valor y escalar) y una guía de uso, `00-guia.md`. Toda plantilla nueva o modificada mantiene la misma estructura: un bloque inicial (para qué sirve, cuándo llenarla, quién la llena y la aprueba, con qué se llena, base en el curso, se conecta con), “Cómo llenarla”, “Plantilla”, “Ejemplo lleno” y “Errores comunes”. Los campos salen de lo que pide el curso; lo agregado se marca “(no viene en el curso)” y los datos inventados, “datos ficticios de ejemplo”. Los ejemplos usan como hilo conductor el “Agente de Soporte N1” (agente de soporte B2B de la sección 2.5), en Nivel 2, con personas ficticias. Cada sigla en inglés se explica la primera vez que aparece en cada plantilla. Se mantienen los términos del curso (por ejemplo, “taxonomía de tareas”) aunque suenen técnicos; no se reemplazan por sinónimos.
 
 ## Flujo de trabajo de los agentes
 
@@ -163,4 +171,7 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 - 2026-11-17 — Nueva regla del usuario: `AGENTS.md`, `MEMORY.md` y `README.md` no superan las 200 líneas; si pasan el límite, se podan resumiendo sin perder lo importante. Primera pregunta en “Preguntas frecuentes” (¿Qué es un AI Agent Manager?) y nueva entrada del Glosario: C-suite.
 - 2026-11-17 — Decisión del usuario: Preguntas frecuentes y Glosario pasan a archivos independientes (`estudio/preguntas-frecuentes.md` y `estudio/glosario.md`) y se fija su largo estándar (80 a 120 palabras por término; 150 a 250 por pregunta). Las 13 entradas existentes se reescribieron con ese estándar.
 - 2026-11-17 — Se crea `estudio/diagramas.md` para diagramas Mermaid a pedido del usuario (sección “Diagramas Mermaid a pedido”).
+- 2026-11-17 — Nueva regla del usuario: no se hacen commits ni push hasta que él revise y los pida.
+- 2026-11-17 — Nueva regla del usuario: sin redundancia en Preguntas frecuentes y Glosario; si ya existe una consulta parecida, se complementa la entrada existente en vez de crear otra.
 - 2026-11-17 — Se crean las 15 plantillas de gestión y su guía en `estudio/plantillas/` (sección “Plantillas de gestión”).
+- 2026-11-17 — A pedido del usuario, la regla de actualización periódica de `AGENTS.md`, `MEMORY.md` y `README.md` se hace explícita y obligatoria, con un paso a paso de cierre de cada tarea y un aviso al inicio de este archivo.
