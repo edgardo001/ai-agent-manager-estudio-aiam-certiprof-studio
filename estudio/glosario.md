@@ -41,3 +41,11 @@ RPA es la sigla en inglés de Robotic Process Automation, automatización robót
 ## SOP
 
 SOP es la sigla en inglés de Standard Operating Procedure, procedimiento operativo estándar: un documento que explica paso a paso cómo se hace una tarea. En el curso, las instrucciones de un agente combinan una descripción del cargo, que dice qué hacer y para qué, con un SOP, que dice cómo hacerlo: cada paso indica qué hacer, con qué herramienta y con qué criterio decidir. Un buen SOP es el que un colega podría seguir sin pedir aclaraciones. Aparece sobre todo en el Módulo 2, sección 2.5.
+
+## Taxonomía de tareas
+
+Taxonomía significa clasificación. En el curso, la taxonomía de tareas, de la sección 4.2, es el primer diseño de un equipo híbrido: clasificar cada tarea según si pertenece al dominio del agente, al dominio humano o requiere colaboración entre ambos. Se decide con cuatro variables: la variabilidad del contexto, la consecuencia del error, la necesidad de relación, como empatía o negociación, y la disponibilidad de datos estructurados. Por ejemplo, en la comunicación con clientes el agente es la primera capa y la persona atiende las escalaciones y los cierres clave. El curso pide revisarla cada trimestre. Es la base de la plantilla 01. Aparece en el Módulo 4, secciones 4.2 y 4.3.
+
+## Vendor
+
+Vendor es una palabra en inglés que significa proveedor: la empresa que vende o entrega la tecnología, por ejemplo la plataforma o el software con que se construyen los agentes. En el curso aparece sobre todo en la sección 2.7 y en la pregunta de validación 4 del Módulo 2: el AI Agent Manager no puede asumir que el vendor o el equipo técnico resolvió la seguridad, la transparencia y los límites del agente, porque la AI Agent Index 2025 mostró que la mayoría de los desarrolladores comparte poca información sobre esto. Pedirle certificaciones al proveedor ayuda, pero no reemplaza la responsabilidad del manager. Más detalle en la pregunta sobre auditoría de seguridad.
