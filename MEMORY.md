@@ -26,13 +26,18 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — Material de repaso impreso: el usuario eligió apuntes visuales tipo “apuntes de clase” (diagramas, poco texto, letra manuscrita en títulos y notas), no fichas de pregunta y respuesta separadas. Aprobó el estilo del Módulo 1 tras pedir menos texto. Cada módulo lleva un recuadro de siglas y términos en inglés.
 - 2026-11-17 — `AGENTS.md`, `MEMORY.md` y `README.md` no deben superar las 200 líneas cada uno; si pasan el límite, se podan resumiendo sin perder lo importante. Regla registrada en `AGENTS.md`.
 - 2026-11-17 — El usuario pidió un archivo de diagramas Mermaid (`estudio/diagramas.md`) al que se irán agregando los que pida.
+- 2026-11-17 — El usuario revisa los cambios antes de subirlos: no se hace commit ni push hasta que él lo pida, y entonces en commits atómicos. Regla registrada en `AGENTS.md`.
+- 2026-11-17 — Sin redundancia en las consultas: antes de agregar una pregunta o un término se busca uno parecido; si existe, se complementa esa entrada en vez de crear otra. Regla registrada en `AGENTS.md`.
+- 2026-11-17 — El usuario recordó que `AGENTS.md`, `MEMORY.md` y `README.md` deben actualizarse periódicamente; la regla quedó explícita en `AGENTS.md`, con un paso a paso de cierre de cada tarea.
+- 2026-11-17 — Se respetan los términos del curso aunque suenen técnicos (por ejemplo, “taxonomía”): no se reemplazan por sinónimos.
 
 ## Estado actual
 
 - `estudio/AI-Agent-Manager.md` completo: 5 módulos, unas 26.500 palabras, 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Termina en el Módulo 5. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
 - Proceso usado: un agente por módulo para la conversión y una segunda pasada de auditoría por módulo contra el PDF, página por página.
-- `estudio/preguntas-frecuentes.md`: 8 preguntas. `estudio/diagramas.md`: 2 diagramas (sistema agentic genérico y caso UPS ORION, ambos vistos como flujo de n8n). `estudio/glosario.md`: 10 términos (Accountability, Agent sprawl, Audit trail, Boundary testing, C-suite, CSAT, Onboarding agentic, PwC, RPA y SOP).
+- `estudio/preguntas-frecuentes.md`: 8 preguntas. `estudio/plantillas/`: 15 plantillas y la guía `00-guia.md`, sin commit, pendientes de revisión del usuario. `estudio/diagramas.md`: 2 diagramas (sistema agentic genérico y caso UPS ORION, ambos vistos como flujo de n8n). `estudio/glosario.md`: 12 términos (Accountability, Agent sprawl, Audit trail, Boundary testing, C-suite, CSAT, Onboarding agentic, PwC, RPA, SOP, Taxonomía de tareas y Vendor).
 - Apuntes visuales en `estudio/apuntes/` completos: 28 hojas A4 (Módulo 1, 4 hojas; módulos 2 a 5, 6 hojas cada uno), cada módulo con su recuadro de siglas y términos en inglés. Hay un PDF por módulo y `apuntes-completos.pdf`. Subidos a GitHub el 2026-11-17; `estudio/fichas/` queda fuera del repositorio por ahora.
+- 2026-11-17 — El usuario pidió plantillas para gestionar y gobernar todo lo que enseña el curso, con cómo, cuándo y con qué llenarlas. Las armaron cuatro agentes en paralelo (diseño, supervisión, procesos y negocio) con una especificación común; el orquestador escribió la guía y revisó coherencia y referencias cruzadas.
 
 ## Consultas del usuario
 
@@ -54,9 +59,14 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — “Boundary testing” con ejemplos. Agregado al Glosario.
 - 2026-11-17 — “Agent sprawl”. Agregado al Glosario.
 - 2026-11-17 — “Dame ejemplos de agent sprawl”. Agregada a Preguntas frecuentes, con el caso de la pregunta 5 del Módulo 2 y tres ejemplos reales marcados como externos al curso.
+- 2026-11-17 — “Vendor”. Agregado al Glosario (no había una entrada parecida).
+- 2026-11-17 — Preguntó por “taxonomía” en las plantillas creyendo que era un error de la IA; al saber que es el término del curso, pidió dejarlo como estaba. Se revirtió el cambio a “reparto de tareas” y se agregó “Taxonomía de tareas” al Glosario, a su pedido.
+- 2026-11-17 — “¿Qué es el framework JD+SOP? Ejemplos.” Como ya existía la entrada SOP del Glosario, se dejó la explicación completa en Preguntas frecuentes y la entrada SOP ahora remite a ella.
+- 2026-11-17 — Aplicando la regla de no redundancia, se unieron las preguntas sobre métricas de valor y métricas de éxito en una sola, y la entrada “Agent sprawl” del Glosario ahora remite a la pregunta con ejemplos.
 
 ## Pendientes y temas abiertos
 
 - Al mover la carpeta, la nota que el agente guardaba en su memoria interna (fuera de esta carpeta, asociada a la ubicación anterior) queda sin uso; su contenido ya está en este archivo y en `AGENTS.md`. Se puede borrar si el usuario lo pide.
 - Pendiente de decisión del usuario: qué se sube al repositorio del material de repaso. Además de los apuntes, existen fichas recortables en `estudio/fichas/` (fichas-preguntas.pdf con las 50 preguntas a doble cara, estilos y `generar.py`), creadas antes de que el usuario eligiera el formato de apuntes; el usuario pidió conservarlas por ahora.
+- Por revisar con el usuario en las plantillas: el nivel de autonomía del agente de ejemplo (se eligió Nivel 2; el curso no lo dice) y las inconsistencias del curso que detectaron los agentes (84% frente a 83% de completitud en el Módulo 5; dos listas distintas de universidades de la AI Agent Index 2025; “módulo anterior” en la sección 4.3 cuando la taxonomía está en la 4.2).
 - Ofrecido y sin respuesta: poblar de antemano el Glosario con los términos técnicos principales del curso.
