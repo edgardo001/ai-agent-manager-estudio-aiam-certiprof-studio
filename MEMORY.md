@@ -25,12 +25,13 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — Repositorio: carpeta y repositorio de GitHub `edgardo001/ai-agent-manager-estudio-aiam-certiprof-studio`, público y con todo el contenido (incluidos el PDF y la conversión), por decisión del usuario. Se recreó desde cero, con un historial limpio sin firmas ni menciones del asistente de IA.
 - 2026-11-17 — Material de repaso impreso: el usuario eligió apuntes visuales tipo “apuntes de clase” (diagramas, poco texto, letra manuscrita en títulos y notas), no fichas de pregunta y respuesta separadas. Aprobó el estilo del Módulo 1 tras pedir menos texto. Cada módulo lleva un recuadro de siglas y términos en inglés.
 - 2026-11-17 — `AGENTS.md`, `MEMORY.md` y `README.md` no deben superar las 200 líneas cada uno; si pasan el límite, se podan resumiendo sin perder lo importante. Regla registrada en `AGENTS.md`.
+- 2026-11-17 — El usuario pidió un archivo de diagramas Mermaid (`estudio/diagramas.md`) al que se irán agregando los que pida.
 
 ## Estado actual
 
 - `estudio/AI-Agent-Manager.md` completo: 5 módulos, unas 26.500 palabras, 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Termina en el Módulo 5. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
 - Proceso usado: un agente por módulo para la conversión y una segunda pasada de auditoría por módulo contra el PDF, página por página.
-- `estudio/preguntas-frecuentes.md`: 7 preguntas. `estudio/glosario.md`: 8 términos (Accountability, Audit trail, C-suite, CSAT, Onboarding agentic, PwC, RPA y SOP).
+- `estudio/preguntas-frecuentes.md`: 7 preguntas. `estudio/diagramas.md`: 1 diagrama (sistema agentic visto como flujo de n8n). `estudio/glosario.md`: 8 términos (Accountability, Audit trail, C-suite, CSAT, Onboarding agentic, PwC, RPA y SOP).
 - Apuntes visuales en `estudio/apuntes/` completos: 28 hojas A4 (Módulo 1, 4 hojas; módulos 2 a 5, 6 hojas cada uno), cada módulo con su recuadro de siglas y términos en inglés. Hay un PDF por módulo y `apuntes-completos.pdf`. Subidos a GitHub el 2026-11-17; `estudio/fichas/` queda fuera del repositorio por ahora.
 
 ## Consultas del usuario
@@ -48,6 +49,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — “Onboarding agentic” y “SOP”. Agregados al Glosario.
 - 2026-11-17 — “¿Cuáles son las métricas de éxito? Ejemplos para aplicarlos en la realidad”. Agregada a Preguntas frecuentes; los ejemplos por área (cobranza, recursos humanos, ventas) no vienen en el curso y están marcados.
 - 2026-11-17 — “Ejemplos de cómo hacer auditoría de seguridad como Agent Manager”. Agregada a Preguntas frecuentes; los ejemplos de pruebas concretas no vienen en el curso y están marcados.
+- 2026-11-17 — Diagrama pedido: “qué debe tener un sistema agentic, como si lo hubiéramos desarrollado en n8n”. Agregado a `estudio/diagramas.md`, con la analogía de n8n marcada como externa al curso.
 
 ## Pendientes y temas abiertos
 
