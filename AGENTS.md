@@ -14,7 +14,6 @@ El usuario estudia este material escuchándolo con un programa text-to-speech; p
 
 Nota: las rutas de abajo eran temporales (carpeta scratchpad de una sesión) y pueden haber desaparecido. Si hace falta volver a consultar el PDF página por página, se regeneran desde `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf` con Python: el texto con `pypdf` (`PdfReader(...).pages[i].extract_text()`) y las imágenes con `pypdfium2` (`page.render(scale=1.4).to_pil().save(...)`). El documento final ya está completo y no depende de esos archivos.
 
-
 - Texto extraído por página: `<scratchpad>/pages/pNNN.txt` (ej. `p007.txt`).
 - Imagen renderizada por página: `<scratchpad>/img/pNNN.png`. Úsala para entender la estructura visual (cards, tablas, cifras destacadas, columnas) cuando el texto extraído quede desordenado o ambiguo.
 - `<scratchpad>` = carpeta temporal de la sesión de trabajo en que se hizo la conversión (ya no existe; al regenerar los archivos se usa cualquier carpeta temporal).
@@ -48,11 +47,11 @@ Nota: las rutas de abajo eran temporales (carpeta scratchpad de una sesión) y p
 
 ## Reglas de formato
 
-1. El documento final usa un `#` para el título general, `##` para cada módulo (“## Módulo 1. El Nuevo Rol del Manager: De Supervisar Personas a Orquestar Agentes”), `###` para cada sección numerada del PDF (“### 1.2 Agentes de IA, Chatbots y Automatización…”) y `####` para subsecciones (casos, cards con título propio, “Preguntas de validación”, cada pregunta “#### Pregunta 1” o similar si queda más claro).
+1. El documento final usa un `#` para el título general, `##` para cada módulo (“## Módulo 1. El Nuevo Rol del Manager: De Supervisar Personas a Orquestar Agentes”), `###` para cada sección numerada del PDF (“### 1.2 Agentes de IA, Chatbots y Automatización…”) y `####` para subsecciones (casos, cards con título propio y cada pregunta como “#### Pregunta 1”). Las secciones sin número, como “Preguntas de validación”, van como `###` (ver regla 5).
 2. Mismo orden y misma numeración de secciones que el PDF.
 3. Sin tablas Markdown, sin viñetas, sin listas numeradas, sin bloques de cita (`>`), sin negritas decorativas excesivas. Solo encabezados y párrafos.
 4. Párrafos separados por una línea en blanco. Codificación UTF-8 con tildes correctas.
-5. **Jerarquía fija:** las secciones sin número que cuelgan del módulo (Objetivo de aprendizaje, Responsabilidades del AIAM™, Checklist / autoevaluación, Reflexión Estratégica Final, Preguntas de validación) van como `###`. Las cards o recuadros con título propio dentro de una sección (Regla práctica, ¿Qué dice la investigación?, Caso X…) van como `####`. Cada pregunta va como `#### Pregunta N`.
+5. **Jerarquía fija:** las secciones sin número que cuelgan del módulo (Objetivo de aprendizaje, Responsabilidades, Checklist o Lista de Competencias, Reflexión Estratégica, Preguntas de validación) van como `###`, con el título que tenga en el PDF (ver regla adicional 32). “Preguntas de validación” se escribe igual en los cinco módulos. Las cards o recuadros con título propio dentro de una sección (Regla práctica, ¿Qué dice la investigación?, Caso X…) van como `####`. Cada pregunta va como `#### Pregunta N`.
 
 ## Reglas adicionales (incorporadas a partir del trabajo de los agentes)
 
@@ -68,6 +67,7 @@ Nota: las rutas de abajo eran temporales (carpeta scratchpad de una sesión) y p
 10. **Cards de pares de ejemplo** (lenguaje técnico frente a directivo, etc.): subsección `####` con un párrafo por par (“En lenguaje técnico: … Traducido al lenguaje directivo: …”).
 11. **Referencias académicas destacadas:** subsección `#### Referencia académica N`, con la fuente en prosa (autor, año, título, editorial) y la cita textual entre comillas.
 12. **Respuestas que empiezan con raya** (“Nivel 1 — Exploración, porque…”) → se reemplaza la raya por coma.
+13. En el “Por qué” se conservan las frases de razonamiento que no nombran letras de alternativas (p. ej. “No hay que retroceder al Nivel 1 ni saltar al Nivel 3…”), porque forman parte de la explicación.
 14. **Símbolos para voz:** “±2 semanas” → “más o menos 2 semanas”; “3+ días” → “3 o más días”; “5-10%” → “entre el 5% y el 10%”; “tokens/min” → “tokens por minuto”; “verde/amarillo/rojo” → “verde, amarillo o rojo”; “1-a-1” → “1 a 1”; “vs.” → “frente a”; las rayas (—) que separan incisos → comas o dos puntos.
 15. **Tablas con celda “N/A”:** se explica en prosa (“aquí no aplica dejar correr, porque…”), no se omite la fila.
 16. **Cards de tipos (p. ej. tipos de error):** un `####` por tipo, con párrafos que empiezan por “Qué son:”, “Ejemplo:”, “Señal de detección:”.
@@ -87,7 +87,6 @@ Nota: las rutas de abajo eran temporales (carpeta scratchpad de una sesión) y p
 30. **Oraciones completas en inglés dentro de prosa en español** (restos sin traducir del original) se traducen fielmente para que el lector de voz en español las lea bien. Los términos técnicos en inglés usados a propósito se mantienen.
 31. **Tablas comparativas sin título:** se puede usar un `####` construido con los encabezados de columna (“Organización sin… frente a organización con…”), sin agregar información.
 32. Se respeta el título exacto del PDF en secciones finales (“Reflexión Estratégica” sin “Final” si así aparece). Una card con título que aparece antes de esas secciones (“Lo que este programa te ha dado”) va como `####`.
-13. En el “Por qué” se conservan las frases de razonamiento que no nombran letras de alternativas (p. ej. “No hay que retroceder al Nivel 1 ni saltar al Nivel 3…”), porque forman parte de la explicación.
 
 ## Preguntas del usuario: Preguntas frecuentes y Glosario
 
@@ -129,3 +128,4 @@ No se guarda información del proyecto fuera de la carpeta (por ejemplo, en la m
 - 2026-11-17 — Nueva regla del usuario: los commits y pull requests no llevan firmas de agentes (sección “Mantenimiento de los archivos del proyecto”).
 - 2026-11-17 — Nueva regla del usuario: no se menciona el nombre del asistente de IA en ninguna parte (archivos, commits, referencias). Se quitaron las menciones existentes, incluida la ruta temporal de `<scratchpad>`.
 - 2026-11-17 — El PDF fuente se renombró de `document.pdf` a `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`; se actualizaron las referencias en `AGENTS.md` y `README.md`.
+- 2026-11-17 — Revisión de consistencia: regla adicional 13 movida a su lugar; reglas de formato 1 y 5 alineadas (“Preguntas de validación” va como `###`). En `AI-Agent-Manager.md` se unificaron los encabezados “Preguntas de validación” de los cinco módulos y el de responsabilidades del Módulo 2, según el PDF.

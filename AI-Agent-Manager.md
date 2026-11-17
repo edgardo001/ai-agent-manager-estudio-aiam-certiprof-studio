@@ -116,7 +116,7 @@ En su organización, ¿quién responde actualmente cuando un agente de IA toma u
 
 Considerando los cinco procesos más demandantes de su área en términos de tiempo, costo o tasa de error: ¿cuáles tres serían los mejores candidatos para transformación agentic en los próximos 90 días? ¿Qué nivel de autonomía sería apropiado para cada uno? ¿Quién en su equipo o en su organización debería estar en el rol de AI Agent Manager para cada uno de esos procesos hoy?
 
-### Preguntas de Validación
+### Preguntas de validación
 
 Módulo 1: diez preguntas de práctica basadas en rol.
 
@@ -328,7 +328,7 @@ La lección para el AI Agent Manager es la siguiente: el resultado de Klarna fue
 
 Al terminar este módulo, usted debería ser capaz de definir los seis parámetros de identidad de un agente (nombre, rol, alcance, permisos, restricciones, escalamiento) para cualquier proceso de su área. También debería comprender y poder aplicar el principio de permisos mínimos (least-privilege) en el diseño de un agente, y poder articular por qué protege al manager y a la organización. Debería ser capaz de diseñar un plan de onboarding agentic diferenciado del onboarding humano, considerando las diferencias críticas en ambigüedad, aprendizaje y motivación. Debería poder redactar el documento de instrucciones de un agente con los siete componentes del framework JD+SOP (contexto, objetivo, SOP, herramientas, restricciones, escalamiento, métricas). Debería conocer las cinco dimensiones de validación pre-producción y poder aplicarlas antes de autorizar el despliegue de un agente en un entorno real. Debería entender qué es el agent sprawl, cómo se origina y los tres mecanismos de gobernanza para prevenirlo. Debería comprender las implicaciones para el manager del hallazgo de la AI Agent Index 2025: la gobernanza de seguridad es responsabilidad del manager, no del vendor. Y, finalmente, debería poder describir el caso de Klarna como evidencia del impacto del onboarding estructurado en la escala y efectividad de un agente.
 
-### Responsabilidades directas del AI Agent Manager derivadas de este módulo
+### AI Agent Manager: Responsabilidades Directas Derivadas de este Módulo
 
 La primera responsabilidad es diseñar la identidad del agente. Para cada agente que el manager autorice desplegar, debe completar el framework de los seis parámetros de identidad antes de cualquier configuración técnica. Este documento es el punto de partida del onboarding, no un artefacto posterior.
 
@@ -568,7 +568,7 @@ Para cualquier agente activo en su área: ¿tiene hoy una línea base documentad
 
 ¿Cuál sería el argumento de dos minutos que presentaría mañana al C-suite para justificar la continuación de la inversión en un agente específico de su área, usando exclusivamente métricas de negocio? Si no puede construirlo hoy, ese argumento es la primera tarea que el programa AIAM™ le está entregando.
 
-### Preguntas de Validación del Módulo 3
+### Preguntas de validación
 
 Las siguientes son diez preguntas de práctica basadas en rol.
 
