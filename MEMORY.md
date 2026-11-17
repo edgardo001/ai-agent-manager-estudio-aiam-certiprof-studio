@@ -15,7 +15,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — Cuestionarios: se conserva la pregunta, el texto completo de la respuesta correcta y la justificación de por qué es correcta. Se eliminan las alternativas incorrectas, pero se rescatan los conceptos que se explicaban al descartarlas.
 - 2026-11-17 — Se omiten duración y nivel de cada módulo. Se conservan en prosa los checklists, las reflexiones estratégicas y las responsabilidades del AIAM™.
 - 2026-11-17 — Se omiten la portada (página 1) y el cierre y las páginas de Certiprof (páginas 93 a 97).
-- 2026-11-17 — El archivo final se llama `AI-Agent-Manager.md` y está en la carpeta `estudio/`, no en la raíz del repositorio (decisión del usuario). La carpeta `estudio/` irá acumulando todos los archivos que se generen a partir del curso.
+- 2026-11-17 — El archivo final se llama `AI-Agent-Manager.md` y está en la carpeta `estudio/`, no en la raíz del repositorio (decisión del usuario). Después se separó en cinco archivos por módulo, en `estudio/modulos/`. La carpeta `estudio/` irá acumulando todos los archivos que se generen a partir del curso.
 - 2026-11-17 — Se corrigen erratas evidentes del PDF y se traducen al español las oraciones completas que habían quedado en inglés (inicio de la sección 4.3); los términos técnicos en inglés se mantienen. El usuario puede pedir restaurar el original en inglés.
 - 2026-11-17 — Las consultas del usuario se guardan en archivos propios: `estudio/preguntas-frecuentes.md` (dudas conceptuales) y `estudio/glosario.md` (términos, en orden alfabético). Antes estaban al final del documento del curso. Largo estándar: de 80 a 120 palabras por término y de 150 a 250 por pregunta, porque las primeras respuestas le resultaron demasiado largas.
 - 2026-11-17 — Se crean `README.md` y `MEMORY.md`, que junto con `AGENTS.md` se mantienen actualizados.
@@ -30,12 +30,14 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-17 — Sin redundancia en las consultas: antes de agregar una pregunta o un término se busca uno parecido; si existe, se complementa esa entrada en vez de crear otra. Regla registrada en `AGENTS.md`.
 - 2026-11-17 — El usuario recordó que `AGENTS.md`, `MEMORY.md` y `README.md` deben actualizarse periódicamente; la regla quedó explícita en `AGENTS.md`, con un paso a paso de cierre de cada tarea.
 - 2026-11-17 — Se respetan los términos del curso aunque suenen técnicos (por ejemplo, “taxonomía”): no se reemplazan por sinónimos.
+- 2026-11-17 — El usuario pidió separar `AI-Agent-Manager.md` en módulos sin cambiar el contenido: ahora son cinco archivos en `estudio/modulos/`; el archivo único se eliminó.
+- 2026-11-17 — Pidió resúmenes por módulo, solo en párrafos fáciles de leer, en una carpeta propia, y que se validen con varios agentes para evitar alucinaciones y omisiones.
 
 ## Estado actual
 
-- `estudio/AI-Agent-Manager.md` completo: 5 módulos, unas 26.500 palabras, 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Termina en el Módulo 5. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
+- Documento del curso completo, separado en cinco archivos en `estudio/modulos/` (uno por módulo; el primero incluye el título general): 5 módulos, unas 26.500 palabras, 50 preguntas de validación con 50 respuestas. Sin tablas, viñetas, citas en bloque ni emojis. Termina en el Módulo 5. Encabezados de sección unificados según el PDF (revisión del 2026-11-17).
 - Proceso usado: un agente por módulo para la conversión y una segunda pasada de auditoría por módulo contra el PDF, página por página.
-- `estudio/preguntas-frecuentes.md`: 8 preguntas. `estudio/plantillas/`: 15 plantillas y la guía `00-guia.md`, sin commit, pendientes de revisión del usuario. `estudio/diagramas.md`: 2 diagramas (sistema agentic genérico y caso UPS ORION, ambos vistos como flujo de n8n). `estudio/glosario.md`: 12 términos (Accountability, Agent sprawl, Audit trail, Boundary testing, C-suite, CSAT, Onboarding agentic, PwC, RPA, SOP, Taxonomía de tareas y Vendor).
+- `estudio/preguntas-frecuentes.md`: 8 preguntas. `estudio/plantillas/`: 15 plantillas y la guía `00-guia.md`, sin commit, pendientes de revisión del usuario. `estudio/resumenes/`: 5 resúmenes (de 783 a 799 palabras), escritos por un agente y validados dos veces por agentes independientes; sin commit. `estudio/diagramas.md`: 2 diagramas (sistema agentic genérico y caso UPS ORION, ambos vistos como flujo de n8n). `estudio/glosario.md`: 12 términos (Accountability, Agent sprawl, Audit trail, Boundary testing, C-suite, CSAT, Onboarding agentic, PwC, RPA, SOP, Taxonomía de tareas y Vendor).
 - Apuntes visuales en `estudio/apuntes/` completos: 28 hojas A4 (Módulo 1, 4 hojas; módulos 2 a 5, 6 hojas cada uno), cada módulo con su recuadro de siglas y términos en inglés. Hay un PDF por módulo y `apuntes-completos.pdf`. Subidos a GitHub el 2026-11-17; `estudio/fichas/` queda fuera del repositorio por ahora.
 - 2026-11-17 — El usuario pidió plantillas para gestionar y gobernar todo lo que enseña el curso, con cómo, cuándo y con qué llenarlas. Las armaron cuatro agentes en paralelo (diseño, supervisión, procesos y negocio) con una especificación común; el orquestador escribió la guía y revisó coherencia y referencias cruzadas.
 
@@ -67,6 +69,6 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 ## Pendientes y temas abiertos
 
 - Al mover la carpeta, la nota que el agente guardaba en su memoria interna (fuera de esta carpeta, asociada a la ubicación anterior) queda sin uso; su contenido ya está en este archivo y en `AGENTS.md`. Se puede borrar si el usuario lo pide.
-- Pendiente de decisión del usuario: qué se sube al repositorio del material de repaso. Además de los apuntes, existen fichas recortables en `estudio/fichas/` (fichas-preguntas.pdf con las 50 preguntas a doble cara, estilos y `generar.py`), creadas antes de que el usuario eligiera el formato de apuntes; el usuario pidió conservarlas por ahora.
+- La carpeta `estudio/fichas/` (fichas de pregunta y respuesta del primer intento, nunca subidas) ya no está en la carpeta del proyecto al 2026-11-17; no la borró ningún agente.
 - Por revisar con el usuario en las plantillas: el nivel de autonomía del agente de ejemplo (se eligió Nivel 2; el curso no lo dice) y las inconsistencias del curso que detectaron los agentes (84% frente a 83% de completitud en el Módulo 5; dos listas distintas de universidades de la AI Agent Index 2025; “módulo anterior” en la sección 4.3 cuando la taxonomía está en la 4.2).
 - Ofrecido y sin respuesta: poblar de antemano el Glosario con los términos técnicos principales del curso.
