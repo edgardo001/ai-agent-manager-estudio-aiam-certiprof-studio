@@ -145,6 +145,10 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 
 `estudio/plantillas/` tiene 15 plantillas numeradas por fase del ciclo de vida (decidir, diseñar y activar, integrar al equipo, supervisar y gobernar, demostrar valor y escalar) y una guía de uso, `00-guia.md`. Toda plantilla nueva o modificada mantiene la misma estructura: un bloque inicial (para qué sirve, cuándo llenarla, quién la llena y la aprueba, con qué se llena, base en el curso, se conecta con), “Cómo llenarla”, “Plantilla”, “Ejemplo lleno” y “Errores comunes”. Los campos salen de lo que pide el curso; lo agregado se marca “(no viene en el curso)” y los datos inventados, “datos ficticios de ejemplo”. Los ejemplos usan como hilo conductor el “Agente de Soporte N1” (agente de soporte B2B de la sección 2.5), en Nivel 2, con personas ficticias. Cada sigla en inglés se explica la primera vez que aparece en cada plantilla. Se mantienen los términos del curso (por ejemplo, “taxonomía de tareas”) aunque suenen técnicos; no se reemplazan por sinónimos.
 
+## Resúmenes por módulo
+
+`estudio/resumenes/resumen-modulo-N.md`: un resumen por módulo para repasar en pocos minutos, leído o escuchado. Formato: un título y solo párrafos cortos (sin subtítulos, listas ni tablas), entre 450 y 800 palabras (el máximo subió de 700 a 800 para no perder contenido importante), con números escritos para la voz y términos en inglés explicados. Todo sale del módulo correspondiente; nada se inventa. Cada resumen pasa dos validaciones de agentes distintos del que lo escribió: la primera busca alucinaciones y omisiones importantes; la segunda revisa de nuevo todo el texto después de las correcciones.
+
 ## Flujo de trabajo de los agentes
 
 - Cada agente procesa **un módulo completo** y escribe su resultado en `<scratchpad>/out/moduloN.md` (empezando por el encabezado `## Módulo N. …`).
@@ -176,3 +180,4 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 - 2026-11-17 — Se crean las 15 plantillas de gestión y su guía en `estudio/plantillas/` (sección “Plantillas de gestión”).
 - 2026-11-17 — A pedido del usuario, la regla de actualización periódica de `AGENTS.md`, `MEMORY.md` y `README.md` se hace explícita y obligatoria, con un paso a paso de cierre de cada tarea y un aviso al inicio de este archivo.
 - 2026-11-17 — Decisión del usuario: `estudio/AI-Agent-Manager.md` se separó en cinco archivos, uno por módulo, en `estudio/modulos/`, sin cambiar el contenido (unidos dan el documento original byte a byte). Toda referencia al “documento del curso” o a `AI-Agent-Manager.md` se refiere ahora a esos cinco archivos.
+- 2026-11-17 — Se crean los resúmenes por módulo en `estudio/resumenes/`, escritos y validados por agentes distintos (sección “Resúmenes por módulo”).
