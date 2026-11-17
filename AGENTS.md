@@ -133,6 +133,10 @@ Además del documento para escuchar, el usuario repasa con apuntes impresos en `
 
 Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el orden en que lo pide. Cada diagrama lleva un encabezado `## <Tema>`, una o dos oraciones que dicen qué muestra y de qué módulo y sección sale, y el bloque de código Mermaid. Las etiquetas van en español y son cortas. Todo dato sale de `estudio/AI-Agent-Manager.md`; lo que no venga del curso se marca. Antes de agregarlo, se valida que la sintaxis Mermaid sea correcta (por ejemplo, comillas en etiquetas con paréntesis, dos puntos o acentos problemáticos).
 
+## Plantillas de gestión
+
+`estudio/plantillas/` tiene 15 plantillas numeradas por fase del ciclo de vida (decidir, diseñar y activar, integrar al equipo, supervisar y gobernar, demostrar valor y escalar) y una guía de uso, `00-guia.md`. Toda plantilla nueva o modificada mantiene la misma estructura: un bloque inicial (para qué sirve, cuándo llenarla, quién la llena y la aprueba, con qué se llena, base en el curso, se conecta con), “Cómo llenarla”, “Plantilla”, “Ejemplo lleno” y “Errores comunes”. Los campos salen de lo que pide el curso; lo agregado se marca “(no viene en el curso)” y los datos inventados, “datos ficticios de ejemplo”. Los ejemplos usan como hilo conductor el “Agente de Soporte N1” (agente de soporte B2B de la sección 2.5), en Nivel 2, con personas ficticias. Cada sigla en inglés se explica la primera vez que aparece en cada plantilla.
+
 ## Flujo de trabajo de los agentes
 
 - Cada agente procesa **un módulo completo** y escribe su resultado en `<scratchpad>/out/moduloN.md` (empezando por el encabezado `## Módulo N. …`).
@@ -159,3 +163,4 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 - 2026-11-17 — Nueva regla del usuario: `AGENTS.md`, `MEMORY.md` y `README.md` no superan las 200 líneas; si pasan el límite, se podan resumiendo sin perder lo importante. Primera pregunta en “Preguntas frecuentes” (¿Qué es un AI Agent Manager?) y nueva entrada del Glosario: C-suite.
 - 2026-11-17 — Decisión del usuario: Preguntas frecuentes y Glosario pasan a archivos independientes (`estudio/preguntas-frecuentes.md` y `estudio/glosario.md`) y se fija su largo estándar (80 a 120 palabras por término; 150 a 250 por pregunta). Las 13 entradas existentes se reescribieron con ese estándar.
 - 2026-11-17 — Se crea `estudio/diagramas.md` para diagramas Mermaid a pedido del usuario (sección “Diagramas Mermaid a pedido”).
+- 2026-11-17 — Se crean las 15 plantillas de gestión y su guía en `estudio/plantillas/` (sección “Plantillas de gestión”).

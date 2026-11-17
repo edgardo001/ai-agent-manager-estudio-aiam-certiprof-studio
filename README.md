@@ -10,6 +10,7 @@ Versión en prosa del curso **AI Agent Manager (AIAM™)** de Certiprof, prepara
   - `estudio/preguntas-frecuentes.md`: respuestas a las dudas de comprensión del usuario, en el orden en que las hizo.
   - `estudio/glosario.md`: siglas y términos consultados, en orden alfabético.
   - `estudio/diagramas.md`: diagramas Mermaid de temas del curso, agregados a pedido; GitHub los muestra dibujados.
+  - `estudio/plantillas/`: 15 plantillas para aplicar el curso en la práctica (oportunidades, business case, registro de agentes, ficha de identidad, instrucciones, onboarding, rediseño de procesos, gestión del cambio, supervisión, intervenciones, riesgos y seguridad, Governance Board, auditoría trimestral, reporte a la dirección y escala). Empiece por `00-guia.md`, que explica cuál usar y cuándo.
   - `estudio/apuntes/`: apuntes visuales para imprimir y repasar, una serie de hojas A4 por módulo con diagramas y poco texto (`apuntes-modulo-N.pdf` y `apuntes-completos.pdf`). Se regeneran con `python estudio/apuntes/generar.py`, que necesita Chrome o Edge.
 - `AGENTS.md`: las reglas de conversión y de mantenimiento que debe seguir cualquier agente de IA que trabaje en este repositorio.
 - `MEMORY.md`: la memoria del proyecto: contexto, decisiones tomadas, estado actual, consultas realizadas y pendientes.
