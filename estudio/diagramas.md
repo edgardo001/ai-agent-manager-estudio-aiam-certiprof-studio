@@ -4,7 +4,7 @@ Diagramas en formato Mermaid sobre los temas del curso, agregados a pedido, en e
 
 Cada diagrama indica de qué módulo y sección sale. Todo su contenido viene del curso, salvo lo que se marca explícitamente.
 
-Los diagramas para construir el proyecto de agente, con su arquitectura técnica, están aparte, en `estudio/proyecto-agente/arquitectura.md`.
+Los diagramas para construir el proyecto de agente, con su arquitectura técnica, están aparte, en `estudio/proyecto-agente/agente-soporte-n1/docs/`: los del código actual en `diagramas-del-codigo.md` y los de la versión futura en `referencia/arquitectura.md`.
 
 ## Qué debe tener un sistema agentic, visto como un flujo de n8n
 

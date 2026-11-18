@@ -6,11 +6,13 @@ Qué viene del curso y qué no: las reglas que el agente debe cumplir (identidad
 
 Orden de lectura: primero, la arquitectura general, que muestra qué pieza técnica responde a cada exigencia del curso; segundo, la arquitectura en contenedores, desde la API REST hacia atrás; tercero, el inventario de qué se instala, se obtiene, se descarga, se programa y se despliega; y cuarto, la secuencia de un caso.
 
-Material relacionado: el texto del system prompt (JD+SOP) y la definición de una herramienta están en `../plantillas/05-instrucciones-del-agente.md`; los diagramas de los temas del curso, en `../diagramas.md`; y el índice de todo el material, en `../indice.md`.
+**Aviso: este documento es de referencia y muestra la versión futura del sistema, no la versión 1 que se está construyendo.** La versión 1 usa dos contenedores (PostgreSQL con pgvector y el backend), una API síncrona sin cola ni worker, sin autenticación, y tablas con nombres en español; posterga Valkey, el worker, el mock-crm, Grafana y Langfuse. Para construir mandan `../plan-del-proyecto.md` (reglas, etapas y modelo de datos) y `../diagramas-del-codigo.md` (el código real). Aquí se mantienen los diagramas porque muestran hacia dónde puede crecer el proyecto.
 
 ## Arquitectura de un proyecto de agente: el Agente de Soporte N1 llevado a código
 
 Muestra las piezas técnicas que hacen falta para construir de verdad un agente como el de soporte técnico de la sección 2.5, y a qué exigencia del curso responde cada una. Los conceptos de gestión salen del Módulo 2 (secciones 2.2 a 2.7) y del Módulo 3 (secciones 3.2 a 3.5); la arquitectura técnica, los componentes y las tecnologías no vienen en el curso: son una propuesta para quien quiera programarlo.
+
+**Versión futura, no es la versión 1.** Lo que cambia en la versión 1 está en el aviso del inicio y en el plan.
 
 ```mermaid
 flowchart TD
@@ -21,7 +23,7 @@ flowchart TD
     end
 
     subgraph BACK["2 · Backend del agente: tu código"]
-        GW["API de entrada<br/>autenticación · límite de uso"]
+        GW["API de entrada<br/>autenticación en una capa superior, D4"]
         GIN{{"Guardrail de entrada<br/>datos sensibles · intentos de manipulación"}}
         ORQ["Orquestador: el bucle del agente<br/>piensa · usa una herramienta · observa · repite"]
         INST[/"Instrucciones versionadas<br/>descripción del cargo + SOP"/]
@@ -35,7 +37,7 @@ flowchart TD
     subgraph TOOLS["3 · Herramientas con permisos mínimos"]
         CRM[["CRM: solo lectura"]]
         KB[["Base de conocimiento<br/>búsqueda semántica"]]
-        TK[["Crear o cerrar ticket"]]
+        TK[["Escalar a una persona"]]
     end
 
     subgraph HUM["4 · Humano en el circuito"]
@@ -67,13 +69,15 @@ flowchart TD
     KILL -. "detiene" .-> ORQ
 ```
 
-Cómo leerlo: los bloques 1 a 4 son el producto que se programa, y el bloque 5 es lo que convierte ese programa en un agente gobernable, que es justamente lo que enseña el curso. El orquestador es el corazón: recibe el caso, le pasa al modelo de lenguaje las instrucciones y el contexto, y repite el ciclo de pensar, usar una herramienta y observar el resultado hasta resolver o escalar. Los permisos mínimos se implementan dándole al agente solo tres herramientas, y el CRM en modo lectura; las restricciones y el escalamiento se implementan como reglas en código, no como algo que el modelo decide solo, porque el curso dice que cuándo interviene un humano es una decisión de governance. El audit trail es una tabla o un registro donde cada paso queda guardado, y de ahí salen las métricas del dashboard. Las pruebas de los cinco filtros de validación de la sección 2.6 se vuelven pruebas automáticas que se corren antes de publicar cada versión de las instrucciones.
+Cómo leerlo: los bloques 1 a 4 son el producto que se programa, y el bloque 5 es lo que convierte ese programa en un agente gobernable, que es justamente lo que enseña el curso. El orquestador es el corazón: recibe el caso, le pasa al modelo de lenguaje las instrucciones y el contexto, y repite el ciclo de pensar, usar una herramienta y observar el resultado hasta resolver o escalar. Los permisos mínimos se implementan dándole al agente solo tres herramientas, y el CRM en modo lectura; las restricciones y el escalamiento se implementan como reglas en código, no como algo que el modelo decide solo, porque el curso dice que cuándo interviene un humano es una decisión de governance. El audit trail es una tabla o un registro donde cada paso queda guardado, y de ahí salen las métricas del dashboard. Las pruebas de los cinco dimensiones de validación de la sección 2.6 se vuelven pruebas automáticas que se corren antes de publicar cada versión de las instrucciones.
 
-Con qué se puede construir (esto no viene en el curso): el orquestador se puede programar directamente con el SDK del proveedor del modelo, que existe para Python, C#, Java y Node, o con un framework de agentes como LangGraph en Python, Semantic Kernel en C# y Java, o el Vercel AI SDK en Node. La base de conocimiento usa búsqueda semántica, por ejemplo PostgreSQL con la extensión pgvector; la memoria, Redis o la misma base de datos; el audit trail, una tabla en PostgreSQL; el dashboard, Grafana o Metabase; y el kill switch, una variable de configuración o un feature flag que el orquestador revisa antes de cada caso. El CRM y el sistema de tickets pueden ser simulados al principio, con una base de datos propia.
+Con qué se puede construir (esto no viene en el curso): el orquestador se puede programar directamente con el SDK del proveedor del modelo, que existe para Python, C#, Java y Node, o con un framework de agentes como LangGraph en Python, Semantic Kernel en C# y Java, o el Vercel AI SDK en Node. La base de conocimiento usa búsqueda semántica, por ejemplo PostgreSQL con la extensión pgvector; la memoria, la misma base de datos (o Valkey, con licencia BSD, si el volumen lo exige); el audit trail, una tabla en PostgreSQL; el dashboard, una página propia o Grafana (licencia AGPL, aceptada como excepción en D3); y el kill switch, una variable de configuración o un feature flag que el orquestador revisa antes de cada caso. El CRM y el sistema de tickets pueden ser simulados al principio, con una base de datos propia.
 
 ## Arquitectura técnica en contenedores: el Agente de Soporte N1 desde la API REST hacia atrás
 
 Versión técnica del diagrama anterior, sin los canales de entrada, que son solo interfaz: parte de la API REST y muestra los contenedores de Docker, las tablas y los proveedores de modelos, Gemini con una clave de Google AI Studio u OpenRouter. Las reglas del agente salen del Módulo 2, sección 2.5, y las métricas del Módulo 3; toda la arquitectura, los contenedores y las tecnologías no vienen en el curso.
+
+**Versión futura, no es la versión 1.** Lo que cambia en la versión 1 está en el aviso del inicio y en el plan.
 
 ```mermaid
 flowchart TD
@@ -81,7 +85,7 @@ flowchart TD
 
     API["contenedor api · backend REST<br/>POST /tickets · GET /tickets/:id<br/>GET /escalations · POST /admin/kill-switch"]
 
-    RD[("contenedor redis<br/>cola de casos · memoria corta<br/>bandera del kill switch")]
+    RD[("contenedor valkey<br/>cola de casos · memoria corta<br/>bandera del kill switch")]
 
     subgraph WKS["contenedor agent-worker"]
         WK["orquestador<br/>bucle: modelo, herramienta, observar<br/>tope de pasos y de tiempo"]
@@ -101,15 +105,15 @@ flowchart TD
     CRM["contenedor mock-crm<br/>REST de solo lectura"]
     ING["contenedor ingest · tarea puntual<br/>documentos a fragmentos y embeddings"]
 
-    PG[("contenedor postgres con pgvector<br/>tickets · messages · kb_chunks<br/>audit_log · prompt_versions<br/>agent_registry · escalations")]
+    PG[("contenedor postgres con pgvector<br/>registro_agentes · clientes<br/>fragmentos_conocimiento · tickets<br/>mensajes · registro_auditoria")]
 
     subgraph OBS["Observabilidad y gobierno"]
         GF["contenedor grafana<br/>dashboard de métricas de negocio"]
         LF["contenedor langfuse, opcional<br/>traza de cada llamada al modelo"]
-        CI["CI · pruebas de los 5 filtros<br/>conjunto fijo de casos de prueba"]
+        CI["CI · pruebas de los 5 dimensiones<br/>conjunto fijo de casos de prueba"]
     end
 
-    CLI -->|"HTTP con API key"| API
+    CLI -->|"HTTP"| API
     API -->|"encola ticket_id"| RD
     RD -->|"toma el caso · kill switch"| WK
     LLMC --> GEM
@@ -125,13 +129,15 @@ flowchart TD
     CI -.->|"aprueba una versión del prompt"| PG
 ```
 
-Cómo leerlo: la API no llama al modelo directamente; guarda el ticket, lo pone en una cola de Redis y responde de inmediato, porque una llamada al modelo puede tardar varios segundos y el agente puede necesitar varias. El agent-worker toma el caso y hace el bucle: le manda al modelo el prompt aprobado, que es el documento JD+SOP guardado en la tabla prompt_versions, y las herramientas disponibles; si el modelo pide una herramienta, el worker la ejecuta y le devuelve el resultado. Las herramientas son solo tres, buscar cliente, buscar solución y escalar a una persona, y las dos primeras son de solo lectura: es el principio de permisos mínimos. El texto exacto del prompt y la definición de una herramienta están en la plantilla 05, `../plantillas/05-instrucciones-del-agente.md`. Los guardrails son código normal, no parte del prompt: revisan las restricciones y las reglas de escalamiento, como los 8 minutos o la mención de cancelación, y si corresponde dejan el caso en la tabla escalations con todo el contexto para que lo tome una persona.
+Cómo leerlo: la API no llama al modelo directamente; guarda el ticket, lo pone en una cola de Valkey y responde de inmediato, porque una llamada al modelo puede tardar varios segundos y el agente puede necesitar varias. El agent-worker toma el caso y hace el bucle: le manda al modelo el prompt aprobado, que es el documento JD+SOP con su versión aprobada anotada en registro_agentes, y las herramientas disponibles; si el modelo pide una herramienta, el worker la ejecuta y le devuelve el resultado. Las herramientas son solo tres, buscar cliente, buscar solución y escalar a una persona, y las dos primeras son de solo lectura: es el principio de permisos mínimos. El texto exacto del prompt y la definición de una herramienta están en la plantilla 05, `../../../../plantillas/05-instrucciones-del-agente.md`. Los guardrails son código normal, no parte del prompt: revisan las restricciones y las reglas de escalamiento, como los 8 minutos o la mención de cancelación, y si corresponde marcan el ticket como escalado, con todo el contexto, para que lo tome una persona.
 
-Sobre los modelos: tanto Gemini como OpenRouter ofrecen un punto de acceso compatible con el formato de OpenAI, así que un solo cliente sirve para los dos y cambiar de proveedor es cambiar la URL base, la clave y el nombre del modelo en la configuración. Para la búsqueda semántica de la base de conocimiento se necesita además un modelo de embeddings, por ejemplo el de Gemini. Para el gobierno: cada paso queda en audit_log, de donde Grafana calcula la resolución autónoma, el escalamiento, el tiempo y el CSAT; la bandera del kill switch en Redis se revisa antes de cada caso y de cada paso; y una versión nueva del prompt solo se marca como aprobada si pasa en CI las pruebas de los cinco filtros de la sección 2.6.
+Sobre los modelos: tanto Gemini como OpenRouter ofrecen un punto de acceso compatible con el formato de OpenAI, así que un solo cliente sirve para los dos y cambiar de proveedor es cambiar la URL base, la clave y el nombre del modelo en la configuración. Para la búsqueda semántica de la base de conocimiento se necesita además un modelo de embeddings, por ejemplo el de Gemini. Para el gobierno: cada paso queda en audit_log, de donde Grafana calcula la resolución autónoma, el escalamiento, el tiempo y el CSAT; la bandera del kill switch en Redis se revisa antes de cada caso y de cada paso; y una versión nueva del prompt solo se marca como aprobada si pasa en CI las pruebas de los cinco dimensiones de la sección 2.6.
 
 ## Inventario del Agente de Soporte N1: qué se instala, se obtiene, se descarga, se programa y se despliega
 
 Complementa el diagrama de contenedores: separa cada componente según de dónde sale, en el orden en que conviene trabajar. Nada de esto viene en el curso; las reglas que el código debe cumplir salen del Módulo 2, secciones 2.2 a 2.6, y las métricas del Módulo 3, sección 3.2.
+
+**Versión futura, no es la versión 1.** Lo que cambia en la versión 1 está en el aviso del inicio y en el plan.
 
 ```mermaid
 flowchart TD
@@ -150,18 +156,18 @@ flowchart TD
 
     subgraph DES["3 · Descargar: imágenes de Docker ya hechas"]
         D1[("pgvector/pgvector<br/>PostgreSQL con búsqueda vectorial")]
-        D2[("redis")]
+        D2[("valkey")]
         D3["grafana/grafana"]
         D4["langfuse, opcional<br/>trae su propio compose"]
     end
 
     subgraph DEV["4 · Desarrollar: tu código, una imagen por servicio"]
-        V1["api<br/>endpoints REST · autenticación"]
+        V1["api<br/>endpoints REST"]
         V2["agent-worker<br/>bucle del agente · llm-client<br/>herramientas · guardrails · audit_log"]
         V3["mock-crm<br/>REST de solo lectura con datos ficticios"]
         V4["ingest<br/>fragmenta documentos y crea embeddings"]
         V5["Archivos de configuración<br/>esquema SQL · prompt JD+SOP · .env"]
-        V6["Pruebas de los 5 filtros<br/>se corren en CI antes de cada versión"]
+        V6["Pruebas de los 5 dimensiones<br/>se corren en CI antes de cada versión"]
     end
 
     subgraph DEP["5 · Desplegar"]
@@ -176,9 +182,9 @@ flowchart TD
     INS --> OBT --> DES --> DEV --> DEP
 ```
 
-Cómo leerlo: lo único que se programa es el bloque 4; el resto se instala, se descarga o se configura. Instalar: Docker Desktop, git, un editor y el SDK del lenguaje elegido. Obtener: una clave gratuita de Google AI Studio alcanza para empezar con Gemini, tanto para conversar como para los embeddings; la de OpenRouter sirve para comparar otros modelos cambiando solo la configuración. También hay que reunir los documentos de soporte que formarán la base de conocimiento y un conjunto de tickets de prueba con su resultado esperado, que son la materia prima de los cinco filtros de validación de la sección 2.6. Descargar: PostgreSQL con pgvector, Redis y Grafana no se programan, se usan como imágenes de Docker; Langfuse es opcional y más pesado, porque trae varios contenedores propios.
+Cómo leerlo: lo único que se programa es el bloque 4; el resto se instala, se descarga o se configura. Instalar: Docker Desktop, git, un editor y el SDK del lenguaje elegido. Obtener: una clave gratuita de Google AI Studio alcanza para empezar con Gemini, tanto para conversar como para los embeddings; la de OpenRouter sirve para comparar otros modelos cambiando solo la configuración. También hay que reunir los documentos de soporte que formarán la base de conocimiento y un conjunto de tickets de prueba con su resultado esperado, que son la materia prima de los cinco dimensiones de validación de la sección 2.6. Descargar: PostgreSQL con pgvector, Valkey y Grafana no se programan, se usan como imágenes de Docker; Langfuse es opcional y más pesado, porque trae varios contenedores propios.
 
-Desarrollar son cuatro servicios pequeños. La api recibe y consulta tickets. El agent-worker es el corazón: el bucle del agente, el cliente del modelo, las tres herramientas, los guardrails y el registro de cada paso. El mock-crm simula el CRM con datos ficticios, y el ingest es una tarea que se corre una vez para cargar la base de conocimiento. Con Python, por ejemplo, serían FastAPI para la api, la librería openai apuntando a la URL de Gemini o de OpenRouter, psycopg para PostgreSQL y redis-py; en C#, ASP.NET Core y un BackgroundService; en Java, Spring Boot; y en Node, Fastify o Express con la librería openai. Desplegar es levantar todo con docker compose, crear las tablas, cargar el prompt aprobado, ejecutar el ingest y probar con curl; más adelante, el mismo archivo compose funciona en una máquina virtual en la nube.
+Desarrollar son cuatro servicios pequeños. La api recibe y consulta tickets. El agent-worker es el corazón: el bucle del agente, el cliente del modelo, las tres herramientas, los guardrails y el registro de cada paso. El mock-crm simula el CRM con datos ficticios, y el ingest es una tarea que se corre una vez para cargar la base de conocimiento. Con Python, por ejemplo, serían FastAPI para la api, la librería openai apuntando a la URL de Gemini o de OpenRouter, pg8000 para PostgreSQL (D1) y redis-py, librería con licencia MIT que también funciona con Valkey; en C#, ASP.NET Core y un BackgroundService; en Java, Spring Boot; y en Node, Fastify o Express con la librería openai. Desplegar es levantar todo con docker compose, crear las tablas, cargar el prompt aprobado, ejecutar el ingest y probar con curl; más adelante, el mismo archivo compose funciona en una máquina virtual en la nube.
 
 Esqueleto del archivo docker-compose.yml, para orientarse; las claves van en un archivo .env que nunca se sube al repositorio:
 
@@ -188,12 +194,12 @@ services:
     build: ./api                      # tu código
     ports: ["8000:8000"]
     env_file: .env
-    depends_on: [postgres, redis]
+    depends_on: [postgres, valkey]
 
   agent-worker:
     build: ./agent-worker             # tu código: bucle, herramientas, guardrails
     env_file: .env                    # LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
-    depends_on: [postgres, redis, mock-crm]
+    depends_on: [postgres, valkey, mock-crm]
 
   mock-crm:
     build: ./mock-crm                 # tu código: CRM simulado
@@ -210,8 +216,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes: ["pgdata:/var/lib/postgresql/data", "./sql:/docker-entrypoint-initdb.d"]
 
-  redis:
-    image: redis:7-alpine             # descargada
+  valkey:
+    image: valkey/valkey:8-alpine     # descargada (licencia BSD, en vez de Redis)
 
   grafana:
     image: grafana/grafana            # descargada
@@ -228,12 +234,14 @@ Para cambiar de proveedor de modelo basta con editar el .env: con Gemini, la URL
 
 Muestra, paso a paso, qué pasa entre los contenedores del diagrama anterior cuando llega un ticket. Las condiciones de escalamiento salen del Módulo 2, sección 2.5; la secuencia técnica no viene en el curso.
 
+**Versión futura, no es la versión 1.** Lo que cambia en la versión 1 está en el aviso del inicio y en el plan.
+
 ```mermaid
 sequenceDiagram
     autonumber
     participant C as Cliente REST
     participant A as api
-    participant R as redis
+    participant R as valkey
     participant W as agent-worker
     participant P as postgres
     participant M as Gemini u OpenRouter
