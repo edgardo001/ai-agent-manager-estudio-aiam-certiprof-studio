@@ -4,6 +4,8 @@ Diagramas en formato Mermaid sobre los temas del curso, agregados a pedido, en e
 
 Cada diagrama indica de qué módulo y sección sale. Todo su contenido viene del curso, salvo lo que se marca explícitamente.
 
+Los diagramas para construir el proyecto de agente, con su arquitectura técnica, están aparte, en `estudio/proyecto-agente/arquitectura.md`.
+
 ## Qué debe tener un sistema agentic, visto como un flujo de n8n
 
 Muestra las piezas que el curso exige a un agente, ordenadas como si fuera un flujo de n8n, con el ejemplo del agente de soporte técnico de la sección 2.5. Sale sobre todo del Módulo 2 (secciones 2.2 a 2.7) y del Módulo 3 (secciones 3.2 a 3.5). La forma de flujo de n8n y los nombres de sus nodos no vienen en el curso: son una analogía para entenderlo.

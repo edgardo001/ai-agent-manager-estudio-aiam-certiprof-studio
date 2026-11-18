@@ -139,7 +139,7 @@ Además del documento para escuchar, el usuario repasa con apuntes impresos en `
 
 ## Diagramas Mermaid a pedido
 
-Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el orden en que lo pide. Cada diagrama lleva un encabezado `## <Tema>`, una o dos oraciones que dicen qué muestra y de qué módulo y sección sale, y el bloque de código Mermaid. Las etiquetas van en español y son cortas. Todo dato sale de los módulos de `estudio/modulos/`; lo que no venga del curso se marca. Antes de agregarlo, se valida que la sintaxis Mermaid sea correcta (por ejemplo, comillas en etiquetas con paréntesis, dos puntos o acentos problemáticos).
+Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el orden en que lo pide. Cada diagrama lleva un encabezado `## <Tema>`, una o dos oraciones que dicen qué muestra y de qué módulo y sección sale, y el bloque de código Mermaid. Las etiquetas van en español y son cortas. Todo dato sale de los módulos de `estudio/modulos/`; lo que no venga del curso se marca. Los diagramas para construir el proyecto de agente (arquitectura, contenedores, inventario, secuencias) no van ahí, sino en `estudio/proyecto-agente/arquitectura.md`, que el usuario usará para programarlo; siguen el mismo formato y marcan lo que no viene del curso. Antes de agregarlo, se valida que la sintaxis Mermaid sea correcta (por ejemplo, comillas en etiquetas con paréntesis, dos puntos o acentos problemáticos).
 
 ## Plantillas de gestión
 
@@ -181,3 +181,4 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 - 2026-11-17 — A pedido del usuario, la regla de actualización periódica de `AGENTS.md`, `MEMORY.md` y `README.md` se hace explícita y obligatoria, con un paso a paso de cierre de cada tarea y un aviso al inicio de este archivo.
 - 2026-11-17 — Decisión del usuario: `estudio/AI-Agent-Manager.md` se separó en cinco archivos, uno por módulo, en `estudio/modulos/`, sin cambiar el contenido (unidos dan el documento original byte a byte). Toda referencia al “documento del curso” o a `AI-Agent-Manager.md` se refiere ahora a esos cinco archivos.
 - 2026-11-17 — Se crean los resúmenes por módulo en `estudio/resumenes/`, escritos y validados por agentes distintos (sección “Resúmenes por módulo”).
+- 2026-11-18 — Decisión del usuario: los diagramas de arquitectura del proyecto de agente van en `estudio/proyecto-agente/arquitectura.md`, porque los usará para construir el proyecto.
