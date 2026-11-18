@@ -1,0 +1,3 @@
+# Librerías del backend. Se agregan a medida que una etapa las necesita.
+openai>=1,<3          # etapa 0: cliente del modelo y de los embeddings (Gemini u OpenRouter)
+python-dotenv>=1,<2   # etapa 0: lee src/docker/.env
