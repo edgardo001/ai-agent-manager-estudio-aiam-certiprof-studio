@@ -97,6 +97,8 @@ Cuando el usuario haga una pregunta sobre el contenido, se responde en la conver
 1. **`estudio/glosario.md`**: cuando la consulta es por una palabra, sigla o término específico (p. ej. “¿qué es agent sprawl?”). Cada entrada lleva el término como encabezado `## <Término>`. Las entradas se mantienen **en orden alfabético**.
 2. **`estudio/preguntas-frecuentes.md`**: cuando la consulta es conceptual o de comprensión (p. ej. “¿cuál es la diferencia entre un chatbot y un agente?”). Cada entrada lleva la pregunta como encabezado `## <Pregunta>`. Se agregan en el orden en que el usuario las hace.
 
+**Búsqueda con el índice:** para responder cualquier consulta, primero se busca el tema en `estudio/indice.md`, que dice en qué secciones del curso, resúmenes, apuntes, glosario, preguntas frecuentes, plantillas y diagramas aparece, con enlaces a cada sección.
+
 **Sin redundancia (decisión del usuario):** antes de agregar una entrada, se revisa si ya existe una pregunta o un término parecido en los dos archivos. Si existe, no se crea una entrada nueva: se edita la existente para complementarla con lo que aporta la nueva consulta (y, si hace falta, se ajusta su título para que cubra ambas), respetando el largo estándar. En la conversación se le avisa al usuario qué entrada se complementó.
 
 **Largo estándar (decisión del usuario):**
@@ -114,7 +116,7 @@ Las respuestas siguen las mismas reglas de formato del documento: solo encabezad
 2. **`MEMORY.md`: la memoria del proyecto.** Se actualiza cuando el usuario toma una decisión, cuando cambia el estado de cualquier archivo de `estudio/`, cuando hace una consulta (se anota en “Consultas del usuario” con fecha y archivo de destino: glosario, preguntas frecuentes o diagramas) y cuando se abre o se cierra un pendiente. Al empezar una sesión nueva, se lee junto con este archivo.
 3. **`README.md`: la presentación del repositorio.** Se actualiza cuando se crea, se mueve o se elimina un archivo o carpeta, o cambia la forma de usarlos.
 
-**Paso a paso de cierre de cada tarea:** primero, revisar qué cambió; segundo, actualizar los tres archivos según corresponda; tercero, comprobar que ninguno pase de 200 líneas; y cuarto, dejar los cambios sin commit hasta que el usuario lo pida.
+**Paso a paso de cierre de cada tarea:** primero, revisar qué cambió; segundo, actualizar los tres archivos según corresponda; tercero, si cambió algo en `estudio/`, regenerar el índice con `python -X utf8 estudio/generar-indice.py` (y, si hay un tema nuevo, agregarlo a la lista `TEMAS` del script); cuarto, comprobar que ninguno de los tres archivos pase de 200 líneas; y quinto, dejar los cambios sin commit hasta que el usuario lo pida.
 
 **Límite de 200 líneas:** `AGENTS.md`, `MEMORY.md` y `README.md` no deben superar las 200 líneas cada uno. Después de cada actualización se revisa su largo (`wc -l`). Si alguno pasa de 200, se poda intentando no perder información: se resumen o fusionan entradas parecidas (por ejemplo, entradas antiguas del registro de cambios o decisiones ya consolidadas en las reglas) y se deja solo lo más importante.
 
@@ -149,6 +151,10 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 
 `estudio/resumenes/resumen-modulo-N.md`: un resumen por módulo para repasar en pocos minutos, leído o escuchado. Formato: un título y solo párrafos cortos (sin subtítulos, listas ni tablas), entre 450 y 800 palabras (el máximo subió de 700 a 800 para no perder contenido importante), con números escritos para la voz y términos en inglés explicados. Todo sale del módulo correspondiente; nada se inventa. Cada resumen pasa dos validaciones de agentes distintos del que lo escribió: la primera busca alucinaciones y omisiones importantes; la segunda revisa de nuevo todo el texto después de las correcciones.
 
+## Índice cruzado
+
+`estudio/indice.md` conecta todo el material: lista de archivos, mapa por módulo (qué entradas, plantillas y diagramas cita cada sección) y temas de la A a la Z con enlaces a la sección exacta. Lo genera `estudio/generar-indice.py` y no se edita a mano. Es un archivo de navegación, por eso es la única excepción a la regla de no usar listas ni tablas. Todo archivo nuevo de `estudio/` debe quedar cubierto por el script.
+
 ## Flujo de trabajo de los agentes
 
 - Cada agente procesa **un módulo completo** y escribe su resultado en `<scratchpad>/out/moduloN.md` (empezando por el encabezado `## Módulo N. …`).
@@ -159,14 +165,11 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 
 ## Registro de cambios
 
-- 2026-11-17 — Versión inicial. Decisiones del usuario: en preguntas se conserva pregunta + respuesta correcta + justificación de la correcta; se omiten duración/nivel; se incluyen checklists, reflexiones y responsabilidades en prosa; se omiten portada (p.1) y cierre/Certiprof (p.93–97); el archivo final se llama `AI-Agent-Manager.md`.
-- 2026-11-17 — Reglas adicionales 1 a 24, a partir de los informes de los agentes de cada módulo (formato numérico, símbolos, jerarquía, navegación, conceptos dentro de comentarios sobre alternativas incorrectas).
-- 2026-11-17 — Segunda pasada de auditoría por módulo contra el PDF: conceptos rescatados de los comentarios de alternativas incorrectas, formato unificado, reglas 25 a 32. Documento final unido: 5 módulos, 50 preguntas con 50 respuestas, sin tablas, listas ni citas.
+- 2026-11-17 — Versión inicial y conversión completa: decisiones del usuario sobre preguntas (pregunta, respuesta correcta y justificación), omisión de duración, nivel, portada y cierre Certiprof; reglas adicionales 1 a 32 a partir de los informes de los agentes y de una segunda auditoría por módulo contra el PDF (5 módulos, 50 preguntas con 50 respuestas).
 - 2026-11-17 — Se crean `README.md` y `MEMORY.md` y se agrega la sección “Mantenimiento de los archivos del proyecto”: los tres archivos se actualizan periódicamente y no se guarda información del proyecto fuera de la carpeta.
 - 2026-11-17 — Se agregó “Contexto del usuario” y la nota sobre fuentes temporales, para que la carpeta pueda moverse sin depender de memoria externa. Primera entrada del Glosario: Accountability.
 - 2026-11-17 — Nueva regla del usuario: las preguntas que haga se agregan al final del documento, en “Preguntas frecuentes” (preguntas conceptuales) o en “Glosario” (términos específicos, en orden alfabético).
-- 2026-11-17 — Nueva regla del usuario: los commits y pull requests no llevan firmas de agentes (sección “Mantenimiento de los archivos del proyecto”).
-- 2026-11-17 — Nueva regla del usuario: no se menciona el nombre del asistente de IA en ninguna parte (archivos, commits, referencias). Se quitaron las menciones existentes, incluida la ruta temporal de `<scratchpad>`.
+- 2026-11-17 — Nuevas reglas del usuario: los commits y pull requests no llevan firmas de agentes, y no se menciona el nombre del asistente de IA en ninguna parte; se quitaron las menciones existentes.
 - 2026-11-17 — El PDF fuente se renombró de `document.pdf` a `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`; se actualizaron las referencias en `AGENTS.md` y `README.md`.
 - 2026-11-17 — Revisión de consistencia: regla adicional 13 movida a su lugar; reglas de formato 1 y 5 alineadas (“Preguntas de validación” va como `###`). En `AI-Agent-Manager.md` se unificaron los encabezados “Preguntas de validación” de los cinco módulos y el de responsabilidades del Módulo 2, según el PDF.
 - 2026-11-17 — Decisión del usuario: el documento convertido se movió de la raíz a la carpeta `estudio/` (`estudio/AI-Agent-Manager.md`).
@@ -181,4 +184,5 @@ Cuando el usuario pida un diagrama, se agrega a `estudio/diagramas.md`, en el or
 - 2026-11-17 — A pedido del usuario, la regla de actualización periódica de `AGENTS.md`, `MEMORY.md` y `README.md` se hace explícita y obligatoria, con un paso a paso de cierre de cada tarea y un aviso al inicio de este archivo.
 - 2026-11-17 — Decisión del usuario: `estudio/AI-Agent-Manager.md` se separó en cinco archivos, uno por módulo, en `estudio/modulos/`, sin cambiar el contenido (unidos dan el documento original byte a byte). Toda referencia al “documento del curso” o a `AI-Agent-Manager.md` se refiere ahora a esos cinco archivos.
 - 2026-11-17 — Se crean los resúmenes por módulo en `estudio/resumenes/`, escritos y validados por agentes distintos (sección “Resúmenes por módulo”).
-- 2026-11-18 — Decisión del usuario: los diagramas de arquitectura del proyecto de agente van en `estudio/proyecto-agente/arquitectura.md`, porque los usará para construir el proyecto.
+- 2026-11-18 — Pedido del usuario: todo el material queda referenciado entre sí. Se crea `estudio/indice.md`, generado por `estudio/generar-indice.py`, y se agrega a las reglas de búsqueda y de cierre de cada tarea.
+- 2026-11-18 — Decisión del usuario: los diagramas de arquitectura del proyecto de agente pasan de `estudio/diagramas.md` a `estudio/proyecto-agente/arquitectura.md`, porque los usará para construir el proyecto.

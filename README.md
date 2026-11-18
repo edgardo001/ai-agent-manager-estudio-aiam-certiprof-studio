@@ -6,6 +6,7 @@ Versión en prosa del curso **AI Agent Manager (AIAM™)** de Certiprof, prepara
 
 - `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`: el material original del curso (97 páginas, 5 módulos).
 - `estudio/`: la carpeta de los archivos generados a partir del curso. Por ahora contiene:
+  - `estudio/indice.md`: índice cruzado de todo el material (por módulo y por tema, con enlaces a cada sección). Lo genera `estudio/generar-indice.py`; empiece por aquí para buscar un tema.
   - `estudio/modulos/`: el documento convertido, listo para escuchar, separado en un archivo por módulo (`modulo-1-el-nuevo-rol-del-manager.md` a `modulo-5-impacto-al-negocio.md`). Es el material principal de estudio.
   - `estudio/resumenes/`: un resumen por módulo, solo en párrafos fáciles de leer o escuchar, para repasar en pocos minutos.
   - `estudio/preguntas-frecuentes.md`: respuestas a las dudas de comprensión del usuario, en el orden en que las hizo.
