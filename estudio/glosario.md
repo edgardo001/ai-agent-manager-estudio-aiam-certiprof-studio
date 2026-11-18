@@ -30,6 +30,10 @@ CSAT es la sigla en inglés de Customer Satisfaction Score, índice de satisfacc
 
 JD es la sigla en inglés de job description, descripción del cargo: el documento que, al contratar a una persona, dice qué debe lograr en su puesto y para qué. En el curso, es la mitad del framework JD+SOP con que se escriben las instrucciones de un agente: el JD le da el qué y el para qué, con el contexto, el objetivo, las herramientas, las restricciones, el escalamiento y las métricas, y el SOP le da el cómo, paso a paso. Aparece en el Módulo 2, sección 2.5. La explicación completa, con el ejemplo del agente de soporte, está en el archivo de preguntas frecuentes.
 
+## N1 (nivel 1 de soporte)
+
+N1 es la abreviatura de nivel 1 de soporte, la primera línea de atención técnica: casos simples y frecuentes, como restablecer una contraseña, que se resuelven con soluciones documentadas; los casos complejos pasan a niveles superiores (esta explicación no viene en el curso). El curso la usa en el ejemplo de instrucciones del Módulo 2, sección 2.5, cuyo objetivo es resolver el 80% de los tickets de nivel 1 sin intervención humana. De ahí sale el nombre Agente de Soporte N1, que se le dio en las plantillas y en el proyecto de agente, y que no viene en el curso. No se confunde con los niveles de autonomía de la sección 1.2: ese agente opera en Nivel 2, Automatización.
+
 ## Onboarding agentic
 
 Onboarding significa incorporación. El onboarding agentic es, según la sección 2.1, el proceso con que el AI Agent Manager define, configura y valida un agente antes de que opere de forma autónoma en producción. No es lo mismo que el deployment técnico, que solo verifica que el sistema funciona: el onboarding verifica que el agente entiende su propósito, respeta sus límites y genera valor. Incluye la identidad del agente, los permisos mínimos, las instrucciones y la validación antes de producción. Aparece en todo el Módulo 2, con el caso Klarna como ejemplo.
@@ -37,6 +41,10 @@ Onboarding significa incorporación. El onboarding agentic es, según la secció
 ## PwC
 
 PwC es la sigla de PricewaterhouseCoopers, una de las firmas de auditoría y consultoría más grandes del mundo; esta descripción no viene en el curso. En el curso aparece por su informe AI Jobs Barometer 2025: los empleos con habilidades de IA pagan un 56% más que los equivalentes sin IA, y un año antes la diferencia era del 25%, es decir, se duplicó en 12 meses. Es uno de los cuatro indicadores de mercado que conviene saber citar, junto con Stanford, Gartner y el World Economic Forum. Aparece en el Módulo 1, sección 1.4.
+
+## RAG
+
+RAG es la sigla en inglés de Retrieval-Augmented Generation, generación aumentada por recuperación: antes de responder, el programa busca en documentos propios los fragmentos relacionados con la pregunta y se los entrega al modelo, para que conteste con esa información y no solo con lo que aprendió al entrenarse. El término no viene en el curso, pero es lo que hace el agente del proyecto cuando usa su base de conocimiento: el curso le exige responder solo con soluciones documentadas (Módulo 2, sección 2.5). En el proyecto, los documentos se guardan como vectores en pgvector y la herramienta buscar_solucion recupera los más parecidos.
 
 ## RPA
 
