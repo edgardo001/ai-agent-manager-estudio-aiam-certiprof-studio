@@ -88,7 +88,7 @@ Agente de soporte B2B (empresa que vende a otras empresas) de la sección 2.5. L
 
 ### El mismo ejemplo como texto para el modelo (no viene en el curso)
 
-Cuando el agente se programa, las instrucciones de arriba se convierten en el mensaje de sistema, o system prompt: el texto que el programa le entrega al modelo de lenguaje (LLM) antes de cada conversación. Las líneas que copian el curso están en los componentes 1, 2, 4, 5 y 6; lo marcado con [agregado] no viene en el curso y es una buena práctica de programación.
+Cuando el agente se programa, las instrucciones de arriba se convierten en el mensaje de sistema, o system prompt: el texto que el programa le entrega al modelo de lenguaje (LLM) antes de cada conversación. Las líneas que copian el curso están en los componentes 1, 2, 4, 5 y 6; lo marcado con [agregado] no viene en el curso y es una buena práctica de programación. Tampoco vienen del curso el nombre del agente (sección “Rol”) ni los cinco pasos del proceso (SOP), que son datos ficticios de ejemplo, como se aclara en “Ejemplo lleno”.
 
 ```text
 # Rol
