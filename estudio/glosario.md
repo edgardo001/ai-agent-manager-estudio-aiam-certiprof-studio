@@ -26,6 +26,10 @@ C-suite es la forma de llamar en inglés a la alta dirección de una empresa. El
 
 CSAT es la sigla en inglés de Customer Satisfaction Score, índice de satisfacción del cliente: la nota que pone el cliente justo después de una atención, por ejemplo de 1 a 5. Es distinto del NPS, que mide cuánto recomendaría a la empresa; esto no viene en el curso. En el curso es una métrica de negocio clave: el agente de soporte de la sección 2.5 debe lograr un CSAT mayor o igual a 4,2 sobre 5, y según la sección 3.4, si baja 0,2 puntos en una semana, se interviene cuando coincide con un cambio en las instrucciones del agente. Aparece en los módulos 2 y 3.
 
+## JD
+
+JD es la sigla en inglés de job description, descripción del cargo: el documento que, al contratar a una persona, dice qué debe lograr en su puesto y para qué. En el curso, es la mitad del framework JD+SOP con que se escriben las instrucciones de un agente: el JD le da el qué y el para qué, con el contexto, el objetivo, las herramientas, las restricciones, el escalamiento y las métricas, y el SOP le da el cómo, paso a paso. Aparece en el Módulo 2, sección 2.5. La explicación completa, con el ejemplo del agente de soporte, está en el archivo de preguntas frecuentes.
+
 ## Onboarding agentic
 
 Onboarding significa incorporación. El onboarding agentic es, según la sección 2.1, el proceso con que el AI Agent Manager define, configura y valida un agente antes de que opere de forma autónoma en producción. No es lo mismo que el deployment técnico, que solo verifica que el sistema funciona: el onboarding verifica que el agente entiende su propósito, respeta sus límites y genera valor. Incluye la identidad del agente, los permisos mínimos, las instrucciones y la validación antes de producción. Aparece en todo el Módulo 2, con el caso Klarna como ejemplo.
