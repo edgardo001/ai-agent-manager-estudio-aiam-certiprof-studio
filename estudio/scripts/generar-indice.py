@@ -1,11 +1,11 @@
 """Genera estudio/indice.md: el índice cruzado de todo el material de estudio.
 
 Uso (desde la raíz del repositorio o desde estudio/):
-    python -X utf8 estudio/generar-indice.py
+    python -X utf8 estudio/scripts/generar-indice.py
 
 Busca cada tema de TEMAS en los módulos del curso, los resúmenes, los apuntes,
-el glosario, las preguntas frecuentes, las plantillas, los diagramas y la
-arquitectura del proyecto de agente, y escribe
+el glosario, las preguntas frecuentes, las plantillas, los diagramas y el
+proyecto de agente, y escribe
 dónde aparece, con enlaces a la sección exacta. Además arma un mapa por módulo
 con lo que cita cada sección. No se edita indice.md a mano: se agregan o
 ajustan temas aquí y se vuelve a ejecutar.
@@ -15,7 +15,8 @@ import pathlib
 import re
 import unicodedata
 
-BASE = pathlib.Path(__file__).resolve().parent
+# Este script vive en estudio/scripts/; BASE es la carpeta estudio/.
+BASE = pathlib.Path(__file__).resolve().parents[1]
 
 # Tema: expresión regular (sin distinguir mayúsculas). Mantener en español,
 # con los términos del curso y sus equivalentes en inglés.
@@ -23,6 +24,7 @@ TEMAS = {
     "Accountability (rendición de cuentas)": r"accountability",
     "Adopción y gestión del cambio": r"gesti[oó]n del cambio|niveles de adopci[oó]n|resistencia",
     "Agent sprawl": r"agent sprawl",
+    "Embeddings y pgvector (búsqueda semántica)": r"embedding|pgvector|b[uú]squeda (sem[aá]ntica|vectorial)",
     "Rol del AI Agent Manager": r"nuevo rol|rol en evoluci|futuro del ai agent manager|qu[eé] es un ai agent manager",
     "AI Productivity Paradox": r"productivity paradox",
     "Alucinaciones": r"alucinaci",
@@ -60,6 +62,7 @@ TEMAS = {
     "Onboarding agentic": r"onboarding",
     "Permisos mínimos (least-privilege)": r"permisos m[ií]nimos|least-privilege",
     "ROI (retorno de la inversión)": r"\broi\b",
+    "RAG (generación aumentada por recuperación)": r"\brag\b|generaci[oó]n aumentada",
     "RPA (automatización robótica de procesos)": r"\brpa\b",
     "Registro de agentes": r"registro (centralizado )?de agentes|agent_registry",
     "Seguridad y riesgo": r"seguridad|matriz de riesgos|ataque adversarial|adversarial",
@@ -156,8 +159,8 @@ def rel(p):
 GLOSARIO = entradas(BASE / "glosario.md")
 PREGUNTAS = entradas(BASE / "preguntas-frecuentes.md")
 DIAGRAMAS = entradas(BASE / "diagramas.md")
-PROYECTO_MD = "proyecto-agente/arquitectura.md"
-PROYECTO = entradas(BASE / PROYECTO_MD)
+PROYECTO_ARCH = sorted((BASE / "proyecto-agente" / "agente-soporte-n1" / "docs").glob("*.md"))
+PROYECTO = [(t, a, x, rel(p)) for p in PROYECTO_ARCH for t, a, x in entradas(p)]
 SECCIONES = {num_modulo(p): (p, secciones_modulo(p)) for p in MODULOS}
 NUM_SEC = re.compile(r"(?<![\d.,])([1-5]\.[1-9])(?![\d])")
 
@@ -173,11 +176,11 @@ def citas(texto):
 
 def mapa_modulos():
     L = ["## Mapa por módulo", "",
-         "Para cada sección del curso: qué entradas del glosario, preguntas frecuentes, plantillas, diagramas y documentos del proyecto de agente (A1, A2…) la citan. Cada módulo tiene además su resumen y sus apuntes impresos, que cubren todas sus secciones numeradas.", ""]
+         "Para cada sección del curso: qué entradas del glosario, preguntas frecuentes, plantillas, diagramas y secciones del proyecto de agente (P1, P2…, numeradas como en la lista de archivos) la citan. Cada módulo tiene además su resumen y sus apuntes impresos, que cubren todas sus secciones numeradas.", ""]
     cit_glo = {t: citas(x) for t, a, x in GLOSARIO}
     cit_faq = {t: citas(x) for t, a, x in PREGUNTAS}
     cit_dia = {t: citas(x.split("```")[0]) for t, a, x in DIAGRAMAS}
-    cit_pro = {t: citas(x.split("```")[0]) for t, a, x in PROYECTO}
+    cit_pro = {t: citas(x.split("```")[0]) for t, a, x, f in PROYECTO}
     cit_pla = {p: citas(base_plantilla(p)) for p in PLANTILLAS}
     for m, (p, secs) in sorted(SECCIONES.items()):
         titulo = leer(p).split("\n## ", 1)[-1].split("\n", 1)[0] if m == 1 else leer(p).split("\n", 1)[0][3:]
@@ -192,7 +195,7 @@ def mapa_modulos():
             f = ", ".join(link(t, "preguntas-frecuentes.md", a) for t, a, _ in PREGUNTAS if etq in cit_faq[t])
             pl = ", ".join(link(q.name[:2], rel(q)) for q in PLANTILLAS if etq in cit_pla[q])
             d = ", ".join(link(str(i + 1), "diagramas.md", a) for i, (t, a, _) in enumerate(DIAGRAMAS) if etq in cit_dia[t])
-            pr = ", ".join(link(f"A{i + 1}", PROYECTO_MD, a) for i, (t, a, _) in enumerate(PROYECTO) if etq in cit_pro[t])
+            pr = ", ".join(link(f"P{i + 1}", f, a) for i, (t, a, _, f) in enumerate(PROYECTO) if etq in cit_pro[t])
             L.append(f"| {link(tit, rel(p), ancla)} | {g or '·'} | {f or '·'} | {pl or '·'} | {d or '·'} | {pr or '·'} |")
         L.append("")
     return L
@@ -231,7 +234,7 @@ def temas():
         dia = [link(t, "diagramas.md", a) for t, a, x in DIAGRAMAS if rx.search(x)]
         if dia:
             filas.append("- **Diagramas:** " + ", ".join(dia))
-        pro = [link(t, PROYECTO_MD, a) for t, a, x in PROYECTO if rx.search(x)]
+        pro = [link(t, f, a) for t, a, x, f in PROYECTO if rx.search(x)]
         if pro:
             filas.append("- **Proyecto de agente:** " + ", ".join(pro))
         if filas:
@@ -241,8 +244,8 @@ def temas():
 
 def main():
     L = ["# Índice cruzado del material de estudio", "",
-         "Este archivo conecta todo el material de `estudio/`: los módulos del curso, los resúmenes, los apuntes, el glosario, las preguntas frecuentes, las plantillas, los diagramas y la arquitectura del proyecto de agente. Sirve para encontrar rápido dónde se trata un tema, a mano o cuando el agente responde una pregunta.", "",
-         "No se edita a mano: lo genera `estudio/generar-indice.py`, que se vuelve a ejecutar después de cada cambio en `estudio/` (`python -X utf8 estudio/generar-indice.py`). Para agregar un tema, se agrega a la lista `TEMAS` del script.", "",
+         "Este archivo conecta todo el material de `estudio/`: los módulos del curso, los resúmenes, los apuntes, el glosario, las preguntas frecuentes, las plantillas, los diagramas y el proyecto de agente. Sirve para encontrar rápido dónde se trata un tema, a mano o cuando el agente responde una pregunta.", "",
+         "No se edita a mano: lo genera `estudio/scripts/generar-indice.py`, que se vuelve a ejecutar después de cada cambio en `estudio/` (`python -X utf8 estudio/scripts/generar-indice.py`). Para agregar un tema, se agrega a la lista `TEMAS` del script.", "",
          "Es un archivo de navegación, no de estudio: por eso usa listas y tablas, a diferencia del resto del material.", "",
          "## Archivos", "",
          f"- **Curso, un archivo por módulo:** " + ", ".join(link(f"Módulo {num_modulo(p)}", rel(p)) for p in MODULOS),
@@ -252,7 +255,7 @@ def main():
          f"- **Preguntas frecuentes ({len(PREGUNTAS)}):** " + ", ".join(link(t, "preguntas-frecuentes.md", a) for t, a, _ in PREGUNTAS),
          f"- **Plantillas ({len(PLANTILLAS)}), con su " + link("guía de uso", "plantillas/00-guia.md") + "):** " + ", ".join(link(titulo_plantilla(q), rel(q)) for q in PLANTILLAS),
          f"- **Diagramas del curso ({len(DIAGRAMAS)}):** " + ", ".join(link(f"{i + 1}. {t}", "diagramas.md", a) for i, (t, a, _) in enumerate(DIAGRAMAS)),
-         f"- **Proyecto de agente, " + link("arquitectura", PROYECTO_MD) + f" ({len(PROYECTO)}):** " + ", ".join(link(f"A{i + 1}. {t}", PROYECTO_MD, a) for i, (t, a, _) in enumerate(PROYECTO)),
+         f"- **Proyecto de agente (" + ", ".join(link(p.name, rel(p)) for p in PROYECTO_ARCH) + "):** " + ", ".join(link(f"P{i + 1}. {t}", f, a) for i, (t, a, _, f) in enumerate(PROYECTO)),
          ""]
     L += mapa_modulos() + temas()
     io.open(BASE / "indice.md", "w", encoding="utf-8", newline="").write("\n".join(L).rstrip("\n") + "\n")
