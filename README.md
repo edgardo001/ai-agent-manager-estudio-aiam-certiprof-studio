@@ -6,13 +6,13 @@ Versión en prosa del curso **AI Agent Manager (AIAM™)** de Certiprof, prepara
 
 - `certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf`: el material original del curso (97 páginas, 5 módulos).
 - `estudio/`: la carpeta de los archivos generados a partir del curso. Por ahora contiene:
-  - `estudio/indice.md`: índice cruzado de todo el material (por módulo y por tema, con enlaces a cada sección). Lo genera `estudio/generar-indice.py`; empiece por aquí para buscar un tema.
+  - `estudio/indice.md`: índice cruzado de todo el material (por módulo y por tema, con enlaces a cada sección). Lo genera `estudio/scripts/generar-indice.py`; empiece por aquí para buscar un tema.
   - `estudio/modulos/`: el documento convertido, listo para escuchar, separado en un archivo por módulo (`modulo-1-el-nuevo-rol-del-manager.md` a `modulo-5-impacto-al-negocio.md`). Es el material principal de estudio.
   - `estudio/resumenes/`: un resumen por módulo, solo en párrafos fáciles de leer o escuchar, para repasar en pocos minutos.
   - `estudio/preguntas-frecuentes.md`: respuestas a las dudas de comprensión del usuario, en el orden en que las hizo.
   - `estudio/glosario.md`: siglas y términos consultados, en orden alfabético.
   - `estudio/diagramas.md`: diagramas Mermaid de temas del curso, agregados a pedido; GitHub los muestra dibujados.
-  - `estudio/proyecto-agente/arquitectura.md`: diagramas de arquitectura para programar un agente real (el Agente de Soporte N1): componentes, contenedores Docker, inventario de qué instalar, descargar y programar, y la secuencia de un caso.
+  - `estudio/proyecto-agente/agente-soporte-n1/`: el proyecto de agente, completo en una carpeta. `docs/README.md` es el mapa de su documentación: el plan con las reglas, las etapas y el modelo de datos (`plan-del-proyecto.md`, que manda), los diagramas del código (`diagramas-del-codigo.md`), el razonamiento de las decisiones (`decisiones.md`), la versión futura y el diseño anterior (`referencia/`), y los registros de pruebas y de revisiones. `src/` tiene el código (Python con FastAPI, HTML y JavaScript, Docker Compose), construido por etapas; su `README.md` explica cómo probarlo.
   - `estudio/plantillas/`: 15 plantillas para aplicar el curso en la práctica (oportunidades, business case, registro de agentes, ficha de identidad, instrucciones, onboarding, rediseño de procesos, gestión del cambio, supervisión, intervenciones, riesgos y seguridad, Governance Board, auditoría trimestral, reporte a la dirección y escala). Empiece por `00-guia.md`, que explica cuál usar y cuándo.
   - `estudio/apuntes/`: apuntes visuales para imprimir y repasar, una serie de hojas A4 por módulo con diagramas y poco texto (`apuntes-modulo-N.pdf` y `apuntes-completos.pdf`). Se regeneran con `python estudio/apuntes/generar.py`, que necesita Chrome o Edge.
 - `AGENTS.md`: las reglas de conversión y de mantenimiento que debe seguir cualquier agente de IA que trabaje en este repositorio.
