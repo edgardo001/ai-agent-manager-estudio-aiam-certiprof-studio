@@ -86,6 +86,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-18 — Revisión de consistencia (EGM) y de fidelidad al curso, aprobada y aplicada: `docs/README.md` como mapa; `arquitectura.md` y `ruta-de-construccion.md` a `docs/referencia/` con avisos; principio rector “todos los conceptos del curso, a escala pequeña” al inicio del plan; citas corregidas; etapa 2 completa en el plan; coberturas agregadas con PostgreSQL. Informe en `docs/revisiones/2026-11-18-revision-consistencia-y-curso.md`. Regla nueva en `AGENTS.md`: revisiones de calidad con EGM. Pendiente: lista de documentos ficticios.
 - 2026-11-18 — Pedido del usuario: la documentación del proyecto de agente se actualiza periódicamente con cada cambio (regla 7 del plan y paso a paso de cierre de `AGENTS.md`).
 - 2026-11-18 — El usuario eligió FastAPI frente a Flask, en su forma simple (sin `async` ni inyección de dependencias). Preguntó qué es Pydantic; se explicó en la decisión D7 de `docs/decisiones.md`.
+- 2026-11-18 — Decisión del usuario: desde ahora los commits siguen Conventional Commits 1.0.0 (`tipo(ámbito): descripción`, tipo en inglés y descripción en español). Los commits anteriores, ya subidos, no se reescriben.
 - 2026-11-17 — Pidió otro ejemplo o caso de uso: se agregó el caso real UPS ORION (sección 5.5) como flujo de n8n, donde el agente recomienda y el conductor decide.
 - 2026-11-17 — “Boundary testing” con ejemplos. Agregado al Glosario.
 - 2026-11-17 — “Agent sprawl”. Agregado al Glosario.
