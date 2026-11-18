@@ -63,6 +63,7 @@ Este archivo guarda lo que un agente de IA necesita saber para continuar el trab
 - 2026-11-18 — “Ejemplos de JD+SOP: los textos que le dan dirección al modelo”. Se agregó a la plantilla 05 el ejemplo como system prompt y la definición de una herramienta, marcando lo que no viene en el curso; la pregunta frecuente de JD+SOP remite a ella.
 - 2026-11-18 — El usuario pidió que todo quede referenciado entre sí para encontrarlo al preguntar. Se creó `estudio/indice.md` (52 temas, mapa por módulo, más de 1.000 enlaces verificados) con su generador `estudio/generar-indice.py`; se regenera después de cada cambio en `estudio/`.
 - 2026-11-18 — El usuario pidió los diagramas de arquitectura en un archivo aparte, porque los usará para construir el proyecto: se movieron a `estudio/proyecto-agente/arquitectura.md`.
+- 2026-11-18 — Frontmatter en los .md: el lector de voz del usuario lo lee. Decisión: no se agrega a los archivos de estudio, porque el índice generado ya cubre la navegación sin duplicar datos; se reconsidera para `estudio/proyecto-agente/` según la herramienta con que se construya, y el estado de cada archivo podría ir como columna del índice.
 - 2026-11-17 — Pidió otro ejemplo o caso de uso: se agregó el caso real UPS ORION (sección 5.5) como flujo de n8n, donde el agente recomienda y el conductor decide.
 - 2026-11-17 — “Boundary testing” con ejemplos. Agregado al Glosario.
 - 2026-11-17 — “Agent sprawl”. Agregado al Glosario.
