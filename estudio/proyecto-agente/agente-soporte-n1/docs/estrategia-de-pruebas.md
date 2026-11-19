@@ -79,7 +79,7 @@ Decisión del usuario (2026-11-18). En este proyecto, “adversarial” signific
 
 **Dónde se aplica:**
 
-1. **Las reglas en código (`reglas.py`, existe desde la etapa 4; sus pruebas adversariales, en la etapa 5):** son funciones puras, así que se prueban sin modelo y sin costo. Propiedades de ejemplo: con cualquier texto, `revisar_entrada()` nunca se cae; cualquier texto que contenga “cancelar” en cualquier forma (mayúsculas, tildes, palabras alrededor) termina en escalamiento; ninguna respuesta que ofrezca un descuento pasa `revisar_respuesta()`.
+1. **Las reglas en código (`reglas.py`, desde la etapa 4; sus pruebas adversariales, en `tests/adversariales/test_reglas_adversariales.py` desde la etapa 5):** son funciones puras, así que se prueban sin modelo y sin costo. Propiedades: con cualquier texto, `revisar_entrada()` y `revisar_respuesta()` nunca se caen; una cancelación con mayúsculas al azar y caracteres invisibles, en medio de cualquier texto, escala; un descuento ofrecido con cualquier porcentaje se bloquea. Además, ataques escritos a mano y los límites conocidos, marcados como falla esperada (xfail estricto): lo que un patrón de palabras no ve y cubren las evals.
 2. **La API (`api.py`, etapa 6):** ningún cuerpo de pedido, por raro que sea, provoca un error `500`. FastAPI y Pydantic ya rechazan con `422` lo que no tiene la forma esperada (D7); la prueba comprueba que eso se cumple siempre.
 
 **Para no gastar llamadas al modelo,** en las pruebas de robustez de la API la función del agente se reemplaza por una versión falsa que responde al instante: aquí no se evalúa al agente, sino que la API no se caiga, y cien casos con el modelo real costarían cien llamadas. El comportamiento del agente se sigue probando con el modelo real en las evals.
