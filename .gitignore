@@ -5,6 +5,8 @@
 # Python
 __pycache__/
 .venv*/
+.pytest_cache/
+.hypothesis/
 
 # PDF de la raíz: solo se versiona la guía del curso; el material de referencia del usuario no se sube
 /*.pdf
