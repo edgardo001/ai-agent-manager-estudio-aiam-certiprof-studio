@@ -24,7 +24,7 @@ def decimal(valor, decimales):
 def mostrar_paso(paso):
     """Muestra un paso del agente en el modo detallado: es la consola como herramienta de estudio,
     para ver por dentro cómo trabaja el agente.
-    Técnico: no viene del curso (buenas-practicas.md)."""
+    Técnico: no viene del curso (rag.md)."""
     if paso["tipo"] == "modelo":
         print(f"  [modelo] {paso['detalle']}: {paso['tokens_entrada']} tokens de entrada, {paso['tokens_salida']} de salida,"
               f" {decimal(paso['costo'], 6)} dólares, {decimal(paso['segundos'], 1)} s")

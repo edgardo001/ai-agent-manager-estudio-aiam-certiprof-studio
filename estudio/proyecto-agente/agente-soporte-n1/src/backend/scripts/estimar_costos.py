@@ -7,20 +7,20 @@ Uso, desde la carpeta src/backend con el entorno virtual activo:
 Sin argumentos, mide los documentos reales de src/base-de-conocimiento/.
 Desde la etapa 3, si PostgreSQL está levantado y ya hay tickets atendidos, los escenarios usan
 el costo real promedio por ticket en vez del supuesto.
-Las cifras son estimaciones: los supuestos y cómo afinarlos están en docs/costos.md.
+Las cifras son estimaciones: los supuestos y cómo afinarlos están en docs/modelos-y-costos.md.
 """
 import argparse
 
 from aplicacion import config
 from aplicacion.base_de_datos import conectar, promedio_tokens_por_ticket
-from scripts.cargar_conocimiento import CARPETA_DOCUMENTOS, fragmentar_documento
+from aplicacion.herramientas import CANTIDAD_FRAGMENTOS
+from scripts.cargar_conocimiento import fragmentar_documento, listar_documentos
 
-# Supuestos de la estimación (docs/costos.md). Desde la etapa 3, los tokens reales de
+# Supuestos de la estimación (docs/modelos-y-costos.md). Desde la etapa 3, los tokens reales de
 # cada ticket quedan en la tabla tickets y reemplazan estos supuestos (leer_tickets_reales()).
 CARACTERES_POR_TOKEN = 4         # regla práctica; en español suele haber algo más de tokens
 TOKENS_HERRAMIENTAS = 300        # la descripción de las tres herramientas, que va en cada llamada
 CARACTERES_PREGUNTA = 200        # largo típico del mensaje de un cliente
-FRAGMENTOS_POR_BUSQUEDA = 5      # los que entrega buscar_fragmentos()
 TOKENS_SALIDA_POR_CONSULTA = 300 # lo que escribe el modelo: decisiones de herramientas y la respuesta
 DIAS_POR_MES = 30
 
@@ -46,7 +46,7 @@ def dolares(valor):
 def medir_base_de_conocimiento():
     """Cuenta los documentos y los caracteres de los fragmentos reales.
     Técnico: no viene del curso."""
-    documentos = [p for p in sorted(CARPETA_DOCUMENTOS.glob("*.md")) if p.name != "README.md"]
+    documentos = listar_documentos()
     fragmentos = [texto for p in documentos for _, texto in fragmentar_documento(p.read_text(encoding="utf-8-sig"))]
     return len(documentos), len(fragmentos), sum(len(texto) for texto in fragmentos)
 
@@ -68,7 +68,7 @@ def estimar_consulta(caracteres_fragmento):
     Curso: costo por caso (Módulo 3, sección 3.2) y ROI (Módulo 5).
     """
     base = tokens(len(config.RUTA_PROMPT.read_text(encoding="utf-8"))) + TOKENS_HERRAMIENTAS + tokens(CARACTERES_PREGUNTA)
-    entrada = config.LLAMADAS_POR_CONSULTA * base + FRAGMENTOS_POR_BUSQUEDA * tokens(caracteres_fragmento)
+    entrada = config.LLAMADAS_POR_CONSULTA * base + CANTIDAD_FRAGMENTOS * tokens(caracteres_fragmento)
     costo = (tokens(CARACTERES_PREGUNTA) * config.PRECIO_MILLON_TOKENS_EMBEDDINGS
              + entrada * config.PRECIO_MILLON_TOKENS_ENTRADA
              + TOKENS_SALIDA_POR_CONSULTA * config.PRECIO_MILLON_TOKENS_SALIDA) / 1_000_000

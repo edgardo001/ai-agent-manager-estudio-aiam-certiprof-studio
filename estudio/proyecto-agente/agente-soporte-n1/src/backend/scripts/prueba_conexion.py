@@ -3,21 +3,12 @@ puede hablar con el modelo de chat, que ese modelo sabe usar herramientas y que 
 embeddings entrega vectores del tamaño correcto.
 
 Uso, desde la carpeta src/backend:  python -m scripts.prueba_conexion
-Sirve cada vez que se cambia el proveedor o el modelo en el .env (docs/proveedores-de-modelos.md).
-Cuesta una fracción de centavo: un saludo, un pedido de herramienta y un embedding.
+Sirve cada vez que se cambia el proveedor o el modelo (docs/modelos-y-costos.md).
+Cuesta una fracción de centavo: un saludo, un pedido de las herramientas del agente y un embedding.
 """
 from aplicacion import config
+from aplicacion.herramientas import DEFINICIONES
 from aplicacion.modelo import DIMENSIONES_EMBEDDING, conversar_con_herramientas, crear_embedding, preguntar_al_modelo
-
-# Una herramienta inventada, solo para ver si el modelo sabe pedirla.
-HERRAMIENTA_DE_PRUEBA = [{
-    "type": "function",
-    "function": {
-        "name": "consultar_hora",
-        "description": "Devuelve la hora actual de una ciudad.",
-        "parameters": {"type": "object", "properties": {"ciudad": {"type": "string"}}, "required": ["ciudad"]},
-    },
-}]
 
 
 def probar_conexion():
@@ -34,8 +25,9 @@ def probar_conexion():
     print(f"Chat: {config.LLM_MODEL} en {config.LLM_PROVEEDOR} ({config.LLM_BASE_URL})")
     try:
         print(f"  1. Saludo: {preguntar_al_modelo([{'role': 'user', 'content': 'Hola. Responde en una sola frase.'}])}")
+        # Las mismas tres herramientas del agente: lo que importa es si este modelo las sabe pedir.
         llamada = conversar_con_herramientas(
-            [{"role": "user", "content": "¿Qué hora es en Santiago? Usa la herramienta."}], HERRAMIENTA_DE_PRUEBA)
+            [{"role": "user", "content": "Olvidé mi contraseña. Busca la solución con tus herramientas."}], DEFINICIONES)
         if llamada["llamadas"]:
             _, nombre, argumentos = llamada["llamadas"][0]
             print(f"  2. Herramientas: sí, pidió {nombre} con {argumentos}. Sirve para el agente.")

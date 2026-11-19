@@ -34,6 +34,12 @@ def vector_a_texto(vector):
     return "[" + ",".join(str(numero) for numero in vector) + "]"
 
 
+def borrar_fragmentos(conexion):
+    """Borra toda la base de conocimiento, antes de volver a cargarla completa.
+    Técnico: no viene del curso (la carga completa es la decisión D8)."""
+    conexion.cursor().execute("DELETE FROM fragmentos_conocimiento")
+
+
 def guardar_fragmento(conexion, documento, seccion, orden, texto, vector, hash_documento):
     """Guarda un fragmento de un documento con su vector en la base de conocimiento,
     junto con el modelo que lo creó y la huella del documento.
@@ -50,7 +56,7 @@ def guardar_fragmento(conexion, documento, seccion, orden, texto, vector, hash_d
     )
 
 
-def buscar_fragmentos(conexion, vector, cantidad=5):
+def buscar_fragmentos(conexion, vector, cantidad):
     """Devuelve los fragmentos más parecidos a un vector: (documento, sección, texto, similitud).
     La similitud va de 0 a 1; mientras más alta, más se parece al texto buscado.
 
@@ -58,13 +64,14 @@ def buscar_fragmentos(conexion, vector, cantidad=5):
     una que corresponda, escala (Módulo 2, sección 2.5).
     """
     cursor = conexion.cursor()
+    texto_vector = vector_a_texto(vector)
     # <=> mide la distancia de coseno: ordenar de menor a mayor trae primero lo más parecido.
     # Solo se comparan vectores creados con el mismo modelo que la consulta (decisión D8).
     cursor.execute(
         "SELECT documento, seccion, texto, 1 - (embedding <=> %s::vector) AS similitud "
         "FROM fragmentos_conocimiento WHERE modelo_embedding = %s "
         "ORDER BY embedding <=> %s::vector LIMIT %s",
-        (vector_a_texto(vector), config.LLM_MODELO_EMBEDDINGS, vector_a_texto(vector), cantidad),
+        (texto_vector, config.LLM_MODELO_EMBEDDINGS, texto_vector, cantidad),
     )
     return cursor.fetchall()
 
@@ -72,7 +79,7 @@ def buscar_fragmentos(conexion, vector, cantidad=5):
 def contar_fragmentos(conexion):
     """Cuenta los fragmentos cargados con el modelo de embeddings actual.
     Si es 0, la búsqueda no encontraría nada: hay que ejecutar la carga.
-    Técnico: no viene del curso (buenas-practicas.md)."""
+    Técnico: no viene del curso (rag.md)."""
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT count(*) FROM fragmentos_conocimiento WHERE modelo_embedding = %s",
@@ -81,7 +88,7 @@ def contar_fragmentos(conexion):
     return cursor.fetchone()[0]
 
 
-def leer_agente(conexion, nombre="Agente de Soporte N1"):
+def leer_agente(conexion):
     """Devuelve el registro del agente como diccionario: id, nombre, fuera_de_alcance, detenido.
 
     Curso: el registro de agentes dice quién es cada agente y qué no atiende
@@ -90,7 +97,7 @@ def leer_agente(conexion, nombre="Agente de Soporte N1"):
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT id, nombre, fuera_de_alcance, detenido FROM registro_agentes WHERE nombre = %s",
-        (nombre,),
+        ("Agente de Soporte N1",),
     )
     fila = cursor.fetchone()
     if fila is None:

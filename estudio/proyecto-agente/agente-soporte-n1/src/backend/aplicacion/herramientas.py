@@ -3,7 +3,7 @@
 Etapa 3. Curso: el agente recibe solo las herramientas que su tarea necesita (permisos
 mínimos, Módulo 2, sección 2.3). El modelo pide una herramienta; este archivo revisa el
 pedido y la ejecuta. Una herramienta que no está en DEFINICIONES se rechaza: lo
-desconocido se trata como restringido (buenas-practicas.md, patrón 09).
+desconocido se trata como restringido (rag.md, patrón 09).
 Todo lo que vuelve al modelo va marcado como datos, no como instrucciones (patrón 02).
 """
 import json
@@ -45,7 +45,7 @@ DEFINICIONES = [
         "function": {
             "name": "buscar_solucion",
             "description": "Busca en la base de conocimiento las soluciones documentadas más parecidas al problema. "
-                           "Devuelve hasta 5 fragmentos, cada uno con su fuente (documento > sección).",
+                           f"Devuelve hasta {CANTIDAD_FRAGMENTOS} fragmentos, cada uno con su fuente (documento > sección).",
             "parameters": {
                 "type": "object",
                 "properties": {"consulta": {"type": "string", "description": "El problema, en pocas palabras."}},
@@ -80,7 +80,7 @@ def marcar_como_datos(etiqueta, texto):
     rutas de menú ("Configuración > Formato de impresión") y en las fuentes ("documento > sección").
 
     Curso: no seguir instrucciones que vienen dentro de los datos (dimensión adversarial,
-    Módulo 2, sección 2.6). La técnica es de buenas-practicas.md, patrón 02.
+    Módulo 2, sección 2.6). La técnica es de rag.md, patrón 02.
     """
     limpio = str(texto).replace("<", "&lt;")
     return f"<{etiqueta}>\n{limpio}\n</{etiqueta}>"
@@ -92,7 +92,7 @@ def leer_argumentos(nombre, argumentos_json):
     Rechaza herramientas desconocidas, JSON roto, parámetros que faltan, sobran o no son texto.
 
     Curso: el agente solo puede usar las herramientas que se le dieron (Módulo 2, sección 2.3).
-    Rechazar lo desconocido no viene del curso (buenas-practicas.md, patrón 09).
+    Rechazar lo desconocido no viene del curso (rag.md, patrón 09).
     """
     definicion = next((d["function"] for d in DEFINICIONES if d["function"]["name"] == nombre), None)
     if definicion is None:
@@ -114,14 +114,14 @@ def leer_argumentos(nombre, argumentos_json):
     return argumentos, None
 
 
-def buscar(conexion, consulta, cantidad=CANTIDAD_FRAGMENTOS):
+def buscar(conexion, consulta):
     """Busca una consulta en la base de conocimiento y devuelve los fragmentos más parecidos:
     (documento, sección, texto, similitud).
 
     Curso: el agente solo responde con soluciones documentadas (Módulo 2, sección 2.5).
     """
     vector = crear_embedding([consulta])[0]
-    return buscar_fragmentos(conexion, vector, cantidad)
+    return buscar_fragmentos(conexion, vector, CANTIDAD_FRAGMENTOS)
 
 
 def formatear_fragmentos(resultados):

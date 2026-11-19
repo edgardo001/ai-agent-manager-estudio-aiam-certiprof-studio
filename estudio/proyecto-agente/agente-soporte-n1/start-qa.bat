@@ -2,7 +2,7 @@
 rem Entorno de QA del Agente de Soporte N1.
 rem Levanta todo con Docker Compose, incluida la app (perfil "qa"),
 rem para probar el sistema tal como correria fuera del equipo de desarrollo.
-rem Aparece en la etapa 0, pero funciona desde la etapa 6, cuando existen el compose y el Dockerfile.
+rem Aparece en la etapa 0, pero funciona desde la etapa 6, cuando existe el Dockerfile.
 rem Uso: doble clic, o "start-qa.bat" desde esta carpeta.
 setlocal
 cd /d "%~dp0src\docker"
@@ -10,12 +10,6 @@ cd /d "%~dp0src\docker"
 if not exist ..\backend\Dockerfile (
     echo Todavia no existe src\backend\Dockerfile: la app dentro de Docker llega en la etapa 6.
     echo Por ahora use start-dev.bat.
-    pause
-    exit /b 1
-)
-if not exist docker-compose.yml (
-    echo Todavia no existe src\docker\docker-compose.yml: llega en la etapa 2,
-    echo y la app dentro de Docker, en la etapa 6. Por ahora use start-dev.bat.
     pause
     exit /b 1
 )

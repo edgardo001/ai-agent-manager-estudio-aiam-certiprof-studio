@@ -28,9 +28,10 @@ def conectar_modelo(para_embeddings=False):
     # Se crea en cada llamada y no al importar el archivo: así, si falta la clave,
     # el programa alcanza a mostrar su propio aviso en vez de un error de la librería.
     if para_embeddings:
-        return OpenAI(base_url=config.LLM_EMBEDDINGS_BASE_URL, api_key=config.LLM_EMBEDDINGS_API_KEY,
-                      timeout=ESPERA_MAXIMA, max_retries=0)
-    return OpenAI(base_url=config.LLM_BASE_URL, api_key=config.LLM_API_KEY, timeout=ESPERA_MAXIMA, max_retries=0)
+        direccion, clave = config.LLM_EMBEDDINGS_BASE_URL, config.LLM_EMBEDDINGS_API_KEY
+    else:
+        direccion, clave = config.LLM_BASE_URL, config.LLM_API_KEY
+    return OpenAI(base_url=direccion, api_key=clave, timeout=ESPERA_MAXIMA, max_retries=0)
 
 
 def opciones_de_llamada(temperatura):

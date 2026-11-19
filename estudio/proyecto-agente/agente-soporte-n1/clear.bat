@@ -29,7 +29,6 @@ rem 3. Docker: detiene y borra los contenedores que levanto docker compose.
 rem    Nunca borra las imagenes descargadas, como la de PostgreSQL (decision del usuario):
 rem    asi volver a empezar es rapido. Los volumenes (los datos de la base) se conservan,
 rem    salvo que se pida con "clear.bat --borrar-volumenes", que ademas pide confirmacion.
-if not exist src\docker\docker-compose.yml goto :fin
 if /i "%~1"=="--borrar-volumenes" goto :volumenes
 echo Deteniendo y borrando los contenedores del proyecto (los datos de la base se conservan)...
 docker compose -f src\docker\docker-compose.yml --profile qa down

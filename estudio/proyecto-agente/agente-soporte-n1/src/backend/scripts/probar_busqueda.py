@@ -10,7 +10,7 @@ Desde la etapa 3 usa la misma búsqueda que la herramienta buscar_solucion del a
 import sys
 
 from aplicacion import config
-from aplicacion.base_de_datos import conectar
+from aplicacion.base_de_datos import conectar, contar_fragmentos
 from aplicacion.herramientas import buscar
 
 # Consulta y documento que debería aparecer primero. La última no tiene documento a propósito:
@@ -40,27 +40,21 @@ def probar_busqueda():
         print(f"No se pudo conectar con PostgreSQL ({error}). ¿Está abierto Docker y se ejecutó start-dev.bat?")
         return
     try:
-        if len(sys.argv) > 1:  # una consulta escrita por la persona
-            consultas = [(" ".join(sys.argv[1:]), None)]
-        else:
-            consultas = CONSULTAS
+        if contar_fragmentos(conexion) == 0:  # base vacía, o cargada con otro modelo de embeddings
+            print(f"La base no tiene fragmentos del modelo {config.LLM_MODELO_EMBEDDINGS}: ejecute python -m scripts.cargar_conocimiento.")
+            return
+        if len(sys.argv) > 1:  # una consulta escrita por la persona: los fragmentos más parecidos
+            for documento, seccion, _, similitud in buscar(conexion, " ".join(sys.argv[1:])):
+                print(f"{similitud:.2f}  {documento} > {seccion}")
+            return
         aciertos = 0
-        for consulta, esperado in consultas:
-            resultados = buscar(conexion, consulta, cantidad=5 if len(consultas) == 1 else 1)
-            if not resultados:  # base vacía, o cargada con otro modelo de embeddings
-                print(f"La base no tiene fragmentos del modelo {config.LLM_MODELO_EMBEDDINGS}: ejecute python -m scripts.cargar_conocimiento.")
-                return
-            if len(consultas) == 1:
-                for documento, seccion, texto, similitud in resultados:
-                    print(f"{similitud:.2f}  {documento} > {seccion}")
-                return
-            documento, seccion, texto, similitud = resultados[0]
+        for consulta, esperado in CONSULTAS:  # la lista fija: solo importa el primer resultado
+            documento, seccion, _, similitud = buscar(conexion, consulta)[0]
             if esperado is None:
                 print(f"[sin documento] {similitud:.2f}  {consulta!r} -> {documento} > {seccion}")
                 continue
-            acierto = documento == esperado
-            aciertos += acierto
-            print(f"[{'bien' if acierto else 'MAL '}] {similitud:.2f}  {consulta!r} -> {documento} > {seccion}")
+            aciertos += documento == esperado
+            print(f"[{'bien' if documento == esperado else 'MAL '}] {similitud:.2f}  {consulta!r} -> {documento} > {seccion}")
         print(f"\n{aciertos} de {sum(1 for _, e in CONSULTAS if e)} consultas encontraron el documento esperado.")
     except Exception as error:  # sin red, clave inválida, límite de uso del modelo...
         print(f"La búsqueda se detuvo: {error}")

@@ -5,7 +5,7 @@ from aplicacion.herramientas import DEFINICIONES, formatear_fragmentos, leer_arg
 def test_herramienta_desconocida_se_rechaza():
     """Una herramienta que no existe se rechaza y el error dice cuáles sí existen.
     Curso: permisos mínimos (Módulo 2, sección 2.3). Que lo desconocido se trate como restringido
-    no viene del curso (buenas-practicas.md, patrón 09)."""
+    no viene del curso (rag.md, patrón 09)."""
     argumentos, error = leer_argumentos("borrar_cliente", '{"codigo": "C-001"}')
     assert argumentos is None
     assert "no existe" in error and "buscar_solucion" in error
@@ -29,7 +29,7 @@ def test_buscar_cliente_no_acepta_otro_cliente():
 
 def test_argumentos_invalidos_dan_errores_comprensibles():
     """JSON roto, un valor que no es objeto o un parámetro que falta dan un error que el modelo entiende.
-    Técnico: no viene del curso (buenas-practicas.md, patrón 08)."""
+    Técnico: no viene del curso (rag.md, patrón 08)."""
     assert "JSON válido" in leer_argumentos("buscar_solucion", "{consulta:")[1]
     assert "objeto JSON" in leer_argumentos("buscar_solucion", '["contraseña"]')[1]
     assert "consulta" in leer_argumentos("buscar_solucion", '{"consulta": "  "}')[1]
@@ -57,7 +57,7 @@ def test_marcar_como_datos_no_se_puede_cerrar_desde_adentro():
 
 def test_fragmentos_llevan_su_fuente():
     """Cada fragmento llega al modelo con su fuente, para que pueda citarla.
-    Técnico: práctica de RAG que no viene en el curso (buenas-practicas.md)."""
+    Técnico: práctica de RAG que no viene en el curso (rag.md)."""
     texto = formatear_fragmentos([("restablecer-contrasena.md", "Pasos", "1. Entrar.", 0.8123)])
     assert "Fuente: restablecer-contrasena.md > Pasos (parecido 0.81)" in texto
     assert texto.startswith("<fragmento>")

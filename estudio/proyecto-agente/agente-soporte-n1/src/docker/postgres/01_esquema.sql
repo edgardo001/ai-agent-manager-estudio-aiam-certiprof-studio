@@ -1,8 +1,8 @@
 -- Etapa 2. Esquema del Agente de Soporte N1: las seis tablas del plan ("Modelo de datos").
 -- PostgreSQL ejecuta este archivo la primera vez que se crea el volumen de datos,
 -- antes que 02_datos_ficticios.sql (el número fija el orden).
--- En la etapa 2 solo se usan registro_agentes, clientes y fragmentos_conocimiento;
--- las otras tres se crean ya para no tener que recrear la base en cada etapa.
+-- Desde la etapa 3 se usan registro_agentes, clientes, fragmentos_conocimiento, tickets y mensajes;
+-- registro_auditoria se usa desde la etapa 4. Todas se crean ya para no recrear la base en cada etapa.
 
 -- pgvector: agrega el tipo "vector" y la búsqueda por parecido.
 CREATE EXTENSION IF NOT EXISTS vector;

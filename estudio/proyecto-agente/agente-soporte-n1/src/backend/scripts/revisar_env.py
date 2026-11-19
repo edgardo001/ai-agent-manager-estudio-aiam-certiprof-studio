@@ -32,12 +32,6 @@ def leer_variables(texto):
     return variables
 
 
-def leer_archivo(ruta):
-    """Lee un archivo de variables; utf-8-sig acepta la marca que agregan algunos editores.
-    Técnico: no viene del curso."""
-    return ruta.read_text(encoding="utf-8-sig")
-
-
 def comparar(plantilla, env):
     """Devuelve (las que faltan en el .env, las que sobran en el .env), por nombre.
     Técnico: no viene del curso."""
@@ -71,8 +65,8 @@ def revisar_env():
     if not RUTA_ENV.exists():
         print("No existe src/docker/.env: copie example.env como .env y complételo.")
         return
-    texto_plantilla = leer_archivo(RUTA_PLANTILLA)
-    plantilla, env = leer_variables(texto_plantilla), leer_variables(leer_archivo(RUTA_ENV))
+    texto_plantilla = RUTA_PLANTILLA.read_text(encoding="utf-8-sig")
+    plantilla, env = leer_variables(texto_plantilla), leer_variables(RUTA_ENV.read_text(encoding="utf-8-sig"))
     faltan, sobran = comparar(plantilla, env)
     if ordenar_env:
         shutil.copyfile(RUTA_ENV, RUTA_RESPALDO)

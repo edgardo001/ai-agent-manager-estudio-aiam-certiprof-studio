@@ -26,15 +26,12 @@ def leer(nombre, por_defecto=""):
 # (el de OpenAI); cada uno tiene su dirección y su clave con nombre propio, las dos en el .env,
 # para poder cambiar una dirección sin tocar el código. Cambiar de proveedor es cambiar
 # LLM_PROVEEDOR en el .env, sin comentar ni descomentar líneas.
-GEMINI_BASE_URL = leer("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
 GEMINI_API_KEY = leer("GEMINI_API_KEY")
-OPENROUTER_BASE_URL = leer("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 OPENROUTER_API_KEY = leer("OPENROUTER_API_KEY")
-OLLAMA_BASE_URL = leer("OLLAMA_BASE_URL", "http://localhost:11434/v1")
 PROVEEDORES = {  # nombre: (dirección, variable con su clave; Ollama no pide clave)
-    "gemini": (GEMINI_BASE_URL, "GEMINI_API_KEY"),
-    "openrouter": (OPENROUTER_BASE_URL, "OPENROUTER_API_KEY"),
-    "ollama": (OLLAMA_BASE_URL, None),
+    "gemini": (leer("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/"), "GEMINI_API_KEY"),
+    "openrouter": (leer("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"), "OPENROUTER_API_KEY"),
+    "ollama": (leer("OLLAMA_BASE_URL", "http://localhost:11434/v1"), None),
 }
 
 
@@ -75,11 +72,11 @@ POSTGRES_HOST = leer("POSTGRES_HOST", "127.0.0.1")
 RUTA_PROMPT = Path(__file__).with_name("prompt_soporte_n1.md")
 
 # Tope de tokens por ticket (etapa 3): si la conversación con el modelo lo supera, el ticket
-# se escala. Evita que un caso enredado gaste sin límite (buenas-practicas.md, patrón 08).
+# se escala. Evita que un caso enredado gaste sin límite (rag.md, patrón 08).
 TOPE_TOKENS_POR_TICKET = int(leer("TOPE_TOKENS_POR_TICKET", "20000"))
 
 # Datos para estimar y calcular costos (scripts/estimar_costos.py; tickets desde la etapa 3).
-# No configuran el modelo: son precios y supuestos. Detalle en docs/costos.md.
+# No configuran el modelo: son precios y supuestos. Detalle en docs/modelos-y-costos.md.
 PRECIO_MILLON_TOKENS_ENTRADA = float(leer("PRECIO_MILLON_TOKENS_ENTRADA", "0.25"))
 PRECIO_MILLON_TOKENS_SALIDA = float(leer("PRECIO_MILLON_TOKENS_SALIDA", "1.50"))
 PRECIO_MILLON_TOKENS_EMBEDDINGS = float(leer("PRECIO_MILLON_TOKENS_EMBEDDINGS", "0.15"))

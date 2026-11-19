@@ -25,11 +25,9 @@ python -m pip install -q -r requirements.txt || goto :error
 rem    Avisa si el .env se separo de la plantilla example.env (decision D14); no detiene nada.
 python -m scripts.revisar_env
 
-rem 2. Servicios de apoyo con Docker Compose (existe desde la etapa 2).
+rem 2. Servicios de apoyo con Docker Compose (desde la etapa 2).
 rem    Sin perfil, Compose levanta solo PostgreSQL; la app no, porque corre en local.
-if exist ..\docker\docker-compose.yml (
-    docker compose -f ..\docker\docker-compose.yml up -d --wait || goto :error
-)
+docker compose -f ..\docker\docker-compose.yml up -d --wait || goto :error
 
 rem 3. La app: la consola del agente. Se mantiene en todas las etapas (regla 12 del plan);
 rem    desde la etapa 6 este script tambien levantara la API con uvicorn.

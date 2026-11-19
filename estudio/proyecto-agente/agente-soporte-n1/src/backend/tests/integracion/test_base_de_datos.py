@@ -5,8 +5,10 @@ from aplicacion.base_de_datos import (
     buscar_fragmentos,
     contar_fragmentos,
     crear_ticket,
+    guardar_escalamiento,
     guardar_fragmento,
     guardar_mensaje,
+    guardar_respuesta,
     leer_agente,
     leer_cliente,
     leer_mensajes,
@@ -69,3 +71,7 @@ def test_un_ticket_guarda_su_conversacion_y_sus_tokens(conexion):
     assert ticket["estado"] == "nuevo"
     assert (ticket["tokens_entrada"], ticket["tokens_salida"], float(ticket["costo_tokens"])) == (300, 30, 0.75)
     assert leer_mensajes(conexion, ticket_id) == [("cliente", "no sincroniza"), ("agente", "pruebe esto")]
+    # Una respuesta tardía no devuelve a 'respondido' un ticket que ya tomó una persona (etapa 3, m8).
+    guardar_escalamiento(conexion, ticket_id, "prueba", "contexto", "regla")
+    guardar_respuesta(conexion, ticket_id, "respuesta tardía")
+    assert leer_ticket(conexion, ticket_id)["estado"] == "escalado"

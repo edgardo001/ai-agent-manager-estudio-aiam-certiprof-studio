@@ -17,7 +17,7 @@ import hashlib
 from pathlib import Path
 
 from aplicacion import config
-from aplicacion.base_de_datos import conectar, guardar_fragmento
+from aplicacion.base_de_datos import borrar_fragmentos, conectar, guardar_fragmento
 from aplicacion.modelo import crear_embedding
 
 # src/backend/scripts/cargar_conocimiento.py -> src/base-de-conocimiento/
@@ -90,6 +90,12 @@ def fragmentar_documento(texto):
     return fragmentos
 
 
+def listar_documentos():
+    """Devuelve los documentos de la base de conocimiento, en orden. El README.md de la carpeta
+    explica los documentos; no es conocimiento del agente. Técnico: no viene del curso."""
+    return [p for p in sorted(CARPETA_DOCUMENTOS.glob("*.md")) if p.name != "README.md"]
+
+
 def cargar_conocimiento():
     """Lee cada documento, lo corta en fragmentos, calcula sus vectores y los guarda.
 
@@ -100,15 +106,14 @@ def cargar_conocimiento():
     if faltan:
         print(f"Faltan en src/docker/.env: {', '.join(faltan)}.")
         return
-    # El README.md de la carpeta explica los documentos; no es conocimiento del agente.
-    documentos = [p for p in sorted(CARPETA_DOCUMENTOS.glob("*.md")) if p.name != "README.md"]
+    documentos = listar_documentos()
     try:
         conexion = conectar()
     except Exception as error:  # PostgreSQL apagado, contraseña equivocada...
         print(f"No se pudo conectar con PostgreSQL ({error}). ¿Está abierto Docker y se ejecutó start-dev.bat?")
         return
     try:
-        conexion.cursor().execute("DELETE FROM fragmentos_conocimiento")
+        borrar_fragmentos(conexion)
         total = 0
         for documento in documentos:
             # utf-8-sig: lee igual un archivo guardado con BOM, la marca que agregan algunos editores.

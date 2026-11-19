@@ -1,21 +1,16 @@
 """Pruebas unitarias de cómo modelo.py lee la respuesta de la librería openai, sin llamar a Gemini.
 Se arma una respuesta con el mismo tipo que entrega la librería (ChatCompletion)."""
+from types import SimpleNamespace
+
 from openai.types.chat import ChatCompletion
 
 from aplicacion import modelo
 
 
-class ClienteFalso:
-    """Imita al cliente de openai: client.chat.completions.create() devuelve una respuesta fija.
+def cliente_falso(respuesta):
+    """Imita al cliente de openai: cliente.chat.completions.create() devuelve una respuesta fija.
     Técnico: no viene del curso."""
-
-    def __init__(self, respuesta):
-        self.chat = self
-        self.completions = self
-        self.respuesta = respuesta
-
-    def create(self, **opciones):
-        return self.respuesta
+    return SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=lambda **opciones: respuesta)))
 
 
 def respuesta_de_openai(mensaje, fin, uso):
@@ -34,7 +29,7 @@ def test_conserva_la_firma_de_gemini_y_lee_los_pedidos(monkeypatch):
     mensaje = {"role": "assistant", "content": None, "tool_calls": [{
         "id": "c1", "type": "function", "function": {"name": "buscar_cliente", "arguments": "{}"}, "extra_content": firma}]}
     uso = {"prompt_tokens": 120, "completion_tokens": 8, "total_tokens": 128}
-    monkeypatch.setattr(modelo, "conectar_modelo", lambda: ClienteFalso(respuesta_de_openai(mensaje, "tool_calls", uso)))
+    monkeypatch.setattr(modelo, "conectar_modelo", lambda: cliente_falso(respuesta_de_openai(mensaje, "tool_calls", uso)))
     resultado = modelo.conversar_con_herramientas([], [])
     assert resultado["mensaje"]["tool_calls"][0]["extra_content"] == firma
     assert resultado["llamadas"] == [("c1", "buscar_cliente", "{}")]
@@ -45,7 +40,7 @@ def test_sin_uso_informado_los_tokens_son_cero(monkeypatch):
     """Si el proveedor no informa los tokens, se cuentan 0 (el tope de tokens no se activaría;
     queda el máximo de llamadas). Técnico: no viene del curso (revisión de la etapa 3, m4)."""
     mensaje = {"role": "assistant", "content": "hola"}
-    monkeypatch.setattr(modelo, "conectar_modelo", lambda: ClienteFalso(respuesta_de_openai(mensaje, "stop", None)))
+    monkeypatch.setattr(modelo, "conectar_modelo", lambda: cliente_falso(respuesta_de_openai(mensaje, "stop", None)))
     resultado = modelo.conversar_con_herramientas([], [])
     assert (resultado["texto"], resultado["llamadas"], resultado["tokens_entrada"]) == ("hola", [], 0)
 
