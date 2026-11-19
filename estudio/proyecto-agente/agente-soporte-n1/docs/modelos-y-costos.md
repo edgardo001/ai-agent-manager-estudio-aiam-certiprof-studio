@@ -25,6 +25,8 @@ El agente necesita un modelo que sepa **usar herramientas** (tool calling o func
 | Ollama | en https://ollama.com/search, los modelos que lo aceptan llevan la etiqueta “tools” |
 | Gemini | la página de cada modelo en la documentación de Google dice si acepta “function calling”; los modelos de chat actuales lo aceptan |
 
+**El mismo modelo tiene otro nombre en cada proveedor** (consulta del usuario del 2026-11-19): en Gemini directo se escribe `gemini-3.1-flash-lite`, y en OpenRouter, `google/gemini-3.1-flash-lite`. Con el nombre del otro proveedor, el chat falla con un error 404 (“model not found”), como pasó al volver de OpenRouter a Gemini. La lista de los modelos de chat y de embeddings que ofrecía cada proveedor ese día está comentada en `example.env`, junto a `LLM_MODEL`, para tenerla a mano al cambiar; `revisar_env --ordenar` la copia al archivo de configuración local. La de Gemini sale de su lista de modelos, pedida con la clave; la de OpenRouter, de su lista pública, filtrando los `:free` que aceptan herramientas. Las listas cambian, sobre todo los modelos de prueba (“preview”).
+
 **La forma segura es probarlo:** `scripts.prueba_conexion` hace tres pruebas con la configuración actual: un saludo, un pedido de una herramienta inventada (“¿qué hora es en Santiago?”) y un embedding. Dice si el modelo pidió la herramienta y si el vector tiene 768 números. Cuesta una fracción de centavo. Que acepte herramientas no basta: también tiene que **usarlas bien**, y eso lo miden las evals de la etapa 5, que permitirán comparar modelos con los mismos casos.
 
 ## 3. Probar el chat con OpenRouter
@@ -32,7 +34,7 @@ El agente necesita un modelo que sepa **usar herramientas** (tool calling o func
 1. Crear una clave en https://openrouter.ai/keys y cargar algo de saldo, o usar un modelo gratuito (los que terminan en `:free`). Los modelos gratuitos comparten un cupo entre todos los usuarios y tienen un límite diario bajo: sirven para probar, no para correr las evals.
 2. En el archivo de configuración, poner la clave en `OPENROUTER_API_KEY` y cambiar dos líneas: `LLM_PROVEEDOR=openrouter` y `LLM_MODEL` con el nombre del modelo en OpenRouter. `LLM_EMBEDDINGS_PROVEEDOR` sigue en `gemini`, así que la base no se recarga. Para volver, `LLM_PROVEEDOR=gemini` y su modelo.
 3. Ajustar los precios del chat si se elige otro modelo (están en su página de OpenRouter).
-4. Correr `scripts.prueba_conexion`, luego `aplicacion.consola --detallado` y `pytest tests/unitarias tests/integracion`.
+4. Correr `scripts.prueba_conexion`, luego `aplicacion.consola --detallado` y `pytest tests/unitarias tests/integracion tests/adversariales`.
 
 Lo que dio la prueba del 2026-11-19 está en `pruebas/2026-11-19-openrouter.md`. Sin el tope de salida (`LLM_MAXIMO_TOKENS_SALIDA`, 2.000 por defecto), OpenRouter reserva saldo para la salida máxima del modelo y, con poco saldo, rechaza el pedido.
 
