@@ -21,6 +21,7 @@ Registro de las decisiones técnicas que necesitan una explicación: qué proble
 | D13 | el chat y los embeddings, cada uno con su proveedor | vigente, con las variables de D14 | 3 |
 | D14 | proveedor elegido por nombre y configuración alineada con la plantilla | vigente | 3 |
 | D15 | el prompt en archivo y git, con una huella que hace cumplir la aprobación | vigente | 4 y 5 |
+| D16 | reglas en código con patrones simples, y el kill switch desde la consola | vigente | 4 |
 
 ## D1. Librería para conectar Python con PostgreSQL: `pg8000`
 
@@ -298,7 +299,7 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 
 **Por qué:** un mensaje del cliente queda guardado completo o no queda (si algo falla a mitad, la consola hace `rollback` y no quedan tickets a medias), y las pruebas de integración pueden usar la base real y deshacer todo al final (`tests/conftest.py`), sin una base aparte para pruebas.
 
-**Qué implica:** toda puerta de entrada nueva (la API de la etapa 6) debe confirmar o deshacer al terminar cada pedido. Desde la etapa 4, los pasos del registro de auditoría van en la misma transacción: son “todo o nada” por mensaje. Para que una falla no borre justo los pasos que la explican, toda falla que se pueda prever (el modelo, una herramienta, un tope) termina en un escalamiento por regla que sí se confirma; solo una falla de la propia base de datos deshace el mensaje. Los números de ticket que usaron las pruebas no se reutilizan (PostgreSQL no retrocede sus contadores con un `rollback`), así que los tickets reales pueden saltar números; no afecta a nada.
+**Qué implica:** toda puerta de entrada nueva (la API de la etapa 6) debe confirmar o deshacer al terminar cada pedido. **Matiz de la etapa 4 (decisión del usuario):** el mensaje del cliente se guarda y se confirma antes de atenderlo (`atender_mensaje(..., mensaje_ya_guardado=True)`), para que no se pierda si el programa se cae a mitad; todo lo demás del mensaje sigue siendo “todo o nada”. Y si falla la base dentro de una herramienta, un punto de retorno (`SAVEPOINT`) deja la transacción usable para escalar. Desde la etapa 4, los pasos del registro de auditoría van en la misma transacción: son “todo o nada” por mensaje. Para que una falla no borre justo los pasos que la explican, toda falla que se pueda prever (el modelo, una herramienta, un tope) termina en un escalamiento por regla que sí se confirma; solo una falla de la propia base de datos deshace el mensaje. Los números de ticket que usaron las pruebas no se reutilizan (PostgreSQL no retrocede sus contadores con un `rollback`), así que los tickets reales pueden saltar números; no afecta a nada.
 
 ## D12. `127.0.0.1` en vez de `localhost` para conectarse a PostgreSQL
 
@@ -360,3 +361,15 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 **Por qué:** hace cumplir la aprobación que pide el curso con dos columnas y unas veinte líneas, sin tablas nuevas ni servicios; distingue un cambio de instrucciones de una deriva (3.3 y la segunda señal de 3.4) y da la auditoría de prompt de la sección 4.6. La traza completa (D) ocuparía de 20 a 80 KB por ticket, copiaría hasta seis veces los datos del cliente y aun así no permitiría repetir una respuesta exacta; queda postergada, como Langfuse. OpenBao (E) se descartó para el prompt: el prompt no es un secreto (viaja completo al modelo en cada llamada), el versionado de un vault no es una aprobación con evals y abriría otro camino para cambiar las instrucciones en caliente.
 
 **Qué implica:** que cambiar el prompt de un agente desplegado exija reconstruir la imagen es una ventaja, no un problema: la imagen queda fija y la huella prueba que trae lo aprobado. `modelo.py` acepta `temperatura` (`opciones_de_llamada()`), para que las evals y el juez usen 0 (`evals-del-llm.md`). Quedan postergados, con su señal, leer el prompt desde la base y OpenBao para las claves de API.
+
+## D16. Reglas en código con patrones simples, y el kill switch desde la consola
+
+**Fecha:** 2026-11-19. **Estado:** vigente, etapa 4, con la revisión aplicada.
+
+**El problema:** el curso pide que el agente escale siempre la cancelación y lo que pase de 8 minutos, que no ofrezca descuentos, no cambie la cuenta del cliente sin confirmación humana ni comparta información de otros clientes (sección 2.5), y nombra un kill switch (sección 1.2) y un circuit breaker (sección 4.5). Si esas reglas dependieran del modelo, una respuesta correcta no probaría que siempre lo sean.
+
+**Las opciones:** patrones de palabras en el código, o un segundo modelo que revise la entrada y la salida.
+
+**La decisión:** patrones de palabras en `reglas.py`, más un kill switch que se activa desde la consola hasta que exista la API. Cómo se comporta cada regla está en el plan, “Cómo funciona cada regla”, que es su única fuente. Dos decisiones del usuario en la revisión: la cancelación exige intención u objeto (“ya cancelé la factura” significa pagarla) y el mensaje del cliente se confirma antes de atenderlo, para no perderlo si el programa se cae (matiza D11).
+
+**Por qué:** los patrones son pocas líneas, gratis, instantáneos y se prueban sin modelo; un segundo modelo costaría llamadas y demora y sería otra fuente de error. Su límite es conocido: no entienden el sentido. Por eso buscan ofrecer o afirmar, no mencionar (se comprobó contra los 8 documentos de la base de conocimiento: ningún falso positivo), el texto bloqueado queda en la auditoría para revisarlo, y las evals de la etapa 5 y la revisión por muestreo (sección 3.3) miden lo que se escape. El prompt sigue diciendo “si menciona cancelación, escala” (el SOP del curso): el modelo puede escalar un caso que la regla dejó pasar, lo que es el lado seguro.

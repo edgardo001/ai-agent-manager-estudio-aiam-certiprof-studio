@@ -116,6 +116,17 @@ La primera medición real (`pruebas/2026-11-19-etapa-3.md`): un ticket resuelto 
 
 **Cada consulta** tiene tres partes: el embedding de la pregunta (casi nada); la entrada del modelo de chat, la mayor parte, porque **cada llamada reenvía todo** (el prompt, la descripción de las herramientas, la pregunta y lo que ya pasó), y los fragmentos encontrados se suman una vez; y la salida, cara por token (1,50) pero con pocos tokens (la respuesta tiene un máximo de 150 palabras, según el prompt). Lo que más mueve el costo: **el largo del prompt**, que se paga en cada llamada, **la cantidad de llamadas** por consulta y **los mensajes de ida y vuelta**, porque cada respuesta del cliente reenvía toda la conversación. Calcular los embeddings cuesta mucho menos que conversar.
 
+**Qué se guarda en la base y por qué así** (consulta del usuario del 2026-11-19):
+
+| Dónde | Qué guarda |
+|---|---|
+| `tickets` | `tokens_entrada`, `tokens_salida` y `costo_tokens` del chat, acumulados por ticket: es el costo por caso que pide el curso (Módulo 3, sección 3.2), en su versión simplificada |
+| `registro_auditoria` | en cada paso del modelo (etapa 4), los tokens de entrada y de salida y el costo de esa llamada: dice en qué se gastó dentro del caso |
+
+- **Se guardan los tokens además del costo:** el costo refleja el precio del día en que se pagó, y con los tokens se puede recalcular si el precio cambia.
+- **Los embeddings no se guardan,** ni el de cada consulta ni los de la carga. Gemini no informa sus tokens por la vía compatible con OpenAI (comprobado el 2026-11-18), y el de una consulta, de unos 50 tokens, cuesta cerca de 0,0000075 dólares: menos del 1% del costo de un ticket (0,0012). Los de la carga no son de ningún ticket: son el costo fijo de mantener la base, y los calcula `estimar_costos.py`.
+- **Decisión: no agregar código por ahora** (regla 3 del plan, la menor cantidad de código). Señal para medirlos: que el modelo de embeddings sea tan caro que el embedding de una consulta supere el 5% del costo por ticket; entonces se estima por caracteres y se suma al ticket, y la carga se registra aparte, por recarga.
+
 ## 8. Demanda incierta: escenarios, no un número
 
 No se puede saber cuántas consultas habrá; por eso el script da tres escenarios y se planifica con el alto.

@@ -123,12 +123,12 @@ La numeración se mantiene porque el código la cita (“patrón 08”).
 | Patrón | Cómo está en el proyecto | Estado |
 |---|---|---|
 | 01 Router (enviar cada petición al agente adecuado) | un solo agente; “si no hay seguridad, a una persona” ya es la regla de escalamiento | no aplica |
-| 02 Guardrails de entrada (validar, autorizar, separar datos de instrucciones) | el cliente sale del ticket (2.3); el texto del cliente y lo que devuelven las herramientas van marcados como datos (`marcar_como_datos()`) | hecho en la etapa 3; `revisar_entrada()` y un largo máximo del ticket, en la etapa 4 |
-| 03 Guardrails de salida (política, fuentes, reglas de negocio) | `revisar_respuesta()` bloquea descuentos, cambios de cuenta y datos de otros clientes; si falla, se escala en vez de reintentar | etapa 4; el respaldo en las fuentes se mide en las evals, por costo |
+| 02 Guardrails de entrada (validar, autorizar, separar datos de instrucciones) | el cliente sale del ticket (2.3); el texto del cliente y lo que devuelven las herramientas van marcados como datos (`marcar_como_datos()`) | hecho en las etapas 3 y 4 (`revisar_entrada()`, largo máximo de 2.000 caracteres; D16) |
+| 03 Guardrails de salida (política, fuentes, reglas de negocio) | `revisar_respuesta()` bloquea descuentos, cambios de cuenta y datos de otros clientes; si falla, se escala en vez de reintentar | hecho en la etapa 4 (D16); el respaldo en las fuentes se mide en las evals, por costo |
 | 04 Cadena de prompts y 06 Orquestador y workers | el agente no tiene pasos fijos ni reparte trabajo | no aplica |
 | 05 Paralelización (votar varias veces) | cada eval se repite 3 veces y vale la mayoría | en las evals |
 | 07 Evaluador y optimizador | el modelo juez de las evals, no en cada respuesta | en las evals |
-| 08 Bucle agéntico con herramientas (el sistema controla pasos, tiempo y costo) | 60 segundos por llamada, 6 llamadas por mensaje, `TOPE_TOKENS_POR_TICKET`, parámetros estrictos (`leer_argumentos()`) | hecho en la etapa 3; los 8 minutos en código, en la etapa 4 |
+| 08 Bucle agéntico con herramientas (el sistema controla pasos, tiempo y costo) | 60 segundos por llamada, 6 llamadas por mensaje, `TOPE_TOKENS_POR_TICKET`, parámetros estrictos (`leer_argumentos()`) | hecho en las etapas 3 y 4 (los 8 minutos por mensaje, en `reglas.py`) |
 | 09 Persona en el circuito (lo no clasificado es de riesgo alto) | las acciones de riesgo se escalan; una herramienta desconocida se rechaza | hecho en la etapa 3 |
 | 10 Memoria | la conversación del ticket y el historial del CRM; los tickets son cortos | ya está |
 | Capacidades transversales (trazas, evaluaciones, presupuestos, versionado) | audit trail, evals, topes de tiempo y costo, versión del prompt y del modelo de embeddings | presupuesto desde la etapa 3; audit trail en la etapa 4 |
@@ -146,8 +146,7 @@ Ideas tomadas de un RAG de ejemplo, sin frameworks, que compartió el usuario; s
 
 ## 11. Lo que queda pendiente
 
-1. **Etapa 4:** `revisar_entrada()` y un largo máximo para el texto del ticket, con las entradas bloqueadas en la auditoría; los 8 minutos en código; si una respuesta no pasa `revisar_respuesta()`, el ticket se escala, sin reintentos.
-2. **Etapa 5 (evals):** recall@5 y posición del documento esperado, causa de cada falla, la búsqueda evaluada sola, datos esperados con alternativas, casos con varios documentos y el golden set verificado.
-3. **Opcional, sin etapa:** comparar en la consola una respuesta con y sin RAG.
+1. **Etapa 5 (evals):** medir los falsos positivos y negativos de las reglas de `reglas.py` (D16) con mensajes y respuestas reales, por ejemplo “ya cancelé la factura”, que la regla deja pasar y el modelo igual escala por el prompt; recall@5 y posición del documento esperado, causa de cada falla, la búsqueda evaluada sola, datos esperados con alternativas, casos con varios documentos y el golden set verificado.
+2. **Opcional, sin etapa:** comparar en la consola una respuesta con y sin RAG.
 
 Lo que no se adopta (router, cadenas de prompts, orquestador, memoria a largo plazo, evaluación en cada respuesta) no hace falta para un agente de este tamaño: sumaría complejidad sin enseñar nada nuevo del curso.

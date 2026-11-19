@@ -4,9 +4,9 @@ Diagramas del código del proyecto: qué archivos y funciones existen, y quién 
 
 El código del proyecto no usa clases (las pruebas sí usan una, el modelo falso): por la regla 2 del plan (código simple de seguir), cada archivo de `src/backend/aplicacion/` y de `src/backend/scripts/` agrupa funciones sueltas sobre un mismo tema, y un archivo llama a las funciones de otro. Por eso los diagramas muestran archivos y funciones, no clases.
 
-**Estado:** etapas 0 a 2 terminadas y probadas por el usuario. Etapa 3 (herramientas y bucle del agente) escrita y probada por el agente y aprobada por el usuario el 2026-11-19.
+**Estado:** etapas 0 a 3 terminadas y probadas por el usuario. Etapa 4 (reglas en código, auditoría y kill switch) escrita, revisada y aprobada por el usuario el 2026-11-19.
 
-## 1. El código de hoy (etapas 0 a 3)
+## 1. El código de hoy (etapas 0 a 4)
 
 Los archivos del código de hoy, los scripts de inicio y limpieza, la base de datos y la conexión con el proveedor de modelos. Las flechas se leen “usa a”. No se dibuja `config.py`, porque casi todos los archivos lo usan para leer el `.env`.
 
@@ -18,11 +18,12 @@ flowchart LR
     end
 
     subgraph BACK["src/backend/aplicacion/ (el agente)"]
-        CON["consola.py<br/>conversar() · pedir_cliente()<br/>atender_ticket() · mostrar_paso()"]
+        CON["consola.py<br/>conversar() · pedir_cliente()<br/>atender_ticket() · mostrar_paso()<br/>--detener · --reactivar"]
         AGE["agente.py<br/>atender_mensaje(): el bucle<br/>usar_herramienta() · escalar() · anotar()"]
         HER["herramientas.py<br/>buscar_cliente() · buscar_solucion()<br/>escalar_a_humano() · leer_argumentos()"]
+        REG["reglas.py (etapa 4)<br/>agente_detenido() · tiempo_excedido()<br/>revisar_entrada() · revisar_respuesta()<br/>cambiar_kill_switch() · escalar_vencidos()"]
         MOD["modelo.py<br/>conversar_con_herramientas()<br/>crear_embedding() · calcular_costo()"]
-        BD["base_de_datos.py<br/>fragmentos · agente · clientes<br/>tickets · mensajes · tokens"]
+        BD["base_de_datos.py<br/>fragmentos · agente · clientes<br/>tickets · mensajes · tokens<br/>registrar_paso(): auditoría"]
         PROMPT[/"prompt_soporte_n1.md<br/>el JD+SOP, versión 3"/]
     end
 
@@ -46,7 +47,11 @@ flowchart LR
     AGE -->|lee| PROMPT
     AGE --> MOD
     AGE --> HER
-    AGE --> BD
+    AGE --> REG
+    AGE -->|cada paso: registrar_paso| BD
+    CON -->|kill switch y vencidos| REG
+    REG --> BD
+    REG -->|escalar_a_humano| HER
     HER -->|embedding de la consulta| MOD
     HER --> BD
     PRU --> MOD
@@ -65,12 +70,13 @@ El código está en dos carpetas (decisión D10): `aplicacion/` es el agente en 
 
 Qué hace cada uno, primero la aplicación y después los scripts:
 
-- **`consola.py`**: la puerta de entrada para probar. `pedir_cliente()` pide el código del cliente (C-001 a C-006) y `atender_ticket()` crea el ticket con el primer mensaje, pasa cada mensaje a `agente.py` y confirma los cambios en la base (D11). Con `--detallado`, `mostrar_paso()` muestra cada paso: herramientas, fragmentos con su parecido, tokens, costo y segundos.
-- **`agente.py`** (etapa 3): `atender_mensaje()` es el bucle del agente, el mismo que usará la API (D6). Todo lo de un mensaje viaja en un diccionario, el `turno` (conexión, ticket, agente, versión del prompt, pasos y herramientas usadas). `armar_instrucciones()` agrega al prompt lo que el agente no atiende, leído del registro de agentes; `armar_conversacion()` marca como datos lo que dice el cliente; `usar_herramienta()` ejecuta las dos búsquedas; `leer_version_prompt()` lee la versión de la primera línea del prompt; `anotar()` y `escalar()` son el único lugar donde, desde la etapa 4, cada paso irá al registro de auditoría, con los tipos de su tabla (`modelo`, `herramienta`, `regla`).
+- **`consola.py`**: la puerta de entrada para probar. `pedir_cliente()` pide el código del cliente (C-001 a C-006) y `atender_ticket()` crea el ticket con el primer mensaje, guarda y confirma cada mensaje del cliente antes de pasarlo a `agente.py`, y confirma el resto al terminar (D11). Con `--detener` y `--reactivar` maneja el kill switch, y al abrir revisa los tickets vencidos. Con `--detallado`, `mostrar_paso()` muestra cada paso: herramientas, fragmentos con su parecido, tokens, costo y segundos.
+- **`reglas.py`** (etapa 4): lo que el agente cumple siempre, sin depender del modelo (D16): el kill switch, los 8 minutos, la cancelación y el largo del mensaje, lo que una respuesta no puede decir y los tickets vencidos. Qué hace cada regla está en el plan, “Cómo funciona cada regla”. También registra las intervenciones (detener o reactivar el agente).
+- **`agente.py`** (etapa 3): `atender_mensaje()` es el bucle del agente, el mismo que usará la API (D6). Todo lo de un mensaje viaja en un diccionario, el `turno` (conexión, ticket, agente, versión del prompt, pasos y herramientas usadas). `armar_instrucciones()` agrega al prompt lo que el agente no atiende, leído del registro de agentes; `armar_conversacion()` marca como datos lo que dice el cliente; `usar_herramienta()` ejecuta las dos búsquedas; `leer_version_prompt()` lee la versión de la primera línea del prompt; `anotar()` registra en la auditoría cada paso de un ticket (etapa 4); las intervenciones las registra `reglas.py`. Cada paso: cada paso con su número, tipo (`modelo`, `herramienta`, `regla`), motivo, tokens, la versión y la huella de las instrucciones (`huella_de()`, D15), el proveedor y el modelo. Antes de llamar al modelo aplica las reglas de `reglas.py`; si falta el archivo del prompt, escala.
 - **`herramientas.py`** (etapa 3): las tres herramientas y su descripción para el modelo (`DEFINICIONES`). `leer_argumentos()` rechaza herramientas desconocidas y argumentos inválidos; `buscar_solucion()` entrega los fragmentos con su fuente; `buscar_cliente()` lee solo al cliente del ticket; `escalar_a_humano()` arma el contexto completo para la persona y escribe el aviso al cliente.
 - **`modelo.py`**: el único lugar que habla con el proveedor de modelos (el que diga la configuración: Gemini, OpenRouter u Ollama). `conversar_con_herramientas()` envía la conversación con las herramientas y devuelve el mensaje tal cual, lo pedido, por qué terminó (`finish_reason`) y los tokens; `calcular_costo()` pasa los tokens a dólares; `crear_embedding()` convierte textos en vectores de 768 números; `preguntar_al_modelo()` queda para la prueba de conexión.
-- **`base_de_datos.py`**: el único lugar que habla con PostgreSQL. Fragmentos (`borrar_fragmentos()`, `guardar_fragmento()`, `buscar_fragmentos()`, `contar_fragmentos()`), agente (`leer_agente()`), clientes (`leer_cliente()`), tickets (`crear_ticket()`, `leer_ticket()`, `guardar_respuesta()`, `guardar_escalamiento()`, `sumar_tokens()`) y mensajes (`guardar_mensaje()`, `leer_mensajes()`). Ninguna confirma los cambios: lo hace quien llama (D11).
-- **`config.py`**: `leer()` toma un valor del `.env`; `PROVEEDORES` y `datos_del_proveedor()` dan la dirección y la clave (las dos del `.env`) del proveedor elegido en `LLM_PROVEEDOR` y `LLM_EMBEDDINGS_PROVEEDOR` (D14); `faltan_variables()` avisa si falta la clave, el modelo o la contraseña de la base; `RUTA_PROMPT` dice dónde está el prompt; `TOPE_TOKENS_POR_TICKET` es el tope de tokens por ticket.
+- **`base_de_datos.py`**: el único lugar que habla con PostgreSQL. Fragmentos (`borrar_fragmentos()`, `guardar_fragmento()`, `buscar_fragmentos()`, `contar_fragmentos()`), agente (`leer_agente()`), clientes (`leer_cliente()`), tickets (`crear_ticket()`, `leer_ticket()`, `guardar_respuesta()`, `guardar_escalamiento()`, `sumar_tokens()`) mensajes (`guardar_mensaje()`, `leer_mensajes()`), auditoría (`registrar_paso()`, `leer_auditoria()`), kill switch (`cambiar_detencion()`) y tickets vencidos (`tickets_sin_respuesta()`, `marcar_sin_confirmar()`). Ninguna confirma los cambios: lo hace quien llama (D11).
+- **`config.py`**: `leer()` toma un valor del `.env`; `PROVEEDORES` y `datos_del_proveedor()` dan la dirección y la clave (las dos del `.env`) del proveedor elegido en `LLM_PROVEEDOR` y `LLM_EMBEDDINGS_PROVEEDOR` (D14); `faltan_variables()` avisa si falta la clave, el modelo o la contraseña de la base; `RUTA_PROMPT` dice dónde está el prompt; `TOPE_TOKENS_POR_TICKET` es el tope de tokens por ticket; `MINUTOS_MAXIMOS_ANTES_DE_ESCALAR`, los 8 minutos.
 - **`prompt_soporte_n1.md`**: no es código; es el texto que define al agente. La versión 3 describe las herramientas, pide citar la fuente y no agregar pasos propios, separa los datos de las instrucciones y aclara que los 8 minutos los controla el programa, porque el modelo no mide el tiempo.
 - **`prueba_conexion.py`** (script): comprueba el proveedor en uso con un saludo, un pedido de las herramientas reales del agente y un embedding de 768 números.
 - **`cargar_conocimiento.py`** (script, etapa 2): corta cada documento por secciones, párrafos o caracteres, calcula los vectores y los guarda. `listar_documentos()` da la lista de documentos, que también usa `estimar_costos.py`.
@@ -80,7 +86,7 @@ Qué hace cada uno, primero la aplicación y después los scripts:
 
 ## 2. Qué pasa en cada mensaje del cliente
 
-El recorrido de un mensaje. Los bloques “alt” muestran las tres salidas posibles de cada vuelta del bucle.
+El recorrido de un mensaje. Los bloques “alt” muestran las salidas posibles de cada vuelta del bucle.
 
 ```mermaid
 sequenceDiagram
@@ -96,12 +102,14 @@ sequenceDiagram
     opt solo en el primer mensaje
         C->>B: crear_ticket()
     end
+    C->>B: guarda el mensaje del cliente y confirma (D11)
     C->>A: atender_mensaje(ticket, texto)
     A->>B: guarda el mensaje, lee el agente y la conversación
     Note over A: si el ticket ya está escalado,<br/>avisa y termina sin llamar al modelo
+    Note over A: lee el prompt (si falta, escala) y calcula su huella;<br/>reglas.py: si el agente está detenido,<br/>o el mensaje pide la baja o es muy largo,<br/>escala por regla y termina
     Note over A: prompt + lo que no atiende<br/>+ conversación marcada como datos
     loop hasta 6 llamadas al modelo
-        Note over A: si el ticket superó el tope de tokens,<br/>escala por regla y termina
+        Note over A: si se detuvo el agente, pasaron 8 minutos<br/>o se superó el tope de tokens, escala por regla y termina
         A->>M: conversar_con_herramientas()
         M->>G: conversación y las 3 herramientas
         G-->>M: pide una herramienta o responde
@@ -117,9 +125,11 @@ sequenceDiagram
             A->>H: escalar_a_humano(), contexto completo
             H->>B: ticket escalado y aviso al cliente, y termina
         else responde al cliente
+            Note over A: revisar_respuesta(): si ofrece descuento,<br/>cambia la cuenta o nombra a otro cliente, escala
             A->>B: guarda la respuesta, ticket respondido, y termina
         end
     end
+    Note over A,B: cada paso queda en registro_auditoria (anotar)
     A-->>C: estado, respuesta y pasos
     C->>C: commit de la conexión
     C-->>P: muestra la respuesta
@@ -129,7 +139,7 @@ Lo importante: el modelo no recuerda nada entre llamadas. El agente le envía ca
 
 ## 3. Cómo quedará el código al terminar la versión 1 (etapa 7)
 
-Mapa de lo que se construirá. Los archivos en verde ya existen (etapas 0 a 3); los grises son los previstos en el plan, y sus nombres de funciones pueden ajustarse al programarlos.
+Mapa de lo que se construirá. Los archivos en verde ya existen (etapas 0 a 4); los grises son los previstos en el plan, y sus nombres de funciones pueden ajustarse al programarlos.
 
 ```mermaid
 flowchart TD
@@ -188,8 +198,8 @@ flowchart TD
 
     classDef existe fill:#d8f3dc,stroke:#2d6a4f,color:#1b4332
     classDef previsto fill:#eeeeee,stroke:#888888,color:#333333
-    class CON,AGE,HER,MOD,PRU,BD,CAR,PBU,TST existe
-    class API,FRONT,REG,SUP,APR previsto
+    class CON,AGE,HER,MOD,PRU,BD,CAR,PBU,TST,REG existe
+    class API,FRONT,SUP,APR previsto
 ```
 
 No se dibuja `config.py`, que ya existe, porque casi todos los archivos lo usan para leer el `.env`. `tests/` aparece en verde porque ya tiene las pruebas unitarias y de integración; los otros tres tipos llegan en las etapas 5 y 6. Cómo leerlo: todo pasa por `agente.py`, que es el único lugar donde está el bucle del agente; la consola y la API son dos puertas hacia la misma función (decisión D6). El agente nunca habla directo con la base de datos ni con Gemini: lo hace a través de `base_de_datos.py` y `modelo.py`. `supervision.py` no atiende tickets: calcula lo que el AI Agent Manager mira en el dashboard (Módulo 3).
