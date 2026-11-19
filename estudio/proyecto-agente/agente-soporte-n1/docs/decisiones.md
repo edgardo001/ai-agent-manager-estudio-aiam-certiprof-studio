@@ -1,6 +1,26 @@
 # Decisiones técnicas del proyecto
 
-Registro de las decisiones técnicas que necesitan una explicación: qué problema había, qué opciones se consideraron, qué se eligió, por qué y qué implica. Sirve para entender el proyecto, no solo para construirlo. Las reglas generales están en `plan-del-proyecto.md`; aquí va el razonamiento detrás de algunas de ellas. Cada decisión nueva se agrega al final, con su fecha.
+Registro de las decisiones técnicas que necesitan una explicación: qué problema había, qué opciones se consideraron, qué se eligió, por qué y qué implica. Sirve para entender el proyecto, no solo para construirlo. Las reglas generales están en `plan-del-proyecto.md`; aquí va el razonamiento detrás de algunas de ellas. Cada decisión nueva se agrega al final, con su fecha. Lo que dio cada prueba (conteos y mediciones) está en `pruebas/`.
+
+## Índice
+
+| D | Decisión | Estado | Etapa |
+|---|---|---|---|
+| D1 | `pg8000` en vez de `psycopg`, por la licencia | vigente | 2 |
+| D2 | vectores como texto convertido con `::vector` | vigente | 2 |
+| D3 | excepciones y reemplazos de la regla de licencias | vigente | todas |
+| D4 | sin autenticación, solo en el equipo local | vigente | 6 y 7 |
+| D5 | modelo `gemini-3.1-flash-lite` y embeddings `gemini-embedding-001` | vigente | 0 |
+| D6 | la consola se mantiene junto a la API | vigente | 3 en adelante |
+| D7 | FastAPI en su forma más simple, con Pydantic | vigente | 6 |
+| D8 | alcance del RAG: qué prácticas tiene y cuáles se postergan | vigente | 2 |
+| D9 | sin columna `dimensiones`: el tamaño lo guarda `vector(768)` | vigente | 2 |
+| D10 | el agente (`aplicacion/`) y los scripts de asistencia (`scripts/`) separados | vigente | todas |
+| D11 | el mensaje del modelo vuelve tal cual; confirma quien llama | vigente | 3 |
+| D12 | `127.0.0.1` en vez de `localhost` | vigente | 2 en adelante |
+| D13 | el chat y los embeddings, cada uno con su proveedor | vigente, con las variables de D14 | 3 |
+| D14 | proveedor elegido por nombre y configuración alineada con la plantilla | vigente | 3 |
+| D15 | el prompt en archivo y git, con una huella que hace cumplir la aprobación | vigente | 4 y 5 |
 
 ## D1. Librería para conectar Python con PostgreSQL: `pg8000`
 
@@ -101,15 +121,15 @@ El operador `<=>` mide qué tan distintos son dos vectores (la distancia de cose
 
 **Fecha:** 2026-11-18. **Estado:** vigente, elección del usuario.
 
-**El modelo:** `gemini-3.1-flash-lite`, de Google, usado por su punto de acceso compatible con OpenAI. Google lo describe como su modelo más eficiente en costo, pensado para tareas agénticas de alto volumen, traducción y procesamiento simple de datos. Fecha de lanzamiento: 7 de mayo de 2026.
+**El modelo:** `gemini-3.1-flash-lite`, de Google, usado por su punto de acceso compatible con OpenAI. Google lo describe como su modelo más eficiente en costo, pensado para tareas agénticas de alto volumen, traducción y procesamiento simple de datos.
 
-**Precios (Google AI Studio, consultados el 2026-11-18), en dólares por millón de tokens:** texto, imagen y video, 0,25 de entrada y 1,50 de salida; audio, 0,50 de entrada y 1,50 de salida. El proyecto solo usa texto.
+**Precios (Google AI Studio, consultados el 2026-11-18):** 0,25 dólares por millón de tokens de entrada y 1,50 de salida, para texto, que es lo único que usa el proyecto. Las cifras de costo están en `modelos-y-costos.md`.
 
 **Por qué importa para el curso:** con estos precios se calcula el costo de tokens de cada ticket, que es parte del costo por caso (Módulo 3, sección 3.2) y del ROI (Módulo 5). Un modelo barato y rápido calza con un agente de soporte de nivel 1, que atiende muchos casos simples.
 
 **Una aclaración:** los precios no configuran el modelo ni se le envían; Google cobra lo mismo. Son datos para un cálculo: el programa solo recibe cuántos tokens usó cada respuesta y, con el precio, los convierte en dólares (tokens de entrada por 0,25 más tokens de salida por 1,50, dividido por un millón). Van en el `.env` porque cambian si Google cambia el precio o si se cambia de modelo, y así no hay que tocar el código.
 
-**El modelo de embeddings y los 768 números:** `gemini-embedding-001`, por el mismo punto de acceso. Cada modelo de embeddings entrega vectores de un tamaño propio, que no es un estándar: este entrega 3.072 números si no se le pide otra cosa, y acepta pedir menos con el parámetro `dimensions`; el proyecto pide 768. Se eligió 768 porque el índice HNSW de pgvector admite hasta 2.000 dimensiones y porque un vector más corto ocupa menos y se compara más rápido, con una pérdida de calidad pequeña (Google entrena este modelo para que los primeros números concentren lo más importante). El tamaño queda fijo en dos lugares: `DIMENSIONES_EMBEDDING` en `modelo.py` y `vector(768)` en `01_esquema.sql`. Cambiar de modelo de embeddings, o de proveedor, obliga a revisar su tamaño: si es otro, se cambian esos dos valores, se cambia el tipo de la columna y se recargan los documentos, sin reconstruir la base (ver `embeddings-y-vectores.md`, sección 6). La base no guarda el tamaño en una columna aparte (ver D9). Explicación completa, con una prueba y el costo de calcularlos, en `embeddings-y-vectores.md`.
+**El modelo de embeddings:** `gemini-embedding-001`, por el mismo punto de acceso, del que el proyecto pide vectores de 768 números. El porqué del 768 y qué hacer al cambiar de modelo están en `rag.md` (secciones 5 y 6); la base no guarda el tamaño en una columna aparte (D9).
 
 **Dónde está anotado:** `LLM_MODEL` (este sí configura a qué modelo se le habla), `PRECIO_MILLON_TOKENS_ENTRADA` y `PRECIO_MILLON_TOKENS_SALIDA`, en `src/docker/example.env` (valores por defecto) y en el `.env`. Si cambia el modelo o su precio, se actualizan esos tres valores y esta decisión, con la fecha.
 
@@ -129,7 +149,7 @@ api.py      ──┘     ◄── la API de FastAPI y, a través de ella, el f
 
 **Por qué:** es más simple de seguir (una sola versión del agente, regla 2) y no duplica código (regla 3). Lo que se prueba en la consola es exactamente lo que hace la API.
 
-**Qué implica:** la consola llama directo a `agente.py`, sin pasar por la API, así que funciona aunque la API no esté corriendo. Desde la etapa 3, cuando use `agente.py`, también necesita PostgreSQL, que levanta `start-dev.bat`; en la etapa 2 la búsqueda se prueba aparte con `probar_busqueda.py`. En la etapa 3 la consola cambia una vez: pide el código del cliente (por ejemplo `C-001`), crea el ticket y pasa cada mensaje a `agente.py`. Después, a medida que el agente gane reglas y auditoría, la consola las tendrá también, sin cambios propios.
+**Qué implica:** la consola llama directo a `agente.py`, sin pasar por la API, así que funciona aunque la API no esté corriendo; necesita PostgreSQL, que levanta `start-dev.bat`. Pide el código del cliente (por ejemplo `C-001`), crea el ticket y pasa cada mensaje a `agente.py`. Las reglas y la auditoría que gane el agente llegan también a la consola, sin cambios propios.
 
 ## D7. FastAPI para la API REST, en su forma más simple
 
@@ -165,7 +185,7 @@ class TicketNuevo(BaseModel):
 
 Al usarla en un endpoint, FastAPI valida lo que llega (si falta un campo o el tipo no corresponde, responde con un error claro), lo entrega listo para usar (`datos.cliente`, `datos.texto`) y lo muestra en `/docs` con un ejemplo. Sin Pydantic, cada endpoint tendría que revisar los datos a mano con varios `if`.
 
-**Qué implica:** se esperan dos o tres clases de este tipo en `api.py`, de dos o tres líneas cada una: crear un ticket, confirmarlo y calificarlo, y registrar una revisión del muestreo. No se usan funciones avanzadas de Pydantic. FastAPI y Pydantic tienen licencia MIT; uvicorn, el servidor que la ejecuta, BSD.
+**Qué implica:** se esperan dos o tres clases de este tipo en `api.py`, de dos o tres líneas cada una: crear un ticket, confirmarlo y calificarlo, y registrar una revisión del muestreo. No se usan funciones avanzadas de Pydantic. Sus licencias están en la tabla del plan.
 
 ## D8. Alcance del RAG: qué prácticas de un RAG estándar tiene el proyecto
 
@@ -186,21 +206,21 @@ Al usarla en un endpoint, FastAPI valida lo que llega (si falta un campo o el ti
 | Fecha de carga | columna `cargado_en` |
 | Citar la fuente de cada respuesta | en dos pasos (decisión del usuario): en la etapa 3, `buscar_solucion` entrega cada fragmento con su documento y su sección, y el agente cita el documento en su respuesta; en la etapa 4, la auditoría guarda el documento, la sección y la huella de los fragmentos usados. El audit trail del curso (Módulo 1, pregunta 9) pide qué decidió el agente y por qué; guardar “con qué datos” es una ampliación del proyecto |
 
-**Lo que no tiene, a propósito:** un umbral mínimo de parecido. La prueba de la etapa 2, con el corte por secciones, mostró que una consulta sin documento (“máquina de café”) dio 0,70, más que la respuesta correcta más baja (0,69); la prueba anterior, sin secciones, había dado 0,64 frente a 0,66: decidir si el fragmento resuelve el caso lo hace el modelo, leyéndolo y siguiendo su SOP (sección 2.5).
+**Lo que no tiene, a propósito:** un umbral mínimo de parecido. En la prueba de la etapa 2, una consulta sin documento (“máquina de café”) se pareció más que la respuesta correcta más baja (`pruebas/2026-11-18-etapa-2.md`): decidir si el fragmento resuelve el caso lo hace el modelo, leyéndolo y siguiendo su SOP (sección 2.5).
 
 **Lo que se posterga,** cada práctica con su motivo y cuándo agregarla, en la tabla de lo postergado del plan:
 
 | Práctica | Por qué no ahora | Cuándo agregarla |
 |---|---|---|
 | Leer PDF, OCR de documentos escaneados y texto de imágenes | los documentos del proyecto ya son texto en Markdown, y el curso pide soluciones documentadas, no un formato; es la pieza más grande y costosa de un RAG real | cuando la base de conocimiento venga de PDF o de documentos escaneados |
-| Búsqueda híbrida (palabras exactas más significado) | la búsqueda por significado encontró 7 de 7 | si fallan consultas con códigos exactos, como “S-09”; PostgreSQL lo permite sin servicios extra |
+| Búsqueda híbrida (palabras exactas más significado) | la búsqueda por significado encontró todas las consultas de prueba | si fallan consultas con códigos exactos, como “S-09”; PostgreSQL lo permite sin servicios extra |
 | Reordenar resultados con un segundo modelo (reranking) | suma llamadas al modelo en cada búsqueda | si las evals muestran que el documento correcto aparece, pero no primero |
 | Carga incremental (solo lo que cambió) | recargar todo tarda segundos | cuando haya muchos documentos; la huella `hash_documento` ya permite saber cuáles cambiaron |
 | Permisos por documento | todos los documentos son públicos para el agente | cuando haya documentos que solo algunos clientes o agentes puedan ver |
 
-**Cambio del mismo día: corte por secciones.** Primero se había postergado cortar por secciones, porque cada documento cabía en un solo fragmento. Después de revisar un RAG de ejemplo, el usuario aprobó adoptarlo: hace que cada fragmento trate un solo tema y que la cita sea precisa. Resultado de la prueba: los 8 documentos pasaron de 8 a 23 fragmentos, las 7 consultas siguieron encontrando su documento con parecidos más altos (de 0,69 a 0,91, antes de 0,66 a 0,83), y la consulta “error S-09” encontró exactamente la sección de códigos de error. La sección que más se parece a una consulta suele ser la introducción, que describe el problema; los pasos de la solución están en otra sección, y por eso el agente recibe los 5 fragmentos más parecidos y no solo uno.
+**El corte por secciones** (aprobado por el usuario el mismo día, a partir de un RAG de ejemplo) hace que cada fragmento trate un solo tema y que la cita sea precisa; con él subieron los parecidos de las consultas correctas (`pruebas/2026-11-18-etapa-2.md`). La sección que más se parece a una consulta suele ser la introducción, que describe el problema; los pasos de la solución están en otra sección, y por eso el agente recibe los 5 fragmentos más parecidos y no solo uno.
 
-**Qué implica:** cambiar el modelo de embeddings obliga a recargar los documentos con `cargar_conocimiento.py`; mientras tanto, la búsqueda no mezcla vectores viejos con nuevos. El usuario aportará más documentos de buenas prácticas, que se evaluarán con este mismo criterio.
+**Qué implica:** cambiar el modelo de embeddings obliga a recargar los documentos con `cargar_conocimiento.py`; mientras tanto, la búsqueda no mezcla vectores viejos con nuevos. Las prácticas de RAG que llegan con material nuevo se evalúan con este mismo criterio, en `rag.md`.
 
 **Nota de la revisión de la etapa 3 (2026-11-19):** el índice HNSW busca los vecinos más cercanos y después aplica el filtro por modelo, así que si la tabla llegara a mezclar fragmentos de dos modelos, una búsqueda podría traer menos de 5. Hoy no pasa, porque `cargar_conocimiento.py` borra todo y carga con un solo modelo.
 
@@ -241,8 +261,7 @@ Las tres consultas se probaron el 2026-11-18 contra la base del proyecto.
 
 **Por qué:** la regla de la menor cantidad de código (regla 3 del plan) y una sola fuente para cada dato. La columna no aportaba información que la base no tuviera ya, ni protegía de nada que `vector(768)` no proteja.
 
-**Qué implica:** para ver el tamaño se usa una de las consultas de arriba. Lo que sí hay que guardar por fila es el modelo (`modelo_embedding`), porque dos modelos distintos pueden entregar el mismo tamaño y aun así sus vectores no se pueden comparar (D8). Cambiar de tamaño no exige reconstruir la base: se borran los fragmentos, se cambia el tipo de la columna con `ALTER TABLE` y se recarga (procedimiento probado en `embeddings-y-vectores.md`, sección 6).
-
+**Qué implica:** para ver el tamaño se usa una de las consultas de arriba. Lo que sí hay que guardar por fila es el modelo (`modelo_embedding`), porque dos modelos distintos pueden entregar el mismo tamaño y aun así sus vectores no se pueden comparar (D8). Cambiar de tamaño no exige reconstruir la base: se borran los fragmentos, se cambia el tipo de la columna con `ALTER TABLE` y se recarga (procedimiento probado en `rag.md`, sección 6).
 
 ## D10. El agente y los scripts de asistencia, en dos paquetes separados
 
@@ -263,9 +282,9 @@ src/backend/
 
 Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta desde `src/backend`: `python -m aplicacion.consola` o `python -m scripts.<nombre>`. La dependencia va en un solo sentido: los scripts usan la aplicación, la aplicación nunca usa un script. `RUTA_PROMPT` pasó de `consola.py` a `config.py`, porque `estimar_costos.py` dependía de la consola solo para saber dónde estaba el prompt.
 
-**Por qué:** es la forma estándar de Python, sin trucos de rutas que después no se recuerdan; los scripts siguen compartiendo el entorno virtual, `requirements.txt` y el `.env`; y en la etapa 6 el `Dockerfile` copia solo `aplicacion/`, así que los scripts quedan fuera de la imagen sin configurar nada más. Revierte la equivalencia anterior del plan (“archivos sueltos, `python src/archivo.py`”), que se eligió por simplicidad cuando había pocos archivos.
+**Por qué:** es la forma estándar de Python, sin trucos de rutas que después no se recuerdan; los scripts siguen compartiendo el entorno virtual, `requirements.txt` y el `.env`; y en la etapa 6 el `Dockerfile` copia solo `aplicacion/`, así que los scripts quedan fuera de la imagen sin configurar nada más.
 
-**Qué implica:** un script nuevo va en `scripts/`, su comentario inicial empieza con “Script de asistencia” y se agrega a la tabla de `src/backend/scripts/README.md`. Si el agente pasa a necesitar la lógica de un script, esa lógica se mueve a `aplicacion/`: así pasó en la etapa 3 con `buscar()` de `probar_busqueda.py`, que ahora vive en `aplicacion/herramientas.py` y la usa la herramienta `buscar_solucion()`. Se probó el 2026-11-19: los imports, el estimador de costos, la carga (8 documentos, 23 fragmentos), la búsqueda (7 de 7), la conexión con el modelo y la consola.
+**Qué implica:** un script nuevo va en `scripts/`, su comentario inicial empieza con “Script de asistencia” y se agrega a la tabla de `src/backend/scripts/README.md`. Si el agente pasa a necesitar la lógica de un script, esa lógica se mueve a `aplicacion/`: así pasó en la etapa 3 con `buscar()` de `probar_busqueda.py`, que vive en `aplicacion/herramientas.py` y la usa la herramienta `buscar_solucion()`.
 
 ## D11. Cómo conversa el bucle del agente con el modelo y con la base
 
@@ -285,7 +304,7 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 
 **Fecha:** 2026-11-19. **Estado:** vigente, encontrado al correr las pruebas de la etapa 3.
 
-**El problema:** cada conexión a PostgreSQL tardaba 2 segundos. En Windows, `localhost` se intenta primero por IPv6 (`::1`), pero el compose publica el puerto solo en `127.0.0.1` (decisión D4); el intento por IPv6 se pierde y recién después se usa IPv4. Medido el 2026-11-19: 2,04 segundos con `localhost` y 0,03 con `127.0.0.1`. Las 30 pruebas bajaron de 38 a 5 segundos.
+**El problema:** cada conexión a PostgreSQL tardaba 2 segundos. En Windows, `localhost` se intenta primero por IPv6 (`::1`), pero el compose publica el puerto solo en `127.0.0.1` (decisión D4); el intento por IPv6 se pierde y recién después se usa IPv4. La medición está en `pruebas/2026-11-19-etapa-3.md`.
 
 **La decisión:** `POSTGRES_HOST=127.0.0.1` en `example.env`, en el `.env` del usuario y como valor por defecto de `config.py`. Dentro de Docker (etapa 6) sigue siendo `postgres`.
 
@@ -293,21 +312,13 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 
 ## D13. El chat y los embeddings, cada uno con su proveedor
 
-**Fecha:** 2026-11-19. **Estado:** vigente, pedido del usuario (probar OpenRouter antes de la etapa 4).
+**Fecha:** 2026-11-19. **Estado:** vigente en su idea; las variables las fija D14.
 
-**El problema:** el usuario quiere probar el agente con OpenRouter, y más adelante con Ollama, mezclar proveedores y tener respaldo si uno se cae. Hasta ahora el chat y los embeddings usaban la misma URL y la misma clave: cambiar el chat a OpenRouter cambiaba también los embeddings, y los 23 fragmentos guardados con `gemini-embedding-001` dejaban de servir, porque los vectores solo se comparan con los de su mismo modelo (D8).
+**El problema:** el chat y los embeddings usaban la misma dirección y la misma clave, así que cambiar el chat (por ejemplo, a OpenRouter) cambiaba también los embeddings y dejaba inservibles los vectores guardados, que solo se comparan con los de su mismo modelo (D8).
 
-**Las opciones:** primero, variables propias para los embeddings (`LLM_EMBEDDINGS_BASE_URL` y `LLM_EMBEDDINGS_API_KEY`), que si quedan vacías usan las del chat; segundo, recargar la base con un modelo de embeddings de OpenRouter cada vez que se cambie el chat; tercero, una capa de “proveedores” con perfiles con nombre en el código.
+**La decisión:** el chat y los embeddings tienen cada uno su proveedor, y `conectar_modelo(para_embeddings=True)` usa el de los embeddings. Así el chat se cambia sin recargar la base, y se pueden mezclar proveedores (por ejemplo, embeddings de Ollama con el chat de Gemini u OpenRouter). Se descartaron recargar la base en cada cambio de chat (pagar de nuevo los embeddings) y una capa de perfiles en el código.
 
-**La decisión:** la primera. `conectar_modelo(para_embeddings=True)` usa la configuración de los embeddings; el chat sigue con `LLM_BASE_URL`, `LLM_API_KEY` y `LLM_MODEL`.
-
-**Por qué:** son dos variables y cuatro líneas de código; el chat se cambia sin recargar la base; y deja lista la mezcla que pidió el usuario (por ejemplo, embeddings de Ollama con el chat de Gemini u OpenRouter). La segunda opción obliga a recargar en cada cambio y a pagar de nuevo los embeddings; la tercera es una capa que hoy no hace falta.
-
-**Qué implica:** el `.env` del usuario se completó el mismo día con la configuración de embeddings (copiando la de Gemini, sin mostrar la clave) y con un bloque comentado para OpenRouter. `scripts/prueba_conexion.py` ahora prueba también que el modelo de chat sepa usar herramientas y que el de embeddings entregue 768 números. Cambiar el **modelo** de embeddings sigue obligando a recargar la base. Ollama, el respaldo ante caídas y por qué no se recomienda balancear entre proveedores están en `proveedores-de-modelos.md`.
-
-**Probado el 2026-11-19** con OpenRouter en la capa gratuita (`pruebas/2026-11-19-openrouter.md`): con `nvidia/nemotron-3-ultra-550b-a55b:free` el agente se comportó igual que con Gemini, con los embeddings en Gemini y sin recargar la base. La prueba agregó `LLM_MAXIMO_TOKENS_SALIDA` (2.000 por defecto), un tope de salida en cada llamada al chat: sin él, OpenRouter reserva saldo para la salida máxima del modelo y rechaza el pedido si no alcanza.
-
-**Actualización del 2026-11-19:** las variables `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_EMBEDDINGS_BASE_URL` y `LLM_EMBEDDINGS_API_KEY` se reemplazaron por un proveedor elegido por nombre (D14). La idea de D13 se mantiene: el chat y los embeddings tienen cada uno su proveedor.
+**Qué implica:** las variables del archivo de configuración cambiaron con D14 (proveedor elegido por nombre), pero los nombres internos `LLM_BASE_URL` y `LLM_EMBEDDINGS_BASE_URL` (con sus claves) siguen en `config.py`. Cambiar el **modelo** de embeddings sigue obligando a recargar la base. La prueba con OpenRouter está en `pruebas/2026-11-19-openrouter.md`, y Ollama y el respaldo ante caídas, en `modelos-y-costos.md`.
 
 ## D14. Proveedor elegido por nombre y `.env` alineado con la plantilla
 
@@ -327,7 +338,7 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 
 **Por qué:** la segunda opción detecta la diferencia pero deja el cambio de proveedor como una edición a mano, que es lo que la produjo. Con el proveedor por nombre, la plantilla y el `.env` tienen siempre las mismas líneas y solo cambian los valores.
 
-**Qué implica:** el `.env` del usuario se migró el mismo día a los nombres nuevos (las dos claves pasaron a `GEMINI_API_KEY` y `OPENROUTER_API_KEY`, sin mostrarse) y se ordenó como la plantilla; la versión anterior quedó en `src/docker/.env.respaldo-antes-de-d14`, ignorada por git, que el usuario puede borrar cuando confirme que todo funciona. Si la plantilla cambia, se ejecuta `python -m scripts.revisar_env --ordenar`. Agregar un proveedor que acepte el formato de OpenAI es una línea en `PROVEEDORES` y dos variables, su dirección y su clave. Al agregar las direcciones al `.env`, `revisar_env` avisó que faltaban y `--ordenar` las agregó sin tocar las claves: el mecanismo probado con un caso real.
+**Qué implica:** si la plantilla cambia, se ejecuta `scripts.revisar_env --ordenar` (regla 5 del plan). Agregar un proveedor que acepte el formato de OpenAI es una línea en `PROVEEDORES` y dos variables, su dirección y su clave. Cómo cambiar de proveedor en la práctica está en `modelos-y-costos.md`.
 
 ## D15. El prompt maestro: archivo y git, con una huella que hace cumplir la aprobación
 
@@ -348,4 +359,4 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 
 **Por qué:** hace cumplir la aprobación que pide el curso con dos columnas y unas veinte líneas, sin tablas nuevas ni servicios; distingue un cambio de instrucciones de una deriva (3.3 y la segunda señal de 3.4) y da la auditoría de prompt de la sección 4.6. La traza completa (D) ocuparía de 20 a 80 KB por ticket, copiaría hasta seis veces los datos del cliente y aun así no permitiría repetir una respuesta exacta; queda postergada, como Langfuse. OpenBao (E) se descartó para el prompt: el prompt no es un secreto (viaja completo al modelo en cada llamada), el versionado de un vault no es una aprobación con evals y abriría otro camino para cambiar las instrucciones en caliente.
 
-**Qué implica:** que cambiar el prompt de un agente desplegado exija reconstruir la imagen es una ventaja, no un problema: la imagen queda fija y la huella prueba que trae lo aprobado. Se corrigió también un pendiente de la etapa 3 que encontró la revisión: `modelo.py` acepta `temperatura` (`opciones_de_llamada()`), para que las evals y el juez usen 0, como dice `evals-del-llm.md`. Quedan postergados, con su señal, leer el prompt desde la base y OpenBao para las claves de API.
+**Qué implica:** que cambiar el prompt de un agente desplegado exija reconstruir la imagen es una ventaja, no un problema: la imagen queda fija y la huella prueba que trae lo aprobado. `modelo.py` acepta `temperatura` (`opciones_de_llamada()`), para que las evals y el juez usen 0 (`evals-del-llm.md`). Quedan postergados, con su señal, leer el prompt desde la base y OpenBao para las claves de API.

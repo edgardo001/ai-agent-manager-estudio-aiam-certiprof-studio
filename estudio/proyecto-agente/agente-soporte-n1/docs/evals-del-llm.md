@@ -13,18 +13,7 @@ Las pruebas comunes comprueban que el código hace lo que se programó. Las eval
 
 ## 1. Herramientas
 
-**Recomendación: `pytest` y un juez propio, sin un framework de evals por ahora.**
-
-| Opción | Qué es | Licencia | Por qué no ahora |
-|---|---|---|---|
-| `pytest` con un juez propio | casos en un archivo y una función de pocas líneas que le pide a un modelo que califique cada respuesta | `pytest` es MIT; el juez usa la librería `openai` que ya está en el proyecto | es la elegida: no suma librerías y se entiende de principio a fin |
-| `deepeval` | framework de evals sobre `pytest`, con métricas listas (fidelidad, relevancia, alucinación) | Apache 2.0 | suma muchas dependencias y esconde cómo se calcula cada métrica, que es justo lo que el proyecto quiere entender |
-| `ragas` | métricas especializadas en RAG | Apache 2.0 | útil si la búsqueda crece; por ahora basta con medir si se recupera el documento correcto |
-| `inspect-ai` | framework de evals con su propio formato de tareas | MIT | más completo de lo que necesita un agente con tres herramientas |
-| `promptfoo` | evals configuradas en YAML | MIT | está hecho en Node, no en Python |
-| `langsmith` | plataforma en línea de trazas y evals | servicio comercial | los datos saldrían a un servicio externo; el proyecto ya tiene su propio audit trail |
-
-Las licencias se verificarán con `pip show` antes de instalar cualquiera, como pide la regla 13 del plan. Los frameworks quedan en la tabla de lo postergado: se agregan si el número de casos o de métricas crece tanto que el juez propio deja de ser simple.
+**Recomendación: `pytest` y un juez propio, sin un framework de evals por ahora.** Los casos van en un archivo, y una función de pocas líneas le pide a un modelo que califique cada respuesta, con la librería `openai` que ya está en el proyecto: no suma librerías y se entiende de principio a fin. Se descartaron, por ahora, `deepeval`, `ragas` e `inspect-ai` (suman dependencias y esconden cómo se calcula cada métrica, que es justo lo que el proyecto quiere entender), `promptfoo` (hecho en Node) y `langsmith` (servicio externo, cuando el proyecto ya tiene su audit trail); quedan en la tabla de lo postergado del plan, con su señal, y antes de instalar cualquiera se revisa su licencia (regla 13).
 
 **Estructura de carpetas**, dentro de las pruebas del backend (la capa 1 de abajo son pruebas unitarias, en `tests/unitarias/`):
 
@@ -42,14 +31,14 @@ Se va de lo más barato a lo más caro. Si una capa falla, no hace falta correr 
 
 **Capa 1: deterministas, rápidas y gratis (sin modelo).**
 
-- Las reglas en código: cancelación, descuento, cambio de cuenta, 8 minutos, kill switch (grupo 1 del plan).
+- Las reglas en código: cancelación, descuento, cambio de cuenta, 8 minutos, kill switch (las pruebas sin modelo de `estrategia-de-pruebas.md`).
 - Las respuestas del agente tienen la forma esperada: estado válido, y si escaló, un motivo y un resumen.
 - La API responde con la forma que declara su modelo Pydantic.
 
 **Capa 2: el agente con el modelo real, revisado con reglas fijas (sin juez).**
 
 - El resultado es el esperado: `resuelto` o `escalado`, comparado con el campo `resultado_esperado` del caso.
-- La búsqueda recupera el documento esperado (`documento_esperado`): es la métrica de recuperación del RAG. Se mide como recall@5 (si el documento esperado está entre los 5 fragmentos) y su posición, porque si el fragmento correcto no llega, el modelo no puede acertar (ver `buenas-practicas.md`).
+- La búsqueda recupera el documento esperado (`documento_esperado`): es la métrica de recuperación del RAG. Se mide como recall@5 (si el documento esperado está entre los 5 fragmentos) y su posición, porque si el fragmento correcto no llega, el modelo no puede acertar (ver `rag.md`, sección 8).
 - Cada caso que falla se clasifica en una de las cuatro causas de falla de un RAG: la búsqueda (no se recuperó), el contexto (llegó entre ruido), la generación (el modelo mezcló lo que sabía o no citó) o los datos (documento desactualizado o sin cargar).
 - La respuesta no contiene datos de otro cliente ni ofrece descuentos (búsqueda de palabras y códigos de cliente).
 - El tiempo y los tokens de cada caso, para el tiempo promedio y el costo por caso.
@@ -123,7 +112,7 @@ Un cambio pasa a uso solo si cumple todos. Los de la columna “Origen: curso”
 | Relevancia promedio (juez) | 0,85 o más | proyecto |
 | Tono y formato promedio (juez) | 0,80 o más | proyecto |
 
-Como el modelo no responde siempre igual, los casos de las capas 2 y 3 se corren 3 veces con `temperature=0` y vale la mayoría (grupo 2 del plan). El resultado de cada corrida se guarda en `docs/pruebas/` con la fecha, la versión del prompt y el modelo, y la aprobación queda en `registro_agentes` con el nombre de quien aprueba.
+Como el modelo no responde siempre igual, los casos de las capas 2 y 3 se corren 3 veces con `temperature=0` y vale la mayoría. El resultado de cada corrida se guarda en `docs/pruebas/` con la fecha, la versión del prompt y el modelo, y la aprobación queda en `registro_agentes` con el nombre de quien aprueba.
 
 ## 5. Lo que se puede ir dejando listo
 
@@ -133,7 +122,7 @@ Pasos pequeños para que integrar las evals después sea simple. Varios ya está
 - [x] Un solo archivo habla con el modelo (`modelo.py`): ahí se agregará el juez sin tocar el resto.
 - [x] La búsqueda devuelve el documento y su parecido (`buscar_fragmentos()`), lo que permite medir la recuperación.
 - [x] Las consultas de `probar_busqueda.py` ya tienen su documento esperado.
-- [ ] Etapa 3: que `atender_ticket()` devuelva, además de la respuesta, los fragmentos usados, el resultado, el motivo y los tokens, para que las evals no tengan que adivinarlos.
+- [x] Etapa 3: `atender_mensaje()` (en `aplicacion/agente.py`) devuelve el estado, la respuesta y los pasos, y los pasos traen los fragmentos usados y los tokens, para que las evals no tengan que adivinarlos.
 - [x] Etapa 3 (hecho el 2026-11-19, tras la revisión del prompt maestro): `preguntar_al_modelo()` y `conversar_con_herramientas()` aceptan `temperatura`, para correr las evals y el juez con 0.
 - [ ] Etapa 4: el registro de auditoría guarda cada paso; sirve como traza para entender por qué falló un caso.
 - [ ] Etapa 5: crear `casos.jsonl` con los casos de este documento, `juez.py` y la variable `LLM_MODELO_JUEZ`.

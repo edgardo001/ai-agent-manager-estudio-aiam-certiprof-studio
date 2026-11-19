@@ -27,7 +27,7 @@ Hay que programar algo, pero no desde cero, y todo corre sin internet:
 1. **Extraer el texto.** Un `.md` ya es texto. Un PDF se lee con `pypdf` (BSD), que ya se usó en este repositorio para convertir el curso; si está escaneado, hace falta OCR, por ejemplo Tesseract (Apache 2.0).
 2. **Detectar los datos personales,** con dos técnicas según el tipo de dato (sección 4).
 3. **Reemplazar** cada dato por una etiqueta (seudonimizar) o borrarlo (anonimizar).
-4. **Medir y revisar.** Ningún detector encuentra el 100%. Se arma un conjunto de documentos de prueba con los datos marcados a mano y se mide cuántos se escapan (es la misma idea de las evals, `evals-del-llm.md`), y se revisa una muestra a mano, como el muestreo de la sección 3.3 aplicado a la privacidad.
+4. **Medir y revisar.** Ningún detector encuentra el 100%. Se arma un conjunto de documentos de prueba con los datos marcados a mano y se mide cuántos se escapan (es la misma idea de las evals, `../evals-del-llm.md`), y se revisa una muestra a mano, como el muestreo de la sección 3.3 aplicado a la privacidad.
 
 ## 4. Cómo se encuentran nombres, RUT, direcciones y otros datos
 

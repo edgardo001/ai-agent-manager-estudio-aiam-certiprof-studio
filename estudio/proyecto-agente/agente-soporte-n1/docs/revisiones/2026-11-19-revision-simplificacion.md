@@ -2,7 +2,7 @@
 
 Pedida por el usuario porque el proyecto “sigue creciendo en archivos” y no sabía si eso ayudaba a entender el curso. Tres revisiones de solo lectura con elephant-goldfish-model, en paralelo, cada una con tres revisores: el código (simplicidad, reutilización y diseño), la documentación del proyecto (estructura, simplicidad y lector nuevo) y los archivos de gestión de la raíz (simplicidad, estructura y redacción). Criterio del usuario, que manda: ¿cada archivo ayuda a entender un concepto del curso o a operar el agente, o es registro, referencia o detalle técnico? El agente que las pidió comprobó los hallazgos principales (M1, M2 y los datos viejos 1 a 3 de la documentación).
 
-**Estado:** pendiente de la decisión del usuario.
+**Estado:** aplicada el 2026-11-19 (resultado al final), con las decisiones del usuario del final. Antes de aplicarla, el usuario pidió hacer commits atómicos y push de todo lo anterior, como punto de retorno (commit 86def47).
 
 ## Resultado general
 
@@ -91,3 +91,31 @@ Pedida por el usuario porque el proyecto “sigue creciendo en archivos” y no 
 2. Aplicar lo seguro del código, la documentación y los archivos de gestión.
 3. Aplicar lo discutible que elija el usuario.
 4. Actualizar los enlaces, regenerar el índice y medir de nuevo archivos y líneas.
+
+## Decisiones del usuario
+
+1. **Aplicar lo seguro más las fusiones de documentos** (opción 1): `rag.md`, `modelos-y-costos.md`, las pruebas adversariales dentro de la estrategia, la anonimización a `referencia/` y eliminar `ruta-de-construccion.md`. Sin los discutibles de código (los `__init__.py`, unir `prueba_conexion` con `revisar_env`).
+2. **`MEMORY.md` solo con lo del curso, el estado y los pendientes;** lo del proyecto queda en sus documentos.
+3. **Las carpetas de pruebas adversariales, evals y e2e se mantienen** desde el inicio, como decidió antes.
+
+## Resultado
+
+Aplicado el mismo día, repartido entre el agente que coordinó (código, pruebas, `.bat` y diagrama del código) y dos agentes en paralelo (la documentación de `docs/` y los archivos de gestión de la raíz).
+
+| Qué | Antes | Después |
+|---|---|---|
+| Documentos en `docs/` (sin registros ni referencia) | 13, 1.905 líneas | 9, 1.593 líneas |
+| README dentro de `src/` | 11 | 9 |
+| Archivos de pruebas (`.py`) | 8 | 6 |
+| Código de `aplicacion/` y `scripts/` | 13 archivos, 1.488 líneas | 13 archivos, 1.480 líneas |
+| `AGENTS.md` | 198 líneas | 152 |
+| `MEMORY.md` | 123 líneas | 68 |
+| Documentos para entender el proyecto | 5 | 3: README, plan y lecciones |
+
+- **Errores corregidos:** M1, con una prueba de dos casos (escalar en la llamada que pasa el tope y en la última vuelta), y M2 (`borrar_fragmentos()`).
+- **Fusiones:** `rag.md` (embeddings y buenas prácticas), `modelos-y-costos.md` (proveedores, costos y el costo de los embeddings), las pruebas adversariales dentro de la estrategia; la anonimización pasó a `referencia/`; se eliminó la ruta de construcción.
+- **El plan** sumó las reglas 16 (registros de pruebas) y 17 (material de referencia), que salieron de `AGENTS.md`, y su regla 7 incluye las lecciones.
+- **Las pruebas pasan** (46), la búsqueda da 7 de 7 y el archivo de configuración local quedó alineado con la plantilla.
+- **No se aplicó:** reescribir la parte de `clear.bat` que borra los volúmenes, porque probarla exigiría borrar los datos del usuario, y ese script ya estaba probado.
+- **Incidente:** un agente, buscando nombres de documentos con una búsqueda recursiva en `src/`, pasó por el archivo de configuración real y su respaldo; solo vio números de línea de comentarios, sin ningún valor. Es el hueco conocido del guardarraíl; quedó como lección.
+

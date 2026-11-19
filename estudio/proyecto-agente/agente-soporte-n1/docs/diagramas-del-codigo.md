@@ -8,7 +8,7 @@ El código del proyecto no usa clases (las pruebas sí usan una, el modelo falso
 
 ## 1. El código de hoy (etapas 0 a 3)
 
-Los archivos del código de hoy, los scripts de inicio y limpieza, la base de datos y la conexión con Gemini. Las flechas se leen “usa a”. No se dibuja `config.py`, porque casi todos los archivos lo usan para leer el `.env`.
+Los archivos del código de hoy, los scripts de inicio y limpieza, la base de datos y la conexión con el proveedor de modelos. Las flechas se leen “usa a”. No se dibuja `config.py`, porque casi todos los archivos lo usan para leer el `.env`.
 
 ```mermaid
 flowchart LR
@@ -36,7 +36,7 @@ flowchart LR
 
     DOCS[/"src/base-de-conocimiento/<br/>8 documentos ficticios"/]
     PG[("PostgreSQL con pgvector<br/>6 tablas")]
-    GEM[["Gemini API<br/>chat y embeddings"]]
+    GEM[["Proveedor de modelos<br/>Gemini, OpenRouter u Ollama<br/>chat y embeddings (D13, D14)"]]
 
     DEV --> CON
     DEV -->|docker compose| PG
@@ -68,15 +68,15 @@ Qué hace cada uno, primero la aplicación y después los scripts:
 - **`consola.py`**: la puerta de entrada para probar. `pedir_cliente()` pide el código del cliente (C-001 a C-006) y `atender_ticket()` crea el ticket con el primer mensaje, pasa cada mensaje a `agente.py` y confirma los cambios en la base (D11). Con `--detallado`, `mostrar_paso()` muestra cada paso: herramientas, fragmentos con su parecido, tokens, costo y segundos.
 - **`agente.py`** (etapa 3): `atender_mensaje()` es el bucle del agente, el mismo que usará la API (D6). Todo lo de un mensaje viaja en un diccionario, el `turno` (conexión, ticket, agente, versión del prompt, pasos y herramientas usadas). `armar_instrucciones()` agrega al prompt lo que el agente no atiende, leído del registro de agentes; `armar_conversacion()` marca como datos lo que dice el cliente; `usar_herramienta()` ejecuta las dos búsquedas; `leer_version_prompt()` lee la versión de la primera línea del prompt; `anotar()` y `escalar()` son el único lugar donde, desde la etapa 4, cada paso irá al registro de auditoría, con los tipos de su tabla (`modelo`, `herramienta`, `regla`).
 - **`herramientas.py`** (etapa 3): las tres herramientas y su descripción para el modelo (`DEFINICIONES`). `leer_argumentos()` rechaza herramientas desconocidas y argumentos inválidos; `buscar_solucion()` entrega los fragmentos con su fuente; `buscar_cliente()` lee solo al cliente del ticket; `escalar_a_humano()` arma el contexto completo para la persona y escribe el aviso al cliente.
-- **`modelo.py`**: el único lugar que habla con Gemini. `conversar_con_herramientas()` envía la conversación con las herramientas y devuelve el mensaje tal cual, lo pedido, por qué terminó (`finish_reason`) y los tokens; `calcular_costo()` pasa los tokens a dólares; `crear_embedding()` convierte textos en vectores de 768 números; `preguntar_al_modelo()` queda para la prueba de conexión.
-- **`base_de_datos.py`**: el único lugar que habla con PostgreSQL. Fragmentos (`guardar_fragmento()`, `buscar_fragmentos()`, `contar_fragmentos()`), agente (`leer_agente()`), clientes (`leer_cliente()`), tickets (`crear_ticket()`, `leer_ticket()`, `guardar_respuesta()`, `guardar_escalamiento()`, `sumar_tokens()`) y mensajes (`guardar_mensaje()`, `leer_mensajes()`). Ninguna confirma los cambios: lo hace quien llama (D11).
+- **`modelo.py`**: el único lugar que habla con el proveedor de modelos (el que diga la configuración: Gemini, OpenRouter u Ollama). `conversar_con_herramientas()` envía la conversación con las herramientas y devuelve el mensaje tal cual, lo pedido, por qué terminó (`finish_reason`) y los tokens; `calcular_costo()` pasa los tokens a dólares; `crear_embedding()` convierte textos en vectores de 768 números; `preguntar_al_modelo()` queda para la prueba de conexión.
+- **`base_de_datos.py`**: el único lugar que habla con PostgreSQL. Fragmentos (`borrar_fragmentos()`, `guardar_fragmento()`, `buscar_fragmentos()`, `contar_fragmentos()`), agente (`leer_agente()`), clientes (`leer_cliente()`), tickets (`crear_ticket()`, `leer_ticket()`, `guardar_respuesta()`, `guardar_escalamiento()`, `sumar_tokens()`) y mensajes (`guardar_mensaje()`, `leer_mensajes()`). Ninguna confirma los cambios: lo hace quien llama (D11).
 - **`config.py`**: `leer()` toma un valor del `.env`; `PROVEEDORES` y `datos_del_proveedor()` dan la dirección y la clave (las dos del `.env`) del proveedor elegido en `LLM_PROVEEDOR` y `LLM_EMBEDDINGS_PROVEEDOR` (D14); `faltan_variables()` avisa si falta la clave, el modelo o la contraseña de la base; `RUTA_PROMPT` dice dónde está el prompt; `TOPE_TOKENS_POR_TICKET` es el tope de tokens por ticket.
 - **`prompt_soporte_n1.md`**: no es código; es el texto que define al agente. La versión 3 describe las herramientas, pide citar la fuente y no agregar pasos propios, separa los datos de las instrucciones y aclara que los 8 minutos los controla el programa, porque el modelo no mide el tiempo.
-- **`prueba_conexion.py`** (script): manda un saludo para comprobar la clave y el modelo.
-- **`cargar_conocimiento.py`** (script, etapa 2): corta cada documento por secciones, párrafos o caracteres, calcula los vectores y los guarda.
-- **`probar_busqueda.py`** (script, etapa 2): prueba la búsqueda con la misma función que usa `buscar_solucion()`.
+- **`prueba_conexion.py`** (script): comprueba el proveedor en uso con un saludo, un pedido de las herramientas reales del agente y un embedding de 768 números.
+- **`cargar_conocimiento.py`** (script, etapa 2): corta cada documento por secciones, párrafos o caracteres, calcula los vectores y los guarda. `listar_documentos()` da la lista de documentos, que también usa `estimar_costos.py`.
+- **`probar_busqueda.py`** (script, etapa 2): prueba la búsqueda con la misma función que usa `buscar_solucion()`: con un texto, muestra los fragmentos más parecidos; sin texto, recorre la lista fija y cuenta los aciertos.
 - **`revisar_env.py`** (script): compara el `.env` con `example.env` y, con `--ordenar`, lo alinea conservando sus valores (D14).
-- **`estimar_costos.py`** (script): estima el costo de cargar documentos y de cada consulta; si ya hay tickets, usa su costo real promedio (`costos.md`).
+- **`estimar_costos.py`** (script): estima el costo de cargar documentos y de cada consulta; si ya hay tickets, usa su costo real promedio (`modelos-y-costos.md`). La cantidad de fragmentos por búsqueda sale de `herramientas.CANTIDAD_FRAGMENTOS`, su única fuente.
 
 ## 2. Qué pasa en cada mensaje del cliente
 
@@ -90,7 +90,7 @@ sequenceDiagram
     participant H as herramientas.py
     participant M as modelo.py
     participant B as base_de_datos.py
-    participant G as Gemini API
+    participant G as Proveedor de modelos
 
     P->>C: código del cliente y mensaje
     opt solo en el primer mensaje
@@ -160,7 +160,7 @@ flowchart TD
 
     PG[("PostgreSQL con pgvector<br/>6 tablas")]
     DOCS[/"base-de-conocimiento/<br/>documentos .md"/]
-    GEM[["Gemini API"]]
+    GEM[["Proveedor de modelos"]]
 
     FRONT -->|HTTP| API
     CON --> AGE

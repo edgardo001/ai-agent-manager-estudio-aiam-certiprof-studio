@@ -8,11 +8,11 @@ Todos se ejecutan desde la carpeta `src/backend`, con el entorno virtual activo 
 
 | Script | Etapa | Para qué sirve | Cuándo usarlo |
 |---|---|---|---|
-| `prueba_conexion.py` | 0 | Prueba el modelo de chat (un saludo y si sabe usar herramientas) y el de embeddings (si entrega 768 números) | Al cambiar la clave, el modelo o el proveedor en el `.env` (`docs/proveedores-de-modelos.md`) |
+| `prueba_conexion.py` | 0 | Prueba el modelo de chat (un saludo y si sabe usar herramientas) y el de embeddings (si entrega 768 números) | Al cambiar la clave, el modelo o el proveedor en el `.env` (`docs/modelos-y-costos.md`) |
 | `cargar_conocimiento.py` | 2 | Borra y vuelve a cargar en pgvector los documentos de `src/base-de-conocimiento/` | Cada vez que cambia un documento, y después de `clear.bat --borrar-volumenes` |
 | `probar_busqueda.py` | 2 | Prueba la búsqueda sin el agente, con la misma función que usa su herramienta `buscar_solucion`: las consultas fijas (7 de 7 esperado) o una escrita por usted | Después de cargar el conocimiento o de cambiar la forma de fragmentar |
 | `revisar_env.py` | 3 | Compara los nombres del `.env` con `example.env` y dice qué falta o sobra; con `--ordenar`, deja el `.env` con el orden y los comentarios de la plantilla, conservando sus valores (copia previa en `.env.respaldo`); nunca muestra los valores | Lo ejecuta `start-dev.bat` para avisar; a mano, cuando la plantilla cambió (D14) |
-| `estimar_costos.py` | 2 | Estima, sin llamar al modelo, el costo de los embeddings y de cada consulta (`docs/costos.md`); desde la etapa 3, si hay tickets atendidos, usa su costo real promedio | Antes de cargar muchos documentos o al cambiar precios |
+| `estimar_costos.py` | 2 | Estima, sin llamar al modelo, el costo de los embeddings y de cada consulta (`docs/modelos-y-costos.md`); desde la etapa 3, si hay tickets atendidos, usa su costo real promedio | Antes de cargar muchos documentos o al cambiar precios |
 
 Ejemplos:
 
