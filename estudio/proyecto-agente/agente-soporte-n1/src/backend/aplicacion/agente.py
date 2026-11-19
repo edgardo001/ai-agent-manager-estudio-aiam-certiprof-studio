@@ -3,7 +3,7 @@
 Etapa 3. Es la única versión del agente: la consola y, desde la etapa 6, la API llaman a
 atender_mensaje() (decisión D6). El bucle es corto y con límites: el modelo decide qué
 herramienta usar; el código controla cuántas vueltas, cuántos tokens y qué herramientas
-existen (buenas-practicas.md: "el modelo decide lo que requiere razonamiento; el código
+existen (rag.md: "el modelo decide lo que requiere razonamiento; el código
 controla lo que requiere garantías").
 Todo lo de un mensaje viaja en un diccionario, el "turno", para que anotar() y escalar()
 sean el único lugar donde, desde la etapa 4, cada paso se guarda en el registro de auditoría.
@@ -59,10 +59,9 @@ def armar_conversacion(instrucciones, mensajes):
     """
     conversacion = [{"role": "system", "content": instrucciones}]
     for quien, texto in mensajes:
+        # Un ticket escalado no vuelve al agente, así que aquí solo hay mensajes del cliente y del agente.
         if quien == "cliente":
             conversacion.append({"role": "user", "content": herramientas.marcar_como_datos("mensaje_del_cliente", texto)})
-        elif quien == "persona":  # hoy no ocurre: un ticket escalado no vuelve al agente
-            conversacion.append({"role": "assistant", "content": f"(Respondió una persona del equipo) {texto}"})
         else:
             conversacion.append({"role": "assistant", "content": texto})
     return conversacion
@@ -105,6 +104,8 @@ def usar_herramienta(turno, nombre, argumentos):
         turno["usadas"].append("buscar_cliente")
         anotar(turno, "herramienta", "buscar_cliente")
         return resultado
+    if nombre != "buscar_solucion":  # una herramienta nueva necesita su propia rama aquí
+        raise ValueError(f"usar_herramienta no sabe ejecutar {nombre}")
     inicio = time.monotonic()
     resultado, fragmentos = herramientas.buscar_solucion(turno["conexion"], argumentos["consulta"])
     turno["usadas"].append(f"buscar_solucion(\"{argumentos['consulta']}\")")
@@ -166,23 +167,24 @@ def atender_mensaje(conexion, ticket_id, texto, al_paso=None):
             guardar_respuesta(conexion, ticket_id, llamada["texto"])
             return {"estado": "respondido", "respuesta": llamada["texto"], "pasos": turno["pasos"]}
 
-        # El modelo pidió herramientas. Si superó el tope o es la última vuelta, no se ejecutan:
-        # nadie usaría su resultado.
+        # El modelo pidió herramientas: cada pedido se revisa una sola vez.
+        pedidos = [(llamada_id, nombre, *herramientas.leer_argumentos(nombre, argumentos_json))
+                   for llamada_id, nombre, argumentos_json in llamada["llamadas"]]
+        # Un pedido válido de escalar se atiende primero, aunque sea la última vuelta o se haya
+        # pasado el tope: así la persona recibe el motivo y el resumen del modelo (curso 2.5 y 4.3).
+        for _, nombre, argumentos, error in pedidos:
+            if nombre == "escalar_a_humano" and not error:
+                turno["usadas"].append("escalar_a_humano")
+                return escalar(turno, argumentos["motivo"], argumentos["resumen"], "modelo")
+        # Si superó el tope o es la última vuelta, las demás no se ejecutan: nadie usaría su resultado.
         if tokens_del_ticket >= tope:
             return escalar(turno, f"el ticket superó el tope de {tope} tokens", "", "regla")
         if vuelta == MAXIMO_LLAMADAS_POR_MENSAJE:
             break
-        # Un pedido válido de escalar se atiende primero, sin pagar antes las otras herramientas.
-        for _, nombre, argumentos_json in llamada["llamadas"]:
-            argumentos, error = herramientas.leer_argumentos(nombre, argumentos_json)
-            if nombre == "escalar_a_humano" and not error:
-                turno["usadas"].append("escalar_a_humano")
-                return escalar(turno, argumentos["motivo"], argumentos["resumen"], "modelo")
 
         # Su mensaje se agrega tal cual (con la firma de Gemini, D11) y cada pedido recibe su resultado.
         conversacion.append(llamada["mensaje"])
-        for llamada_id, nombre, argumentos_json in llamada["llamadas"]:
-            argumentos, error = herramientas.leer_argumentos(nombre, argumentos_json)
+        for llamada_id, nombre, argumentos, error in pedidos:
             if error:
                 resultado = error
                 anotar(turno, "herramienta", f"rechazada: {error}")

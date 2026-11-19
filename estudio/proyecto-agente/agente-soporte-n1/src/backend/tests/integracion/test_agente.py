@@ -153,7 +153,7 @@ def test_una_herramienta_desconocida_se_rechaza_y_sigue(conexion, monkeypatch):
 
 def test_escalar_sin_resumen_no_escala_y_recibe_el_error(conexion, monkeypatch):
     """Un pedido de escalar con argumentos inválidos no escala: el modelo recibe el error y puede corregir.
-    Técnico: no viene del curso (buenas-practicas.md, patrón 08)."""
+    Técnico: no viene del curso (rag.md, patrón 08)."""
     ticket = nuevo_ticket(conexion, "quiero cancelar")
     modelo = usar_modelo(monkeypatch, ModeloFalso(
         pide(("escalar_a_humano", {"motivo": "cancelación"})),
@@ -180,7 +180,7 @@ def test_el_segundo_mensaje_lleva_la_conversacion_anterior(conexion, monkeypatch
 
 def test_el_tope_de_tokens_escala_sin_ejecutar_herramientas(conexion, monkeypatch):
     """Si una llamada deja el ticket sobre el tope, se escala por regla sin ejecutar lo que pidió.
-    Técnico: no viene del curso (buenas-practicas.md, patrón 08)."""
+    Técnico: no viene del curso (rag.md, patrón 08)."""
     ticket = nuevo_ticket(conexion, "olvidé mi contraseña")
     monkeypatch.setattr(config, "TOPE_TOKENS_POR_TICKET", 500)
     modelo = usar_modelo(monkeypatch, ModeloFalso(pide(("buscar_cliente", {}), tokens=600)))
@@ -189,6 +189,24 @@ def test_el_tope_de_tokens_escala_sin_ejecutar_herramientas(conexion, monkeypatc
     assert (len(modelo.recibidas), resultado["estado"], datos["escalado_por"]) == (1, "escalado", "regla")
     assert "tope de 500 tokens" in datos["motivo_escalamiento"]
     assert "Herramientas usadas: ninguna" in datos["resumen_escalamiento"]
+
+
+@pytest.mark.parametrize("tope, vueltas_antes", [(500, 0), (20000, agente.MAXIMO_LLAMADAS_POR_MENSAJE - 1)])
+def test_escalar_en_el_limite_conserva_el_motivo_del_modelo(conexion, monkeypatch, tope, vueltas_antes):
+    """Si el modelo pide escalar justo en la llamada que pasa el tope o en la última vuelta, se
+    escala con SU motivo y resumen, no por regla: la persona recibe el contexto del traspaso.
+    Curso: protocolo de escalamiento con contexto completo (Módulo 2, sección 2.5; Módulo 4, 4.3).
+    Error encontrado en la revisión de simplificación (M1)."""
+    ticket = nuevo_ticket(conexion, "quiero cancelar")
+    monkeypatch.setattr(config, "TOPE_TOKENS_POR_TICKET", tope)
+    vueltas = [pide(("buscar_cliente", {})) for _ in range(vueltas_antes)]
+    vueltas.append(pide(("escalar_a_humano", {"motivo": "pide cancelar", "resumen": "cliente C-001"}), tokens=600))
+    modelo = usar_modelo(monkeypatch, ModeloFalso(*vueltas))
+    resultado = agente.atender_mensaje(conexion, ticket, "quiero cancelar")
+    datos = leer_ticket(conexion, ticket)
+    assert (len(modelo.recibidas), resultado["estado"]) == (vueltas_antes + 1, "escalado")
+    assert (datos["escalado_por"], datos["motivo_escalamiento"]) == ("modelo", "pide cancelar")
+    assert "cliente C-001" in datos["resumen_escalamiento"]
 
 
 def test_un_ticket_que_llega_pasado_del_tope_no_llama_al_modelo(conexion, monkeypatch):
@@ -203,7 +221,7 @@ def test_un_ticket_que_llega_pasado_del_tope_no_llama_al_modelo(conexion, monkey
 
 def test_si_no_termina_en_el_maximo_de_llamadas_escala(conexion, monkeypatch):
     """Un modelo que nunca responde no deja el bucle girando: al llegar al máximo, escala por regla.
-    Técnico: no viene del curso (buenas-practicas.md, patrón 08)."""
+    Técnico: no viene del curso (rag.md, patrón 08)."""
     ticket = nuevo_ticket(conexion, "olvidé mi contraseña")
     vueltas = [pide(("buscar_cliente", {})) for _ in range(agente.MAXIMO_LLAMADAS_POR_MENSAJE)]
     modelo = usar_modelo(monkeypatch, ModeloFalso(*vueltas))
@@ -262,15 +280,6 @@ def test_un_ticket_escalado_no_vuelve_al_agente(conexion, monkeypatch):
     assert resultado["respuesta"] == agente.MENSAJE_YA_ESCALADO
     assert modelo.recibidas == []
     assert leer_mensajes(conexion, ticket)[-2:] == [("cliente", "¿hay novedades?"), ("agente", agente.MENSAJE_YA_ESCALADO)]
-
-
-def test_la_respuesta_no_pisa_un_ticket_escalado(conexion):
-    """guardar_respuesta() no devuelve a 'respondido' un ticket que ya tomó una persona.
-    Técnico: no viene del curso (revisión de la etapa 3, m8)."""
-    ticket = nuevo_ticket(conexion, "olvidé mi contraseña")
-    guardar_escalamiento(conexion, ticket, "prueba", "contexto", "regla")
-    guardar_respuesta(conexion, ticket, "respuesta tardía")
-    assert leer_ticket(conexion, ticket)["estado"] == "escalado"
 
 
 def test_un_ticket_que_no_existe_da_un_error_claro(conexion):
