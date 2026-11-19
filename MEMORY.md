@@ -61,13 +61,13 @@ Solo las del curso. Las del proyecto de agente están en su documentación (ver 
 
 **Lista temporal de la etapa 5 (pedido del usuario, 2026-11-19): se trabaja de a uno, el usuario decide cada paso, y la lista se borra al cerrar la etapa.**
 
-1. Commits atómicos de lo hecho el 2026-11-19 (pruebas adversariales y arreglos de reglas.py, Hypothesis, modelos en example.env, seguridad-owasp.md con la regla 18, D4 y D16, costos guardados): esperan el pedido del usuario.
-2. El usuario instala Hypothesis (`pip install -r requirements.txt`) y corre las pruebas gratis con `tests/adversariales`.
-3. Decidir si la consulta de modelos queda como `scripts/listar_modelos.py` (hoy fuera del repositorio).
-4. Variables nuevas en example.env: proveedor y modelo del juez (`gemini-3.5-flash`, elegido por el usuario) y la barrera de aprobación (apagada en desarrollo); luego el usuario corre `revisar_env --ordenar`.
-5. Golden dataset `tests/evals/casos.jsonl`: unos 22 casos de mezcla realista y unos 16 casos borde.
-6. Evaluación de la búsqueda sola (recall@5 y MRR; solo embeddings).
-7. El juez y las evals con el modelo real: avisar antes las llamadas (unas 150 por corrida; el triple para aprobar).
+1. ~~Commits atómicos de lo hecho el 2026-11-19~~: hechos y subidos el mismo día (seis commits, de cfd3730 a 145b14f).
+2. ~~El usuario instala Hypothesis y corre las pruebas gratis~~: hecho el 2026-11-19 en su equipo, 111 pasan y 13 fallan como se espera (16 segundos).
+3. ~~Consulta de modelos~~: el usuario decidió dejarla como `scripts/listar_modelos.py`; hecho y probado el 2026-11-19.
+4. ~~Variables nuevas~~: agregadas el 2026-11-19 (`LLM_JUEZ_PROVEEDOR`, `LLM_MODELO_JUEZ=gemini-3.5-flash`, `EXIGIR_PROMPT_APROBADO=false`); el juez responde JSON pero tarda de 22 a 39 segundos por llamada. Falta que el usuario corra `revisar_env --ordenar`.
+5. ~~Golden dataset~~: `tests/evals/casos.jsonl` con 40 casos aprobados por el usuario el 2026-11-19 (22 de mezcla realista y 18 casos borde; la propuesta decía 38 por un error de suma). Falta que el usuario corra `revisar_env --ordenar` (pendiente 4).
+6. ~~Búsqueda sola~~: `tests/evals/test_busqueda.py`, 2026-11-19: recall@5 93% (pasa el 90%), MRR 0,89; `limites-del-soporte.md` casi nunca aparece en las búsquedas (dos casos fallidos); el parecido no separa lo que tiene solución de lo que no.
+7. El juez y las evals con el modelo real: código escrito y probado con un modelo falso el 2026-11-19 (61 pruebas; la base quedó sin tickets). Falta la corrida real (unas 150 llamadas, de 30 a 40 minutos): el usuario pidió lanzarla el 2026-11-19, pero se detuvo a los pocos minutos porque debía apagar el equipo; no quedó resultado. Al retomar: relanzarla con `python -m pytest tests/evals` desde src/backend. Todo lo de los pendientes 3 a 7 está sin commit.
 8. `aprobar_prompt.py`, la columna de la huella aprobada y la barrera de D15.
 9. Cierre: pendientes de seguridad-owasp.md (regla 18), revisión con EGM y de fidelidad, prueba del usuario y commits.
 
