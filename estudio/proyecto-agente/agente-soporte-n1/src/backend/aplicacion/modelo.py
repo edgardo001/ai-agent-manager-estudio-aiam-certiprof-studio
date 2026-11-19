@@ -93,6 +93,25 @@ def conversar_con_herramientas(mensajes, herramientas, temperatura=None):
     }
 
 
+def preguntar_al_juez(mensajes):
+    """Envía la conversación al modelo juez de las evals y devuelve {"texto", "tokens_entrada",
+    "tokens_salida"}. Usa su propio proveedor y modelo (LLM_JUEZ_PROVEEDOR y LLM_MODELO_JUEZ),
+    temperatura 0 y respuesta en JSON. Espera hasta 180 segundos: gemini-3.5-flash tardó de 22 a 39
+    segundos por llamada aun en una prueba mínima (2026-11-19). Solo lo usan las evals.
+
+    Curso: validación antes de producción (Módulo 2, sección 2.6). Usar un modelo como juez es
+    técnico: no viene del curso (evals-del-llm.md).
+    """
+    direccion, clave = config.LLM_JUEZ_BASE_URL, config.LLM_JUEZ_API_KEY
+    cliente = OpenAI(base_url=direccion, api_key=clave, timeout=180, max_retries=0)
+    respuesta = cliente.chat.completions.create(
+        model=config.LLM_MODELO_JUEZ, messages=mensajes, temperature=0,
+        max_tokens=config.LLM_MAXIMO_TOKENS_SALIDA, response_format={"type": "json_object"})
+    uso = respuesta.usage
+    return {"texto": respuesta.choices[0].message.content or "",
+            "tokens_entrada": uso.prompt_tokens if uso else 0, "tokens_salida": uso.completion_tokens if uso else 0}
+
+
 def calcular_costo(tokens_entrada, tokens_salida):
     """Pasa a dólares los tokens de una llamada, con los precios del .env.
 

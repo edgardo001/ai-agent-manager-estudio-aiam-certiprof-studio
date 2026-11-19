@@ -60,6 +60,17 @@ LLM_EMBEDDINGS_PROVEEDOR = leer("LLM_EMBEDDINGS_PROVEEDOR", LLM_PROVEEDOR).strip
 LLM_EMBEDDINGS_BASE_URL, LLM_EMBEDDINGS_API_KEY = datos_del_proveedor(LLM_EMBEDDINGS_PROVEEDOR)
 LLM_MODELO_EMBEDDINGS = leer("LLM_MODELO_EMBEDDINGS", "gemini-embedding-001")
 
+# Modelo juez de las evals (etapa 5): califica las respuestas del agente. Distinto y más capaz que
+# el del agente (decisión del usuario), con su propio proveedor, como los embeddings (D13). Vacío,
+# usa el del chat. Solo lo usan las evals (docs/evals-del-llm.md).
+LLM_JUEZ_PROVEEDOR = leer("LLM_JUEZ_PROVEEDOR", LLM_PROVEEDOR).strip().lower()
+LLM_JUEZ_BASE_URL, LLM_JUEZ_API_KEY = datos_del_proveedor(LLM_JUEZ_PROVEEDOR)
+LLM_MODELO_JUEZ = leer("LLM_MODELO_JUEZ", "gemini-3.5-flash")
+
+# Barrera de aprobación del prompt (etapa 5, D15): con true, un prompt cuya huella no es la aprobada
+# no atiende y el ticket pasa a una persona; con false (desarrollo y evals), solo queda anotado.
+EXIGIR_PROMPT_APROBADO = leer("EXIGIR_PROMPT_APROBADO", "false").strip().lower() == "true"
+
 # Base de datos (etapa 2). POSTGRES_HOST es "127.0.0.1" desde la terminal (start-dev.bat; no "localhost", D12)
 # y "postgres" dentro de Docker (start-qa.bat, etapa 6).
 POSTGRES_USER = leer("POSTGRES_USER", "agente")

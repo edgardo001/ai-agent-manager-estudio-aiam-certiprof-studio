@@ -35,7 +35,7 @@ class ModeloFalso:
         self.respuestas = list(respuestas)
         self.recibidas = []
 
-    def __call__(self, mensajes, definiciones):
+    def __call__(self, mensajes, definiciones, temperatura=None):
         self.recibidas.append(list(mensajes))
         if not self.respuestas:
             raise AssertionError("el agente llamó al modelo más veces de lo esperado")
@@ -416,7 +416,7 @@ def test_el_kill_switch_a_mitad_del_mensaje_detiene_el_agente(conexion, monkeypa
     Curso: kill switch (Módulo 1, sección 1.2)."""
     ticket = nuevo_ticket(conexion, "olvidé mi contraseña")
 
-    def modelo_que_detiene(mensajes, definiciones):  # simula a la persona que lo detiene a mitad
+    def modelo_que_detiene(mensajes, definiciones, temperatura=None):  # simula a la persona que lo detiene a mitad
         cambiar_detencion(conexion, agente.leer_agente(conexion)["id"], True, "deriva detectada")
         return pide(("buscar_cliente", {}))
 

@@ -143,7 +143,7 @@ def usar_herramienta(turno, nombre, argumentos):
     return resultado
 
 
-def atender_mensaje(conexion, ticket_id, texto, al_paso=None, mensaje_ya_guardado=False):
+def atender_mensaje(conexion, ticket_id, texto, al_paso=None, mensaje_ya_guardado=False, temperatura=None):
     """Atiende un mensaje del cliente: lo guarda, conversa con el modelo y ejecuta las
     herramientas que pida, hasta que responde o escala.
     Devuelve {"estado": "respondido" o "escalado", "respuesta": texto para el cliente, "pasos": [...]}.
@@ -151,6 +151,7 @@ def atender_mensaje(conexion, ticket_id, texto, al_paso=None, mensaje_ya_guardad
     al_paso: función opcional que recibe cada paso al momento (el modo detallado de la consola).
     mensaje_ya_guardado: True si quien llama ya guardó y confirmó el mensaje del cliente, para que no
     se pierda si el proceso se cae a mitad; escalar_vencidos() lo rescata después (D11).
+    temperatura: None usa la del proveedor; las evals de la etapa 5 piden 0 (evals-del-llm.md).
 
     Curso: el proceso del SOP, paso a paso (Módulo 2, sección 2.5), con un agente de
     Nivel 3 que combina herramientas para completar un objetivo de varios pasos (sección 1.2).
@@ -205,7 +206,7 @@ def atender_mensaje(conexion, ticket_id, texto, al_paso=None, mensaje_ya_guardad
             return escalar(turno, f"el ticket superó el tope de {tope} tokens", "", "regla")
         inicio = time.monotonic()
         try:
-            llamada = conversar_con_herramientas(conversacion, herramientas.DEFINICIONES)
+            llamada = conversar_con_herramientas(conversacion, herramientas.DEFINICIONES, temperatura=temperatura)
         except Exception as error:  # sin red, clave inválida, límite de uso, 60 segundos sin respuesta...
             return escalar(turno, f"no se pudo hablar con el modelo ({error})", "", "regla")
         entrada, salida = llamada["tokens_entrada"], llamada["tokens_salida"]
