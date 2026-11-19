@@ -4,3 +4,8 @@
 # Python
 __pycache__/
 .venv/
+.venv*/
+
+# PDF de la raíz: solo se versiona la guía del curso; el material de referencia del usuario no se sube
+/*.pdf
+!/certiprof-ai-agent-manager-aiam-guia-de-autoestudio-es.pdf
