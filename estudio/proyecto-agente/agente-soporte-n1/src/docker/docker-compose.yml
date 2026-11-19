@@ -1,0 +1,25 @@
+# Servicios del Agente de Soporte N1.
+# Etapa 2: solo PostgreSQL con pgvector. Desde la etapa 6 se suma el backend con el perfil "qa".
+# start-dev.bat lo levanta sin perfil (solo PostgreSQL); start-qa.bat, con --profile qa.
+# Los valores salen del .env de esta misma carpeta, que Docker Compose lee solo.
+name: agente-soporte-n1
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17          # PostgreSQL 17 con la extensión pgvector (licencia PostgreSQL)
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}   # obligatoria: sin ella la imagen no arranca
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "127.0.0.1:5432:5432"              # solo accesible desde este equipo (decisión D4)
+    volumes:
+      - datos-postgres:/var/lib/postgresql/data        # los datos sobreviven al apagar el contenedor
+      - ./postgres:/docker-entrypoint-initdb.d:ro      # los SQL se ejecutan al crear el volumen
+    healthcheck:                           # "listo" recién cuando la base acepta conexiones
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 3s
+      retries: 20
+
+volumes:
+  datos-postgres:

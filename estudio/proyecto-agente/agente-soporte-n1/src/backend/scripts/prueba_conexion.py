@@ -1,10 +1,10 @@
-"""Etapa 0: comprueba que el proyecto puede hablar con el modelo.
+"""Script de asistencia, etapa 0: comprueba que el proyecto puede hablar con el modelo.
 
-Uso, desde la carpeta src/backend:  python src/prueba_conexion.py
+Uso, desde la carpeta src/backend:  python -m scripts.prueba_conexion
 Si el modelo responde, la clave y el nombre del modelo del .env están bien.
 """
-import config
-from modelo import preguntar_al_modelo
+from aplicacion import config
+from aplicacion.modelo import preguntar_al_modelo
 
 
 def probar_conexion():

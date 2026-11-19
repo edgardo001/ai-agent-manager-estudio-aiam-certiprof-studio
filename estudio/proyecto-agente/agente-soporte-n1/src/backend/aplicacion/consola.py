@@ -1,16 +1,12 @@
 """Etapa 1: conversar con el Agente de Soporte N1 en la terminal.
 
-Uso, desde la carpeta src/backend:  python src/consola.py
+Uso, desde la carpeta src/backend:  python -m aplicacion.consola
 El agente todavía no tiene herramientas ni base de conocimiento: solo su
 identidad e instrucciones (JD+SOP). Sirve para ver cómo cambia su conducta
 al editar prompt_soporte_n1.md, sin tocar el código.
 """
-from pathlib import Path
-
-import config
-from modelo import preguntar_al_modelo
-
-RUTA_PROMPT = Path(__file__).with_name("prompt_soporte_n1.md")
+from aplicacion import config
+from aplicacion.modelo import preguntar_al_modelo
 
 
 def cargar_instrucciones():
@@ -19,7 +15,7 @@ def cargar_instrucciones():
     Curso: instrucciones con el rigor de un job description más un SOP
     (Módulo 2, sección 2.5). El texto sale de la plantilla 05.
     """
-    return RUTA_PROMPT.read_text(encoding="utf-8")
+    return config.RUTA_PROMPT.read_text(encoding="utf-8")
 
 
 def conversar():

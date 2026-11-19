@@ -1,3 +1,5 @@
 # Librerías del backend. Se agregan a medida que una etapa las necesita.
-openai>=1,<3          # etapa 0: cliente del modelo y de los embeddings (Gemini u OpenRouter)
-python-dotenv>=1,<2   # etapa 0: lee src/docker/.env
+# Antes de agregar una, se revisa su licencia y la de sus dependencias (regla 13 del plan).
+openai>=1,<3          # etapa 0: cliente del modelo y de los embeddings (Gemini u OpenRouter); Apache 2.0
+python-dotenv>=1,<2   # etapa 0: lee src/docker/.env; BSD
+pg8000>=1.31,<2       # etapa 2: conexión con PostgreSQL (decisión D1); BSD
