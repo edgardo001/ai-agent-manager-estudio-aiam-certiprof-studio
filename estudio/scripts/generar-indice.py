@@ -5,10 +5,9 @@ Uso (desde la raíz del repositorio o desde estudio/):
 
 Busca cada tema de TEMAS en los módulos del curso, los resúmenes, los apuntes,
 el glosario, las preguntas frecuentes, las plantillas, los diagramas y el
-proyecto de agente, y escribe
-dónde aparece, con enlaces a la sección exacta. Además arma un mapa por módulo
-con lo que cita cada sección. No se edita indice.md a mano: se agregan o
-ajustan temas aquí y se vuelve a ejecutar.
+proyecto de agente, y escribe dónde aparece, con enlaces a la sección exacta.
+Además arma un mapa por módulo con lo que cita cada sección. No se edita
+indice.md a mano: se agregan o ajustan temas aquí y se vuelve a ejecutar.
 """
 import io
 import pathlib
