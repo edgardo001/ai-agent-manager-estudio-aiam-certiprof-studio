@@ -52,6 +52,7 @@ TEMAS = {
     "Identidad del agente: los seis parámetros": r"seis par[aá]metros|6 par[aá]metros|identidad del agente",
     "Instrucciones del agente: JD+SOP y system prompt": r"jd\s?\+\s?sop|job description|\bsop\b|system prompt",
     "Kill switch y circuit breaker": r"kill switch|kill-switch|circuit breaker",
+    "OWASP y seguridad": r"owasp",
     "Línea base (baseline)": r"l[ií]nea base|baseline",
     "Madurez agentic organizacional": r"madurez",
     "Método AIAM de rediseño en 5 pasos": r"5 pasos|cinco pasos|redise[ñn]o de procesos?",
