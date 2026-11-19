@@ -110,6 +110,17 @@ def leer_agente(conexion):
     return dict(zip(("id", "nombre", "fuera_de_alcance", "detenido", "motivo_detencion"), fila))
 
 
+def nombres_de_otros_clientes(conexion, cliente_id):
+    """Devuelve los nombres y las empresas de todos los clientes menos uno, para que reglas.py
+    revise que una respuesta no los nombre.
+
+    Curso: restricción del SOP "No compartir información de otros clientes" (Módulo 2, sección 2.5).
+    """
+    cursor = conexion.cursor()
+    cursor.execute("SELECT nombre, empresa FROM clientes WHERE id <> %s ORDER BY codigo", (cliente_id,))
+    return [texto for fila in cursor.fetchall() for texto in fila]
+
+
 def leer_cliente(conexion, cliente_id=None, codigo=None):
     """Devuelve un cliente del CRM simulado, por su id interno o por su código (C-001).
     Devuelve None si no existe.

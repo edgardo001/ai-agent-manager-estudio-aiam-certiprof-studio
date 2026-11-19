@@ -22,6 +22,7 @@ from aplicacion.base_de_datos import (
     leer_cliente,
     leer_mensajes,
     leer_ticket,
+    nombres_de_otros_clientes,
     registrar_paso,
     sumar_tokens,
     ultimo_paso,
@@ -185,6 +186,7 @@ def atender_mensaje(conexion, ticket_id, texto, al_paso=None, mensaje_ya_guardad
     if motivo:
         return escalar(turno, motivo, "", "regla")
     codigo_cliente = leer_cliente(conexion, cliente_id=ticket["cliente_id"])["codigo"]
+    otros_clientes = nombres_de_otros_clientes(conexion, ticket["cliente_id"])
     conversacion = armar_conversacion(instrucciones, leer_mensajes(conexion, ticket_id))
     tokens_del_ticket = ticket["tokens_entrada"] + ticket["tokens_salida"]
     tope = config.TOPE_TOKENS_POR_TICKET
@@ -218,7 +220,7 @@ def atender_mensaje(conexion, ticket_id, texto, al_paso=None, mensaje_ya_guardad
                 return escalar(turno, f"la respuesta del modelo llegó incompleta ({llamada['fin']})", "", "regla")
             if not llamada["texto"].strip():  # el proveedor bloqueó la respuesta o llegó vacía
                 return escalar(turno, "el modelo no devolvió una respuesta", "", "regla")
-            motivo = reglas.revisar_respuesta(llamada["texto"], codigo_cliente)
+            motivo = reglas.revisar_respuesta(llamada["texto"], codigo_cliente, otros_clientes)
             if motivo:  # la respuesta no se envía; sin reintentos (rag.md). Su texto queda en la auditoría
                 return escalar(turno, f"respuesta bloqueada: {motivo}", "", "regla", texto_bloqueado=llamada["texto"])
             guardar_mensaje(conexion, ticket_id, "agente", llamada["texto"])

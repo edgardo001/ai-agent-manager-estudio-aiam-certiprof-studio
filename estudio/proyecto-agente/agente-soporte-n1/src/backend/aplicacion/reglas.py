@@ -55,11 +55,25 @@ PATRON_NEGACION = re.compile(
 
 MINUTOS_SIN_CONFIRMAR = 24 * 60  # un ticket respondido sin confirmar en 24 horas (decisión del proyecto)
 
+# Trucos de caracteres para saltarse un patrón (pruebas adversariales de la etapa 5): caracteres
+# invisibles dentro de una palabra, letras cirílicas o griegas que se ven iguales a las latinas, y
+# guiones que pegan palabras ("quiero-cancelar") o que no son el guion común ("C‑002").
+INVISIBLES = dict.fromkeys(map(ord, "\u00ad\u200b\u200c\u200d\u2060\ufeff"))
+PARECIDAS = str.maketrans("аеорсхуіАЕОРСХУІοαΟΑ", "aeopcxyiAEOPCXYIoaOA")
+GUIONES = re.compile(r"[\u2010-\u2015\u2212_-]")
+
+
+def normalizar(texto):
+    """Quita los trucos de caracteres: compone las letras (NFKC), borra los invisibles, cambia las
+    letras parecidas por las latinas y los guiones por espacios. Técnico: no viene del curso."""
+    texto = unicodedata.normalize("NFKC", texto).translate(INVISIBLES).translate(PARECIDAS)
+    return GUIONES.sub(" ", texto)
+
 
 def sin_tildes(texto):
-    """Pasa el texto a minúsculas y sin tildes, para comparar palabras escritas de cualquier forma.
-    Técnico: no viene del curso."""
-    normal = unicodedata.normalize("NFD", texto.lower())
+    """Pasa el texto a minúsculas y sin tildes, sin trucos de caracteres, para comparar palabras
+    escritas de cualquier forma. Técnico: no viene del curso."""
+    normal = unicodedata.normalize("NFD", normalizar(texto).lower())
     return "".join(letra for letra in normal if unicodedata.category(letra) != "Mn")
 
 
@@ -97,9 +111,11 @@ def revisar_entrada(texto):
     return None
 
 
-def revisar_respuesta(texto, codigo_cliente):
+def revisar_respuesta(texto, codigo_cliente, otros_clientes=()):
     """Revisa la respuesta del modelo antes de enviarla al cliente. Devuelve el motivo para no
     enviarla y escalar, o None si se puede enviar. No se reintenta: se escala (rag.md).
+    otros_clientes son los nombres y las empresas de los demás clientes: se buscan completos
+    (el apellido solo no se detecta; límite conocido, en las pruebas adversariales).
 
     Curso: restricciones del SOP: "No realizar cambios en la cuenta del cliente sin confirmación
     humana. No compartir información de otros clientes. No ofrecer descuentos no autorizados."
@@ -108,11 +124,14 @@ def revisar_respuesta(texto, codigo_cliente):
     """
     if PATRON_DESCUENTO.search(PATRON_NEGACION.sub(" ", sin_tildes(texto))):
         return "la respuesta ofrece un descuento"
-    if PATRON_CAMBIO_DE_CUENTA.search(texto.lower()):  # con tildes: "actualicé" no es "actualice"
+    if PATRON_CAMBIO_DE_CUENTA.search(normalizar(texto).lower()):  # con tildes: "actualicé" no es "actualice"
         return "la respuesta afirma un cambio en la cuenta sin confirmación humana"
     propio = PATRON_CODIGO_CLIENTE.search(codigo_cliente or "")
-    otros = sorted({f"C-{numero}" for numero in PATRON_CODIGO_CLIENTE.findall(texto)
+    otros = sorted({f"C-{numero}" for numero in PATRON_CODIGO_CLIENTE.findall(normalizar(texto))
                     if not propio or numero != propio.group(1)})
+    comparable = f" {' '.join(re.findall(r'\w+', sin_tildes(texto)))} "
+    otros += [nombre for nombre in otros_clientes
+              if f" {' '.join(re.findall(r'\w+', sin_tildes(nombre)))} " in comparable]
     if otros:
         return f"la respuesta menciona a otro cliente ({', '.join(otros)})"
     return None
