@@ -55,13 +55,19 @@ Solo las del curso. Las del proyecto de agente están en su documentación (ver 
 - Cada pedido, decisión y consulta técnica del proyecto quedó en su documentación: el registro de cambios del plan, `decisiones.md` (D1 a D15), `lecciones-aprendidas.md`, `pruebas/` y `revisiones/`.
 - Proveedores: el chat va hoy en OpenRouter con un modelo gratuito y los embeddings en Gemini (D13 y D14, detalle en `docs/modelos-y-costos.md`).
 - Guardarraíl de claves en la configuración global de la herramienta del usuario, fuera del repositorio (regla en `AGENTS.md`).
+- 2026-11-19: las dos copias de respaldo de la configuración local en src/docker/ ya no existen (las borró el usuario); pendiente cerrado. Cada uso de revisar_env --ordenar vuelve a crear una copia, ignorada por git, que el usuario puede borrar.
 
 ## Pendientes y temas abiertos
 
-- Borrar las dos copias de respaldo de la configuración local en `src/docker/` del proyecto de agente cuando el usuario confirme.
+**Antes de empezar la etapa 4 (pedido del usuario, 2026-11-19): los tres quedaron cerrados el mismo día.**
+
+1. Sandbox de la herramienta en Windows (la barrera completa para las claves): el usuario decidió el 2026-11-19 **activarlo el día que cambie a un modelo o herramienta en que confíe menos**; mientras tanto quedan el guardarraíl global y la regla de AGENTS.md. Con el sandbox activo, lo que usa claves reales (consola con el modelo, prueba_conexion, pruebas de integración, evals) lo ejecuta el usuario. **Pendiente 1 cerrado.**
+2. Claves: las dos son de cuentas gratuitas sin facturación ni saldo (Gemini en Google AI Studio y OpenRouter); si se filtran, solo se agota el cupo gratuito. El usuario decidió el 2026-11-19 no restringirlas ni ponerles tope. Revisarlo si algún día activa facturación o carga saldo. Por verificar cuando haya datos reales: los términos de Google permitirían usar lo enviado a la API gratuita para mejorar sus productos (no verificado), lo que se suma a lo postergado de anonimización. **Pendiente 2 cerrado.**
+3. Varias claves para que no se agote el cupo: el usuario decidió el 2026-11-19 **no agregar más claves** (riesgo de bloqueo de las cuentas). Confirmado en la documentación de OpenRouter: los modelos gratuitos dan 50 pedidos al día, o 1.000 con 10 dólares comprados alguna vez; no alcanza para las evals de la etapa 5. Documentado en `docs/modelos-y-costos.md` (sección 4b) y en las lecciones. El usuario decidió mantener postergado el respaldo entre proveedores, como dice el plan (después de la etapa 6, si las caídas siguen). **Pendiente 3 cerrado.**
+
+**Otros:**
+
 - Decidir si borrar la copia previa de su configuración global (`settings.json.antes-guardarrail`).
-- Decidir si probar el sandbox de la herramienta en Windows (la barrera completa para las claves).
-- Recomendado al usuario: poner tope de gasto a la clave de OpenRouter y restringir la de Google AI Studio.
 - Opcional: comparar las respuestas del agente con y sin RAG.
 - Plantillas 01, 03 y 11: describen el agente de ejemplo en Nivel 2 y el proyecto lo reclasificó a Nivel 3 (2026-11-18); falta corregirlas y revisar si las menciones a Nivel 2 de las plantillas 04, 08 y 15 se refieren al agente. También siguen pendientes de aprobación las correcciones que propuso la revisión de las plantillas por agentes.
 - Inconsistencias del curso ya anotadas, por revisar con el usuario: 84% frente a 83% de completitud en el Módulo 5; dos listas distintas de universidades de la AI Agent Index 2025; “módulo anterior” en la sección 4.3 cuando la taxonomía está en la 4.2.
