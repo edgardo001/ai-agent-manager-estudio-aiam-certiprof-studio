@@ -44,12 +44,12 @@ def probar_busqueda():
             print(f"La base no tiene fragmentos del modelo {config.LLM_MODELO_EMBEDDINGS}: ejecute python -m scripts.cargar_conocimiento.")
             return
         if len(sys.argv) > 1:  # una consulta escrita por la persona: los fragmentos más parecidos
-            for documento, seccion, _, similitud in buscar(conexion, " ".join(sys.argv[1:])):
+            for documento, seccion, _, similitud, _ in buscar(conexion, " ".join(sys.argv[1:])):
                 print(f"{similitud:.2f}  {documento} > {seccion}")
             return
         aciertos = 0
         for consulta, esperado in CONSULTAS:  # la lista fija: solo importa el primer resultado
-            documento, seccion, _, similitud = buscar(conexion, consulta)[0]
+            documento, seccion, _, similitud, _ = buscar(conexion, consulta)[0]
             if esperado is None:
                 print(f"[sin documento] {similitud:.2f}  {consulta!r} -> {documento} > {seccion}")
                 continue

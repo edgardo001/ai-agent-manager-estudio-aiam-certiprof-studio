@@ -1,6 +1,7 @@
-"""Conexión con PostgreSQL: base de conocimiento, registro del agente, clientes y tickets.
+"""Conexión con PostgreSQL: base de conocimiento, registro del agente, clientes, tickets y auditoría.
 
-Etapa 2, ampliado en la etapa 3 (clientes, tickets y mensajes). Usa la librería pg8000
+Etapa 2, ampliado en la etapa 3 (clientes, tickets y mensajes) y en la etapa 4 (registro de
+auditoría, kill switch y tickets vencidos). Usa la librería pg8000
 (licencia BSD, decisión D1). Es el único archivo que habla con la base de datos: el resto
 del programa llama a estas funciones, y todo el SQL vive aquí.
 Los vectores se envían como texto y PostgreSQL los convierte con ::vector (decisión D2).
@@ -8,6 +9,8 @@ Quien abre una conexión la cierra al terminar, aunque haya un error (try/finall
 Estas funciones no confirman los cambios (commit): lo hace quien abrió la conexión,
 al terminar cada mensaje (decisión D11). Así las pruebas pueden deshacerlo todo.
 """
+import json
+
 import pg8000.dbapi
 
 from aplicacion import config
@@ -57,8 +60,9 @@ def guardar_fragmento(conexion, documento, seccion, orden, texto, vector, hash_d
 
 
 def buscar_fragmentos(conexion, vector, cantidad):
-    """Devuelve los fragmentos más parecidos a un vector: (documento, sección, texto, similitud).
-    La similitud va de 0 a 1; mientras más alta, más se parece al texto buscado.
+    """Devuelve los fragmentos más parecidos a un vector: (documento, sección, texto, similitud,
+    huella del documento). La similitud va de 0 a 1; mientras más alta, más se parece al texto
+    buscado. La huella dice qué versión del documento se usó, para la auditoría (D8).
 
     Curso: el agente solo responde con soluciones documentadas; si no encuentra
     una que corresponda, escala (Módulo 2, sección 2.5).
@@ -68,7 +72,7 @@ def buscar_fragmentos(conexion, vector, cantidad):
     # <=> mide la distancia de coseno: ordenar de menor a mayor trae primero lo más parecido.
     # Solo se comparan vectores creados con el mismo modelo que la consulta (decisión D8).
     cursor.execute(
-        "SELECT documento, seccion, texto, 1 - (embedding <=> %s::vector) AS similitud "
+        "SELECT documento, seccion, texto, 1 - (embedding <=> %s::vector) AS similitud, hash_documento "
         "FROM fragmentos_conocimiento WHERE modelo_embedding = %s "
         "ORDER BY embedding <=> %s::vector LIMIT %s",
         (texto_vector, config.LLM_MODELO_EMBEDDINGS, texto_vector, cantidad),
@@ -89,20 +93,21 @@ def contar_fragmentos(conexion):
 
 
 def leer_agente(conexion):
-    """Devuelve el registro del agente como diccionario: id, nombre, fuera_de_alcance, detenido.
+    """Devuelve el registro del agente como diccionario: id, nombre, fuera_de_alcance, detenido
+    (el kill switch) y motivo_detencion.
 
     Curso: el registro de agentes dice quién es cada agente y qué no atiende
     (Módulo 2, secciones 2.2 y 2.7).
     """
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT id, nombre, fuera_de_alcance, detenido FROM registro_agentes WHERE nombre = %s",
+        "SELECT id, nombre, fuera_de_alcance, detenido, motivo_detencion FROM registro_agentes WHERE nombre = %s",
         ("Agente de Soporte N1",),
     )
     fila = cursor.fetchone()
     if fila is None:
         return None
-    return {"id": fila[0], "nombre": fila[1], "fuera_de_alcance": fila[2], "detenido": fila[3]}
+    return dict(zip(("id", "nombre", "fuera_de_alcance", "detenido", "motivo_detencion"), fila))
 
 
 def leer_cliente(conexion, cliente_id=None, codigo=None):
@@ -195,7 +200,7 @@ def guardar_respuesta(conexion, ticket_id, respuesta):
     del proyecto, no viene en el curso (plan, "Cómo funciona cada regla").
     """
     conexion.cursor().execute(
-        "UPDATE tickets SET estado = 'respondido', respuesta = %s WHERE id = %s AND estado <> 'escalado'",
+        "UPDATE tickets SET estado = 'respondido', respuesta = %s, cerrado_en = NULL WHERE id = %s AND estado <> 'escalado'",
         (respuesta, ticket_id),
     )
 
@@ -208,7 +213,7 @@ def guardar_escalamiento(conexion, ticket_id, motivo, resumen, escalado_por):
     """
     conexion.cursor().execute(
         "UPDATE tickets SET estado = 'escalado', motivo_escalamiento = %s, resumen_escalamiento = %s, "
-        "escalado_por = %s, cerrado_en = now() WHERE id = %s",
+        "escalado_por = %s, cerrado_en = now() WHERE id = %s AND estado <> 'escalado'",
         (motivo, resumen, escalado_por, ticket_id),
     )
 
@@ -228,3 +233,109 @@ def promedio_tokens_por_ticket(conexion):
     if not cantidad:
         return None
     return cantidad, float(entrada), float(salida), float(costo)
+
+
+def cambiar_detencion(conexion, agente_id, detenido, motivo):
+    """Activa o desactiva el kill switch del agente, con su motivo.
+
+    Curso: kill switch (Módulo 1, sección 1.2) y circuit breaker (Módulo 4, sección 4.5).
+    """
+    conexion.cursor().execute(
+        "UPDATE registro_agentes SET detenido = %s, motivo_detencion = %s WHERE id = %s",
+        (detenido, motivo, agente_id),
+    )
+
+
+def registrar_paso(conexion, agente_id, ticket_id, paso, tipo, decision, datos_usados, motivo, version_prompt,
+                   tokens, quien):
+    """Guarda un paso en el registro de auditoría: qué decidió el agente (o la persona), por qué,
+    con qué datos, con qué versión de las instrucciones y cuántos tokens gastó.
+    tipo es 'modelo', 'herramienta', 'regla', 'intervencion' o 'cambio_externo'; ticket_id va vacío
+    en las intervenciones que no son de un ticket, como detener el agente.
+
+    Curso: audit trail con los criterios de decisión de cada caso (Módulo 1, pregunta 9). Guardar
+    con qué datos, y guardar las intervenciones humanas (detener o reactivar el agente), es una
+    ampliación del proyecto.
+    """
+    conexion.cursor().execute(
+        "INSERT INTO registro_auditoria (agente_id, ticket_id, paso, tipo, decision, datos_usados, motivo, "
+        "version_prompt, tokens, quien) VALUES (%s, %s, %s, %s, %s, %s::jsonb, %s, %s, %s, %s)",
+        (agente_id, ticket_id, paso, tipo, decision, json.dumps(datos_usados, ensure_ascii=False), motivo,
+         version_prompt, tokens, quien),
+    )
+
+
+def leer_auditoria(conexion, ticket_id):
+    """Devuelve los pasos de un ticket en orden: (paso, tipo, decisión, datos usados, motivo, versión).
+    Sirve para explicar qué hizo el agente en un caso.
+
+    Curso: audit trail (Módulo 1, pregunta 9).
+    """
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT paso, tipo, decision, datos_usados, motivo, version_prompt FROM registro_auditoria "
+        "WHERE ticket_id = %s ORDER BY id",
+        (ticket_id,),
+    )
+    return [tuple(fila) for fila in cursor.fetchall()]
+
+
+def tickets_sin_respuesta(conexion, minutos):
+    """Devuelve los números de los tickets abiertos cuyo último mensaje es del cliente y lleva más
+    de esos minutos sin respuesta: el agente se cayó a mitad de la atención.
+
+    Curso: escalar si el tiempo de resolución supera 8 minutos (Módulo 2, sección 2.5).
+    """
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT t.id FROM tickets t "
+        "JOIN LATERAL (SELECT quien, creado_en FROM mensajes m WHERE m.ticket_id = t.id "
+        "              ORDER BY m.id DESC LIMIT 1) ultimo ON true "
+        "WHERE t.estado IN ('nuevo', 'respondido') AND ultimo.quien = 'cliente' "
+        "AND ultimo.creado_en < now() - %s * interval '1 minute' ORDER BY t.id "
+        # Bloquea los tickets elegidos: si dos consolas (o el dashboard) revisan a la vez, la otra
+        # se los salta y no los escala dos veces.
+        "FOR UPDATE OF t SKIP LOCKED",
+        (minutos,),
+    )
+    return [fila[0] for fila in cursor.fetchall()]
+
+
+def marcar_sin_confirmar(conexion, minutos):
+    """Deja como 'resuelto_sin_confirmar' los tickets respondidos cuyo último mensaje es del agente
+    y lleva más de esos minutos sin que el cliente confirme. Devuelve cuántos marcó.
+
+    Regla del proyecto, inspirada en la tasa de resolución autónoma (Módulo 3, sección 3.2) y en los
+    fallos silenciosos (sección 3.3): un ticket que nadie confirmó no cuenta como resuelto.
+    """
+    cursor = conexion.cursor()
+    cursor.execute(
+        "UPDATE tickets t SET estado = 'resuelto_sin_confirmar', cerrado_en = now() "
+        "FROM (SELECT DISTINCT ON (ticket_id) ticket_id, quien, creado_en FROM mensajes "
+        "      ORDER BY ticket_id, id DESC) ultimo "
+        "WHERE ultimo.ticket_id = t.id AND t.estado = 'respondido' AND ultimo.quien = 'agente' "
+        "AND ultimo.creado_en < now() - %s * interval '1 minute'",
+        (minutos,),
+    )
+    return cursor.rowcount
+
+
+def ultimo_paso(conexion, ticket_id):
+    """Devuelve el número del último paso del ticket en la auditoría, o 0 si no tiene: así los pasos
+    se numeran por ticket y no vuelven a 1 en cada mensaje. Técnico: no viene del curso."""
+    cursor = conexion.cursor()
+    cursor.execute("SELECT coalesce(max(paso), 0) FROM registro_auditoria WHERE ticket_id = %s", (ticket_id,))
+    return cursor.fetchone()[0]
+
+
+def crear_punto_de_retorno(conexion):
+    """Marca un punto de la transacción al que se puede volver si algo falla después (SAVEPOINT).
+    Técnico: no viene del curso (D11: que una falla de la base en una herramienta no impida escalar)."""
+    conexion.cursor().execute("SAVEPOINT antes_de_la_herramienta")
+
+
+def volver_al_punto_de_retorno(conexion):
+    """Deshace lo hecho desde el último punto de retorno y deja la transacción usable de nuevo.
+    Técnico: no viene del curso (D11)."""
+    conexion.cursor().execute("ROLLBACK TO SAVEPOINT antes_de_la_herramienta")
+

@@ -1,18 +1,23 @@
 """Conversar con el Agente de Soporte N1 en la terminal.
 
-Etapa 1, ampliada en la etapa 3: pide el código del cliente, crea un ticket y pasa cada
-mensaje a agente.py, la misma función que usará la API (decisión D6). Necesita PostgreSQL
+Etapa 1, ampliada en la etapa 3 (código del cliente, ticket, agente.py, la misma función que
+usará la API, decisión D6) y en la etapa 4 (kill switch y tickets vencidos). Necesita PostgreSQL
 levantado y la base de conocimiento cargada.
 Uso, desde la carpeta src/backend:
-    python -m aplicacion.consola              conversación normal
-    python -m aplicacion.consola --detallado  muestra cada paso: herramientas, fragmentos,
-                                              parecido, tokens, costo y segundos
+    python -m aplicacion.consola                        conversación normal
+    python -m aplicacion.consola --detallado            muestra cada paso: herramientas, fragmentos,
+                                                        parecido, tokens, costo y segundos
+    python -m aplicacion.consola --detener "motivo"     activa el kill switch y termina
+    python -m aplicacion.consola --reactivar "motivo"   desactiva el kill switch y termina
 """
 import argparse
+import getpass
 
-from aplicacion import config
+from aplicacion import config, reglas
 from aplicacion.agente import atender_mensaje
-from aplicacion.base_de_datos import conectar, contar_fragmentos, crear_ticket, leer_agente, leer_cliente, leer_ticket
+from aplicacion.base_de_datos import (
+    conectar, contar_fragmentos, crear_ticket, guardar_mensaje, leer_agente, leer_cliente, leer_ticket,
+)
 
 
 def decimal(valor, decimales):
@@ -30,7 +35,7 @@ def mostrar_paso(paso):
               f" {decimal(paso['costo'], 6)} dólares, {decimal(paso['segundos'], 1)} s")
     else:
         print(f"  [{paso['tipo']}] {paso['detalle']}")
-    for documento, seccion, similitud in paso.get("fragmentos", []):
+    for documento, seccion, similitud, _ in paso.get("fragmentos", []):
         print(f"      {decimal(similitud, 2)}  {documento} > {seccion}")
 
 
@@ -71,18 +76,20 @@ def atender_ticket(conexion, agente, cliente, detallado):
             return texto.lower() == "nuevo"
         if not texto:
             continue
-        ticket_nuevo = ticket_id is None
         try:
-            if ticket_nuevo:
+            # El mensaje del cliente (y el ticket, si es nuevo) se confirma antes de atenderlo: si el
+            # programa se cae a mitad, no se pierde y escalar_vencidos() lo rescata (D11).
+            if ticket_id is None:
                 ticket_id = crear_ticket(conexion, agente["id"], cliente["id"], texto)
                 print(f"(ticket {ticket_id})")
-            resultado = atender_mensaje(conexion, ticket_id, texto, mostrar_paso if detallado else None)
+            guardar_mensaje(conexion, ticket_id, "cliente", texto)
+            conexion.commit()
+            resultado = atender_mensaje(conexion, ticket_id, texto, mostrar_paso if detallado else None,
+                                        mensaje_ya_guardado=True)
             conexion.commit()
         except Exception as error:  # la base se cayó a mitad, por ejemplo
             conexion.rollback()
-            if ticket_nuevo:  # el rollback también borró el ticket: el próximo mensaje crea otro
-                ticket_id = None
-            print(f"\n(No se pudo atender el mensaje: {error}. Intente de nuevo.)")
+            print(f"\n(No se pudo atender el mensaje: {error}. Quedó guardado; si nadie lo atiende, pasará a una persona.)")
             continue
         print(f"\nAgente: {resultado['respuesta']}")
         if detallado:
@@ -99,7 +106,10 @@ def conversar():
     Técnico: no viene del curso."""
     parser = argparse.ArgumentParser(description="Conversar con el Agente de Soporte N1.")
     parser.add_argument("--detallado", action="store_true", help="muestra cada paso del agente")
-    detallado = parser.parse_args().detallado
+    parser.add_argument("--detener", metavar="MOTIVO", help="activa el kill switch, con su motivo, y termina")
+    parser.add_argument("--reactivar", metavar="MOTIVO", help="desactiva el kill switch, con su motivo, y termina")
+    argumentos = parser.parse_args()
+    detallado = argumentos.detallado
 
     faltan = config.faltan_variables(con_base_de_datos=True)
     if faltan:
@@ -119,7 +129,21 @@ def conversar():
         if agente is None:
             print("El Agente de Soporte N1 no está en el registro de agentes: revise 02_datos_ficticios.sql.")
             return
-        print(f"{agente['nombre']}." + (" Modo detallado." if detallado else ""))
+        # El kill switch se maneja desde aquí hasta que exista la API (etapa 6). Queda en la
+        # auditoría con el usuario del equipo como "quién" (decisión del proyecto, D16).
+        if argumentos.detener or argumentos.reactivar:
+            reglas.cambiar_kill_switch(conexion, bool(argumentos.detener), getpass.getuser(),
+                                       argumentos.detener or argumentos.reactivar)
+            conexion.commit()
+            print("Agente detenido: los tickets pasarán a una persona." if argumentos.detener else "Agente reactivado.")
+            return
+        # Al abrir la consola se revisan los tickets que quedaron sin atender (etapa 4).
+        escalados, sin_confirmar = reglas.escalar_vencidos(conexion)
+        conexion.commit()
+        if escalados or sin_confirmar:
+            print(f"Tickets revisados al abrir: {escalados} escalados por tiempo, {sin_confirmar} sin confirmar.")
+        print(f"{agente['nombre']}." + (" Modo detallado." if detallado else "")
+              + (" AGENTE DETENIDO: los tickets pasarán a una persona." if agente["detenido"] else ""))
         while True:
             cliente = pedir_cliente(conexion)
             if cliente is None or not atender_ticket(conexion, agente, cliente, detallado):

@@ -75,6 +75,10 @@ RUTA_PROMPT = Path(__file__).with_name("prompt_soporte_n1.md")
 # se escala. Evita que un caso enredado gaste sin límite (rag.md, patrón 08).
 TOPE_TOKENS_POR_TICKET = int(leer("TOPE_TOKENS_POR_TICKET", "20000"))
 
+# Minutos que puede durar la atención de un mensaje antes de escalar (curso, Módulo 2, sección 2.5;
+# medido por mensaje, decisión del usuario). Desde la etapa 4 lo controla reglas.py.
+MINUTOS_MAXIMOS_ANTES_DE_ESCALAR = float(leer("MINUTOS_MAXIMOS_ANTES_DE_ESCALAR", "8"))
+
 # Datos para estimar y calcular costos (scripts/estimar_costos.py; tickets desde la etapa 3).
 # No configuran el modelo: son precios y supuestos. Detalle en docs/modelos-y-costos.md.
 PRECIO_MILLON_TOKENS_ENTRADA = float(leer("PRECIO_MILLON_TOKENS_ENTRADA", "0.25"))

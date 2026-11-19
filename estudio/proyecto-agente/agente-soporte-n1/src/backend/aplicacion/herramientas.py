@@ -116,7 +116,7 @@ def leer_argumentos(nombre, argumentos_json):
 
 def buscar(conexion, consulta):
     """Busca una consulta en la base de conocimiento y devuelve los fragmentos más parecidos:
-    (documento, sección, texto, similitud).
+    (documento, sección, texto, similitud, huella del documento).
 
     Curso: el agente solo responde con soluciones documentadas (Módulo 2, sección 2.5).
     """
@@ -134,7 +134,7 @@ def formatear_fragmentos(resultados):
     if not resultados:
         return "No hay soluciones documentadas para esta consulta. Si el problema no tiene solución documentada, escala."
     partes = []
-    for documento, seccion, texto, similitud in resultados:
+    for documento, seccion, texto, similitud, _ in resultados:
         encabezado = f"Fuente: {documento} > {seccion} (parecido {similitud:.2f})"
         partes.append(marcar_como_datos("fragmento", f"{encabezado}\n{texto}"))
     return "\n".join(partes)
