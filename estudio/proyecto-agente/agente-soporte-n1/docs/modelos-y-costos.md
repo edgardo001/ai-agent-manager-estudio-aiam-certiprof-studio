@@ -56,6 +56,30 @@ Ninguna está construida; están en la tabla de lo postergado del plan, con su s
 
 **Recomendación:** dejar el respaldo para cuando las evals de la etapa 5 permitan comparar modelos con los mismos casos; si después de la etapa 6 las caídas siguen siendo frecuentes, empezar por la forma 1, que no suma código, y pasar a la 2 solo si hace falta no depender de un intermediario.
 
+## 4b. Cupos de uso y por qué no varias claves
+
+Consulta del usuario del 2026-11-19: ¿y si las claves fueran una lista, con claves de otras cuentas, para que no se acabe el cupo? **Decisión del usuario: no se agregan más claves**, porque arriesga que bloqueen las cuentas.
+
+- **Varias claves de una misma cuenta no suman cupo:** los límites son por cuenta, no por clave.
+- **Varias cuentas gratuitas para esquivar los límites** suele estar prohibido por los términos de uso de estos servicios, y pueden suspenderse todas a la vez (los términos exactos de OpenRouter y de Google no se verificaron).
+- **Lo legítimo es el respaldo entre proveedores distintos** (sección 4): Gemini y OpenRouter tienen cada uno su propio cupo, y el respaldo cubre además las caídas.
+
+**Los cupos de los modelos gratuitos de OpenRouter** (los que terminan en `:free`), según su documentación oficial, consultada el 2026-11-19, dependen del saldo comprado alguna vez:
+
+| Saldo comprado alguna vez | Pedidos por minuto | Pedidos por día |
+|---|---|---|
+| menos de 10 dólares | 20 | 50 |
+| 10 dólares o más | 20 | 1.000 |
+
+Con 50 pedidos al día alcanza para probar, no para las evals de la etapa 5: unos 20 casos, repetidos 3 veces, con unas 3 llamadas cada uno, son casi 200 llamadas. Para las evals hay tres caminos legítimos: el cupo propio de Gemini, cargar 10 dólares una vez en OpenRouter (sube a 1.000 al día y queda saldo para modelos de pago), o un modelo de pago.
+
+**Dos opciones de OpenRouter que conviene conocer:**
+
+- **Traer la propia clave (BYOK, “bring your own key”):** se asocia la clave de un proveedor, por ejemplo la de Google, a la cuenta de OpenRouter; los pedidos a modelos de ese proveedor usan el cupo propio y no el compartido de los gratuitos. El error 429 de `google/gemma-4-31b-it:free` lo sugería.
+- **`openrouter/free`:** un enrutador que elige automáticamente algún modelo gratuito disponible. Para este agente hay que tener cuidado: no garantiza que el modelo elegido sepa usar herramientas, y cambiar de modelo sin aviso es cambiar de agente (D15 lo anota en la auditoría).
+
+**Para saber cuánto cupo queda,** OpenRouter informa en `GET https://openrouter.ai/api/v1/key` los pedidos gratuitos usados y restantes del día (`free_model_daily_requests`). No se agregó al proyecto: el usuario lo puede ver en el panel de su cuenta.
+
 ## 5. Cuánto cuesta: `estimar_costos.py`
 
 Estima, sin llamar al modelo (es gratis), el costo de los embeddings de X documentos de X tamaño y el de cada consulta, con una demanda que no se conoce con certeza (pedido del usuario del 2026-11-18):

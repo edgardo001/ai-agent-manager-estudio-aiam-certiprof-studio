@@ -2,7 +2,7 @@
 
 Este es el documento que manda en el desarrollo del agente: si otro documento dice otra cosa, vale lo que dice este archivo. `referencia/arquitectura.md` muestra hacia dónde podría crecer el sistema; un diseño anterior, con su ruta de construcción y una tabla de equivalencias, fue reemplazado por este plan, y git lo conserva. Se actualiza cada vez que el usuario pide un cambio, y cada cambio se anota en el registro del final.
 
-**Estado (2026-11-19):** etapa actual, la 3 (herramientas y bucle del agente), terminada y probada, con su revisión aplicada. Siguiente paso: la etapa 4 (reglas en código, auditoría y kill switch). Lo probado en cada etapa está en `pruebas/`.
+**Estado (2026-11-19):** etapa actual, la 3 (herramientas y bucle del agente), terminada y probada, con su revisión aplicada. Siguiente paso: la etapa 4 (reglas en código, auditoría y kill switch). Lo probado en cada etapa está en `pruebas/`. Los tres pendientes que el usuario pidió cerrar antes de empezarla quedaron resueltos el 2026-11-19 (MEMORY.md de la raíz): el sandbox se activa cuando cambie a un modelo o herramienta en que confíe menos; las claves, de cuentas gratuitas, quedan sin restricción ni tope; y no se agregan más claves, con el respaldo entre proveedores postergado (modelos-y-costos.md, sección 4b).
 
 **Propósito (decisión del usuario):** entender en simple el flujo completo de un agente gobernado por las reglas del curso y el esfuerzo que hay detrás. El proyecto tiene lo mínimo que haga falta para eso: ni más piezas, ni menos que las que exige el curso.
 
@@ -262,3 +262,5 @@ Una línea por cambio, con la regla o la decisión que lo explica; el detalle es
 - 2026-11-19: nace `lecciones-aprendidas.md` (regla 7).
 - 2026-11-19: el prompt maestro sigue en archivo y git, con una huella que hace cumplir la aprobación (D15, `revisiones/2026-11-19-revision-prompt-maestro.md`); se postergan leerlo desde la base, la traza completa y OpenBao.
 - 2026-11-19: simplificación de la documentación (`revisiones/2026-11-19-revision-simplificacion.md`): nacen `rag.md` y `modelos-y-costos.md`, las pruebas adversariales pasan a `estrategia-de-pruebas.md`, la anonimización a `referencia/`, se eliminan la ruta de construcción y la tabla de equivalencias, y se agregan las reglas 16 y 17.
+- 2026-11-19: consulta del usuario sobre usar varias claves: decidió no agregarlas (riesgo de bloqueo) y mantener postergado el respaldo entre proveedores; los cupos de OpenRouter y las opciones legítimas quedaron en modelos-y-costos.md, sección 4b.
+- 2026-11-19: cerrados los tres pendientes previos a la etapa 4 (sandbox para cuando cambie de modelo, claves gratuitas sin restricción, sin claves adicionales).
