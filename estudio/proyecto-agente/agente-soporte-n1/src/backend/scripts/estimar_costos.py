@@ -5,15 +5,18 @@ Uso, desde la carpeta src/backend con el entorno virtual activo:
     python -m scripts.estimar_costos --documentos 1000 --caracteres 20000
     python -m scripts.estimar_costos --consultas 50 300 1000 --hora-pico 20
 Sin argumentos, mide los documentos reales de src/base-de-conocimiento/.
+Desde la etapa 3, si PostgreSQL está levantado y ya hay tickets atendidos, los escenarios usan
+el costo real promedio por ticket en vez del supuesto.
 Las cifras son estimaciones: los supuestos y cómo afinarlos están en docs/costos.md.
 """
 import argparse
 
 from aplicacion import config
+from aplicacion.base_de_datos import conectar, promedio_tokens_por_ticket
 from scripts.cargar_conocimiento import CARPETA_DOCUMENTOS, fragmentar_documento
 
 # Supuestos de la estimación (docs/costos.md). Desde la etapa 3, los tokens reales de
-# cada ticket quedan en la tabla tickets y permiten reemplazar estos supuestos.
+# cada ticket quedan en la tabla tickets y reemplazan estos supuestos (leer_tickets_reales()).
 CARACTERES_POR_TOKEN = 4         # regla práctica; en español suele haber algo más de tokens
 TOKENS_HERRAMIENTAS = 300        # la descripción de las tres herramientas, que va en cada llamada
 CARACTERES_PREGUNTA = 200        # largo típico del mensaje de un cliente
@@ -51,8 +54,8 @@ def medir_base_de_conocimiento():
 def estimar_embeddings(caracteres):
     """Costo de calcular los embeddings de una carga completa: solo tokens de entrada.
 
-    Curso: parte del costo por caso y del valor que mide el dashboard
-    (Módulo 3, sección 3.2, y Módulo 5). El cálculo es técnico.
+    Curso: parte del costo por caso y del valor que muestra el dashboard
+    (Módulo 3, secciones 3.2 y 3.5, y Módulo 5). El cálculo es técnico.
     """
     return tokens(caracteres) * config.PRECIO_MILLON_TOKENS_EMBEDDINGS / 1_000_000
 
@@ -70,6 +73,23 @@ def estimar_consulta(caracteres_fragmento):
              + entrada * config.PRECIO_MILLON_TOKENS_ENTRADA
              + TOKENS_SALIDA_POR_CONSULTA * config.PRECIO_MILLON_TOKENS_SALIDA) / 1_000_000
     return entrada, costo
+
+
+def leer_tickets_reales():
+    """Devuelve (cantidad, tokens de entrada, de salida y costo promedio por ticket) de los tickets
+    ya atendidos, o None si no hay tickets o PostgreSQL no responde (entonces se usan los supuestos).
+
+    Curso: costo por caso (Módulo 3, sección 3.2); aquí solo la parte de tokens. Usar los tickets
+    reales en vez de los supuestos es del proyecto.
+    """
+    try:
+        conexion = conectar()
+    except Exception:  # PostgreSQL apagado: no es un error, solo se usan los supuestos
+        return None
+    try:
+        return promedio_tokens_por_ticket(conexion)
+    finally:
+        conexion.close()
 
 
 def estimar_costos():
@@ -102,6 +122,16 @@ def estimar_costos():
     print("\n2. Una consulta del cliente")
     print(f"   {config.LLAMADAS_POR_CONSULTA} llamadas al modelo, unos {numero(entrada)} tokens de entrada y "
           f"{TOKENS_SALIDA_POR_CONSULTA} de salida: {dolares(costo)} por consulta.")
+
+    reales = leer_tickets_reales()
+    if reales:
+        cantidad, entrada_real, salida_real, costo_real = reales
+        print(f"   Con los {cantidad} tickets reales de la base: en promedio {numero(entrada_real)} tokens de entrada y"
+              f" {numero(salida_real)} de salida, {dolares(costo_real)} por ticket. Los escenarios usan este costo real,"
+              " que es por ticket (puede tener varios mensajes) y no incluye el embedding de la consulta.")
+        costo = costo_real
+    else:
+        print("   Todavía no hay tickets atendidos (o PostgreSQL está apagado): los escenarios usan el supuesto.")
 
     print("\n3. Escenarios de uso")
     for nombre, por_dia in zip(("baja", "esperada", "alta"), argumentos.consultas):

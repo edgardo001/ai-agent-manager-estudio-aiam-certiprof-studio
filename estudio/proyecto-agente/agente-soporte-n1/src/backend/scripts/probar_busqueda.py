@@ -4,13 +4,14 @@ Uso, desde la carpeta src/backend con el entorno virtual activo, después de car
     python -m scripts.probar_busqueda
     python -m scripts.probar_busqueda "mi factura sale cortada"
 Sin texto, prueba una lista de consultas fijas y dice si cada una encuentra el documento esperado.
-En la etapa 3, buscar() pasa a herramientas.py como la herramienta buscar_solucion.
+Desde la etapa 3 usa la misma búsqueda que la herramienta buscar_solucion del agente
+(herramientas.buscar), así lo que se prueba aquí es lo que encuentra el agente.
 """
 import sys
 
 from aplicacion import config
-from aplicacion.base_de_datos import buscar_fragmentos, conectar
-from aplicacion.modelo import crear_embedding
+from aplicacion.base_de_datos import conectar
+from aplicacion.herramientas import buscar
 
 # Consulta y documento que debería aparecer primero. La última no tiene documento a propósito:
 # no se le exige una similitud baja, porque un umbral no sirve (decisión D8): el agente decide escalar.
@@ -26,19 +27,9 @@ CONSULTAS = [
 ]
 
 
-def buscar(conexion, consulta, cantidad=5):
-    """Busca una consulta en la base de conocimiento y devuelve los fragmentos más parecidos.
-
-    Curso: es la búsqueda que usará la herramienta buscar_solucion del agente
-    para responder solo con soluciones documentadas (Módulo 2, sección 2.5).
-    """
-    vector = crear_embedding([consulta])[0]
-    return buscar_fragmentos(conexion, vector, cantidad)
-
-
 def probar_busqueda():
     """Muestra qué documentos encuentra cada consulta y si coinciden con lo esperado.
-    Técnico: es una prueba manual; las pruebas automáticas llegan en la etapa 5."""
+    Técnico: es una prueba manual; las pruebas automáticas están en tests/, desde la etapa 3."""
     faltan = config.faltan_variables(con_base_de_datos=True)
     if faltan:
         print(f"Faltan en src/docker/.env: {', '.join(faltan)}.")

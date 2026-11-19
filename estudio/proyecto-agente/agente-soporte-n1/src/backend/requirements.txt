@@ -3,3 +3,4 @@
 openai>=1,<3          # etapa 0: cliente del modelo y de los embeddings (Gemini u OpenRouter); Apache 2.0
 python-dotenv>=1,<2   # etapa 0: lee src/docker/.env; BSD
 pg8000>=1.31,<2       # etapa 2: conexión con PostgreSQL (decisión D1); BSD
+pytest>=8,<10         # etapa 3: pruebas; MIT (trae pluggy e iniconfig, MIT; packaging, Apache 2.0 o BSD; colorama, BSD)

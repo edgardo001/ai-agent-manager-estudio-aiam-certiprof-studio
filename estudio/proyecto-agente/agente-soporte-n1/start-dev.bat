@@ -22,6 +22,8 @@ if not exist .venv\Scripts\python.exe (
 )
 call .venv\Scripts\activate.bat
 python -m pip install -q -r requirements.txt || goto :error
+rem    Avisa si el .env se separo de la plantilla example.env (decision D14); no detiene nada.
+python -m scripts.revisar_env
 
 rem 2. Servicios de apoyo con Docker Compose (existe desde la etapa 2).
 rem    Sin perfil, Compose levanta solo PostgreSQL; la app no, porque corre en local.
