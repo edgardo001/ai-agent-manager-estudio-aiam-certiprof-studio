@@ -9,6 +9,7 @@ Todos se ejecutan desde la carpeta `src/backend`, con el entorno virtual activo 
 | Script | Etapa | Para qué sirve | Cuándo usarlo |
 |---|---|---|---|
 | `prueba_conexion.py` | 0 | Prueba el modelo de chat (un saludo y si sabe usar herramientas) y el de embeddings (si entrega 768 números) | Al cambiar la clave, el modelo o el proveedor en el `.env` (`docs/modelos-y-costos.md`) |
+| `listar_modelos.py` | 5 | Lista los modelos de Gemini (con la clave, sin mostrarla), los gratuitos de OpenRouter que aceptan herramientas y los de Ollama en el equipo; no llama a ningún modelo | Para elegir un modelo o al actualizar la lista comentada de `example.env` (`docs/modelos-y-costos.md`, sección 2) |
 | `cargar_conocimiento.py` | 2 | Borra y vuelve a cargar en pgvector los documentos de `src/base-de-conocimiento/` | Cada vez que cambia un documento, y después de `clear.bat --borrar-volumenes` |
 | `probar_busqueda.py` | 2 | Prueba la búsqueda sin el agente, con la misma función que usa su herramienta `buscar_solucion`: las consultas fijas (7 de 7 esperado) o una escrita por usted | Después de cargar el conocimiento o de cambiar la forma de fragmentar |
 | `revisar_env.py` | 3 | Compara los nombres del `.env` con `example.env` y dice qué falta o sobra; con `--ordenar`, deja el `.env` con el orden y los comentarios de la plantilla, conservando sus valores (copia previa en `.env.respaldo`); nunca muestra los valores | Lo ejecuta `start-dev.bat` para avisar; a mano, cuando la plantilla cambió (D14) |
@@ -18,6 +19,7 @@ Ejemplos:
 
 ```
 python -m scripts.prueba_conexion
+python -m scripts.listar_modelos
 python -m scripts.cargar_conocimiento
 python -m scripts.probar_busqueda "mi factura sale cortada"
 python -m scripts.estimar_costos --documentos 1000 --caracteres 20000
