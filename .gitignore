@@ -1,5 +1,6 @@
 # Claves y configuración local: nunca se suben (el repositorio es público)
 .env
+.env.*
 
 # Python
 __pycache__/
