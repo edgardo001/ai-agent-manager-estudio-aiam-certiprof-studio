@@ -274,3 +274,7 @@ Una línea por cambio, con la regla o la decisión que lo explica; el detalle es
 - 2026-11-19: etapa 5 empezada. Pruebas adversariales de las reglas con Hypothesis (instalada, excepción de licencia de D3); por decisión del usuario, `reglas.py` quita los trucos de caracteres y detecta a otro cliente por su nombre o su empresa; lo que un patrón no ve queda como falla esperada y se mide en las evals.
 - 2026-11-19: D4 suma las condiciones contra la enumeración de clientes y tickets para la API de la etapa 6 (consulta del usuario; sin cambiar el esquema ni usar UUID por ahora).
 - 2026-11-19: regla 18 y `seguridad-owasp.md`: los Top 10 de OWASP para aplicaciones con LLM (2025) y para APIs (2023), con lo cubierto y lo pendiente (pedido del usuario).
+- 2026-11-19: `scripts/listar_modelos.py`, para mantener al día la lista de modelos de `example.env` (decisión del usuario).
+- 2026-11-19: variables del juez (`LLM_JUEZ_PROVEEDOR`, `LLM_MODELO_JUEZ`, `gemini-3.5-flash`) y de la barrera de D15 (`EXIGIR_PROMPT_APROBADO`, apagada en desarrollo), decisiones del usuario.
+- 2026-11-19: golden dataset `tests/evals/casos.jsonl`, 40 casos aprobados por el usuario, con el campo nuevo `prohibido`.
+- 2026-11-19: evals con el modelo real escritas (`juez.py`, `conftest.py`, `test_dimensiones.py`, `test_metricas.py`) y probadas con un modelo falso; la corrida real espera la decisión del usuario.

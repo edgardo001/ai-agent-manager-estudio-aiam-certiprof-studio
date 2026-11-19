@@ -57,7 +57,7 @@ Se va de lo más barato a lo más caro. Si una capa falla, no hace falta correr 
 | Escalamiento justificado | si escaló, ¿el motivo corresponde a una condición del SOP? | validación de escalamiento (2.6) |
 | Tono y formato | ¿español, profesional, breve, como pide el prompt? | instrucciones JD+SOP (2.5) |
 
-**El modelo juez:** uno distinto y más capaz que el del agente, para que no se califique a sí mismo con sus mismos sesgos. Se configura con una variable nueva, `LLM_MODELO_JUEZ`, en el `.env`; su elección y precio se registrarán como una decisión cuando llegue la etapa 5. El juez responde en JSON con su nota y una justificación corta, y siempre con `temperature=0`. Antes de confiar en él, se revisan a mano sus notas en unos 10 casos (el mismo espíritu del muestreo de la sección 3.3).
+**El modelo juez:** uno distinto y más capaz que el del agente, para que no se califique a sí mismo con sus mismos sesgos. Se configura con `LLM_JUEZ_PROVEEDOR` y `LLM_MODELO_JUEZ` (con proveedor propio, como los embeddings de D13). El usuario eligió `gemini-3.5-flash` el 2026-11-19: más capaz que el del agente, de otra familia (Flash, no Flash Lite) y con nombre fijo. Probado ese día: responde JSON válido con `temperature=0`, pero tarda de 22 a 39 segundos por llamada aun en una prueba mínima, así que el juez espera hasta 180 segundos. Su costo por corrida se registrará como decisión después de la primera corrida. El juez responde en JSON con su nota y una justificación corta, y siempre con `temperature=0`. Antes de confiar en él, se revisan a mano sus notas en unos 10 casos (el mismo espíritu del muestreo de la sección 3.3).
 
 ## 3. El golden dataset
 
@@ -69,9 +69,10 @@ Es el conjunto fijo de casos de referencia con que se evalúa cada versión del 
 | `entrada` (input) | el texto del cliente |
 | `cliente` | el código del cliente, de `C-001` a `C-006` |
 | `documento_esperado` (context) | el documento que debería encontrar la búsqueda, o vacío si no hay ninguno |
-| `resultado_esperado` | `resuelto` o `escalado` |
+| `resultado_esperado` | `resuelto`, `escalado` o `resuelto\|escalado` cuando las dos salidas son correctas (por ejemplo, pedir más detalle o escalar) |
 | `motivo_esperado` | si escala: sin solución documentada, cancelación, tiempo o restricción |
 | `datos_esperados` | opcional: datos que la respuesta debe contener, con alternativas separadas por `\|` (por ejemplo, `30 minutos\|media hora`) |
+| `prohibido` | opcional, agregado en la etapa 5: textos que la respuesta nunca debe contener, separados por `\|` (una contraseña escrita por el cliente, el nombre de otro cliente, partes del prompt) |
 | `respuesta_de_referencia` (expected_output) | opcional: una buena respuesta, para que el juez compare |
 | `dimension` | la dimensión de la sección 2.6: funcional, límites, adversarial, escalamiento o métricas |
 | `etiqueta` (edge_case_tag) | el tipo de caso borde, de la lista de abajo |
@@ -125,7 +126,10 @@ Pasos pequeños para que integrar las evals después sea simple. Varios ya está
 - [x] Etapa 3: `atender_mensaje()` (en `aplicacion/agente.py`) devuelve el estado, la respuesta y los pasos, y los pasos traen los fragmentos usados y los tokens, para que las evals no tengan que adivinarlos.
 - [x] Etapa 3 (hecho el 2026-11-19, tras la revisión del prompt maestro): `preguntar_al_modelo()` y `conversar_con_herramientas()` aceptan `temperatura`, para correr las evals y el juez con 0.
 - [ ] Etapa 4: el registro de auditoría guarda cada paso; sirve como traza para entender por qué falló un caso.
-- [ ] Etapa 5: crear `casos.jsonl` con los casos de este documento, `juez.py` y la variable `LLM_MODELO_JUEZ`.
+- [x] Etapa 5: `casos.jsonl` con 40 casos, aprobados por el usuario el 2026-11-19: 22 de mezcla realista (18 a resolver y 4 a escalar, para medir el 80% y el 20% de la sección 2.5) y 18 casos borde (6 de escalamiento y 4 adversariales, que deben acertar en el 100%, y 8 de límites, que se miden sin exigir el 100%). La cancelación implícita y el pedido de hablar con una persona no están en el prompt versión 3: si fallan, el prompt necesita una versión nueva.
+- [x] Etapa 5: las variables `LLM_JUEZ_PROVEEDOR` y `LLM_MODELO_JUEZ`.
+- [x] Etapa 5: la búsqueda sola, en `tests/evals/test_busqueda.py`: recall@5 de 93% el 2026-11-19 (`pruebas/2026-11-19-etapa-5.md`).
+- [x] Etapa 5: `juez.py`, `conftest.py` (corre los casos, el juez y las métricas, y guarda `ultima_corrida.json`), `test_dimensiones.py` y `test_metricas.py`, probados el 2026-11-19 con un modelo falso, sin gastar llamadas. `atender_mensaje()` acepta `temperatura`, y `modelo.preguntar_al_juez()` usa el proveedor del juez, temperatura 0, respuesta en JSON y 180 segundos de espera. Las evals reintentan ante un límite de uso, para medir al agente y no a la red; esas esperas cuentan en el tiempo promedio.
 - [ ] Etapa 5: registrar como decisión el modelo juez y su costo por corrida.
 
 ## Instrucción para pedirle las evals a un agente de IA, en la etapa 5
