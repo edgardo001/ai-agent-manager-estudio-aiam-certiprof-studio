@@ -134,7 +134,7 @@ Pasos pequeños para que integrar las evals después sea simple. Varios ya está
 - [x] La búsqueda devuelve el documento y su parecido (`buscar_fragmentos()`), lo que permite medir la recuperación.
 - [x] Las consultas de `probar_busqueda.py` ya tienen su documento esperado.
 - [ ] Etapa 3: que `atender_ticket()` devuelva, además de la respuesta, los fragmentos usados, el resultado, el motivo y los tokens, para que las evals no tengan que adivinarlos.
-- [ ] Etapa 3: que `preguntar_al_modelo()` acepte `temperature`, para correr las evals con 0.
+- [x] Etapa 3 (hecho el 2026-11-19, tras la revisión del prompt maestro): `preguntar_al_modelo()` y `conversar_con_herramientas()` aceptan `temperatura`, para correr las evals y el juez con 0.
 - [ ] Etapa 4: el registro de auditoría guarda cada paso; sirve como traza para entender por qué falló un caso.
 - [ ] Etapa 5: crear `casos.jsonl` con los casos de este documento, `juez.py` y la variable `LLM_MODELO_JUEZ`.
 - [ ] Etapa 5: registrar como decisión el modelo juez y su costo por corrida.

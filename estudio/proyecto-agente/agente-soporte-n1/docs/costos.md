@@ -57,7 +57,7 @@ No se puede saber con certeza cuántas consultas habrá. Por eso la herramienta 
 
 - **El costo depende del total de consultas, no de cuántas llegan juntas.** Mil consultas cuestan lo mismo repartidas en el día que en una hora.
 - **Lo que llega junto afecta otra cosa: el límite de uso del proveedor.** Cada cuenta tiene un máximo de llamadas y de tokens por minuto. Si un pico lo supera, hay esperas o errores, no más costo. El parámetro `--hora-pico` dice qué parte de las consultas del día llega en la hora más cargada; un 20% es un supuesto razonable para soporte en horario laboral. El límite de la cuenta se ve en Google AI Studio y se anota en `LIMITE_LLAMADAS_POR_MINUTO`.
-- **Para acotar el riesgo:** fijar un tope de gasto o alertas de presupuesto en la consola de facturación del proveedor, y un tope de tokens por ticket en el agente (práctica adoptada para la etapa 3 en `buenas-practicas.md`).
+- **Para acotar el riesgo:** fijar un tope de gasto o alertas de presupuesto en la consola de facturación del proveedor, y un tope de tokens por ticket en el agente (`TOPE_TOKENS_POR_TICKET`, 20.000 por defecto, desde la etapa 3: si se supera, el ticket se escala).
 
 ## 5. Supuestos y cómo afinarlos
 
@@ -70,4 +70,4 @@ No se puede saber con certeza cuántas consultas habrá. Por eso la herramienta 
 | Tokens de salida por consulta | 300 | `estimar_costos.py` | con los tickets reales |
 | Precios | los del `.env` | `PRECIO_MILLON_TOKENS_*` | cuando cambie el modelo o el precio (D5) |
 
-**Desde la etapa 3, con datos reales:** cada ticket guarda `tokens_entrada`, `tokens_salida` y `costo_tokens` (lo informa el modelo de chat en cada respuesta), y el script podrá usar esos promedios en vez de los supuestos. Los tokens de los embeddings no se pueden medir así: el punto de acceso compatible con OpenAI no los informa (`usage` llega vacío, comprobado el 2026-11-18); se estiman por caracteres o se ven en el panel de uso de Google AI Studio.
+**Desde la etapa 3, con datos reales:** cada ticket guarda `tokens_entrada`, `tokens_salida` y `costo_tokens` (lo informa el modelo de chat en cada respuesta), y el script usa esos promedios en vez de los supuestos cuando PostgreSQL está levantado y hay tickets. Primera medición, el 2026-11-19: un ticket resuelto con 3 llamadas usó 3.774 tokens de entrada y 200 de salida, 0,0012 dólares, lo mismo que la estimación de la tabla de arriba (`pruebas/2026-11-19-etapa-3.md`). El costo real es por ticket, que puede tener varios mensajes, y no incluye el embedding de la consulta. Si el proveedor no informara los tokens de una respuesta, se cuentan 0 y el tope de tokens no se activaría; queda el máximo de 6 llamadas por mensaje (con Gemini se comprobó que sí los informa). Los tokens de los embeddings no se pueden medir así: el punto de acceso compatible con OpenAI no los informa (`usage` llega vacío, comprobado el 2026-11-18); se estiman por caracteres o se ven en el panel de uso de Google AI Studio.

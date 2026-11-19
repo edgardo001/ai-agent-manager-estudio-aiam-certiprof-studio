@@ -202,6 +202,8 @@ Al usarla en un endpoint, FastAPI valida lo que llega (si falta un campo o el ti
 
 **Qué implica:** cambiar el modelo de embeddings obliga a recargar los documentos con `cargar_conocimiento.py`; mientras tanto, la búsqueda no mezcla vectores viejos con nuevos. El usuario aportará más documentos de buenas prácticas, que se evaluarán con este mismo criterio.
 
+**Nota de la revisión de la etapa 3 (2026-11-19):** el índice HNSW busca los vecinos más cercanos y después aplica el filtro por modelo, así que si la tabla llegara a mezclar fragmentos de dos modelos, una búsqueda podría traer menos de 5. Hoy no pasa, porque `cargar_conocimiento.py` borra todo y carga con un solo modelo.
+
 ## D9. Sin columna `dimensiones`: el tamaño del vector lo guarda el tipo de la columna
 
 **Fecha:** 2026-11-18. **Estado:** vigente, aprobada por el usuario en la revisión de la etapa 2.
@@ -263,4 +265,87 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 
 **Por qué:** es la forma estándar de Python, sin trucos de rutas que después no se recuerdan; los scripts siguen compartiendo el entorno virtual, `requirements.txt` y el `.env`; y en la etapa 6 el `Dockerfile` copia solo `aplicacion/`, así que los scripts quedan fuera de la imagen sin configurar nada más. Revierte la equivalencia anterior del plan (“archivos sueltos, `python src/archivo.py`”), que se eligió por simplicidad cuando había pocos archivos.
 
-**Qué implica:** un script nuevo va en `scripts/`, su comentario inicial empieza con “Script de asistencia” y se agrega a la tabla de `src/backend/scripts/README.md`. Si el agente pasa a necesitar la lógica de un script, esa lógica se mueve a `aplicacion/`: así pasará con `buscar()` de `probar_busqueda.py`, que en la etapa 3 se convierte en la herramienta `buscar_solucion`. Se probó el 2026-11-19: los imports, el estimador de costos, la carga (8 documentos, 23 fragmentos), la búsqueda (7 de 7), la conexión con el modelo y la consola.
+**Qué implica:** un script nuevo va en `scripts/`, su comentario inicial empieza con “Script de asistencia” y se agrega a la tabla de `src/backend/scripts/README.md`. Si el agente pasa a necesitar la lógica de un script, esa lógica se mueve a `aplicacion/`: así pasó en la etapa 3 con `buscar()` de `probar_busqueda.py`, que ahora vive en `aplicacion/herramientas.py` y la usa la herramienta `buscar_solucion()`. Se probó el 2026-11-19: los imports, el estimador de costos, la carga (8 documentos, 23 fragmentos), la búsqueda (7 de 7), la conexión con el modelo y la consola.
+
+## D11. Cómo conversa el bucle del agente con el modelo y con la base
+
+**Fecha:** 2026-11-19. **Estado:** vigente, etapa 3.
+
+**El problema:** el bucle del agente (`agente.py`) habla con Gemini varias veces por mensaje y escribe en varias tablas. Hubo que decidir dos cosas: cómo se devuelve al modelo lo que él mismo pidió, y quién confirma (commit) lo escrito en la base.
+
+**Primera parte, el mensaje del modelo va tal cual.** Los modelos Gemini 3 agregan a cada pedido de herramienta una “firma de pensamiento” (`extra_content.google.thought_signature`) y exigen recibirla de vuelta en la llamada siguiente. Se probó el 2026-11-19 contra la API: sin la firma, Gemini responde error 400 (“Function call is missing a thought_signature”). Por eso `conversar_con_herramientas()` devuelve el mensaje con `model_dump(exclude_none=True)`, que conserva ese campo, y el bucle lo agrega a la conversación sin tocarlo. Las opciones descartadas eran armar el mensaje a mano con los campos conocidos (pierde la firma) o usar la librería de Google (otra dependencia, y se pierde la compatibilidad con OpenRouter).
+
+**Segunda parte, confirma quien llama.** Las funciones de `base_de_datos.py`, `herramientas.py` y `agente.py` escriben, pero no hacen `commit`. Lo hace quien abrió la conexión al terminar cada mensaje: hoy la consola y, desde la etapa 6, la API. La opción descartada era confirmar dentro de cada función.
+
+**Por qué:** un mensaje del cliente queda guardado completo o no queda (si algo falla a mitad, la consola hace `rollback` y no quedan tickets a medias), y las pruebas de integración pueden usar la base real y deshacer todo al final (`tests/conftest.py`), sin una base aparte para pruebas.
+
+**Qué implica:** toda puerta de entrada nueva (la API de la etapa 6) debe confirmar o deshacer al terminar cada pedido. Desde la etapa 4, los pasos del registro de auditoría van en la misma transacción: son “todo o nada” por mensaje. Para que una falla no borre justo los pasos que la explican, toda falla que se pueda prever (el modelo, una herramienta, un tope) termina en un escalamiento por regla que sí se confirma; solo una falla de la propia base de datos deshace el mensaje. Los números de ticket que usaron las pruebas no se reutilizan (PostgreSQL no retrocede sus contadores con un `rollback`), así que los tickets reales pueden saltar números; no afecta a nada.
+
+## D12. `127.0.0.1` en vez de `localhost` para conectarse a PostgreSQL
+
+**Fecha:** 2026-11-19. **Estado:** vigente, encontrado al correr las pruebas de la etapa 3.
+
+**El problema:** cada conexión a PostgreSQL tardaba 2 segundos. En Windows, `localhost` se intenta primero por IPv6 (`::1`), pero el compose publica el puerto solo en `127.0.0.1` (decisión D4); el intento por IPv6 se pierde y recién después se usa IPv4. Medido el 2026-11-19: 2,04 segundos con `localhost` y 0,03 con `127.0.0.1`. Las 30 pruebas bajaron de 38 a 5 segundos.
+
+**La decisión:** `POSTGRES_HOST=127.0.0.1` en `example.env`, en el `.env` del usuario y como valor por defecto de `config.py`. Dentro de Docker (etapa 6) sigue siendo `postgres`.
+
+**Por qué:** es el mismo equipo y la misma restricción de seguridad (solo accesible desde este equipo); solo se evita el intento inútil por IPv6. Publicar también en `::1` sumaba configuración sin ganar nada.
+
+## D13. El chat y los embeddings, cada uno con su proveedor
+
+**Fecha:** 2026-11-19. **Estado:** vigente, pedido del usuario (probar OpenRouter antes de la etapa 4).
+
+**El problema:** el usuario quiere probar el agente con OpenRouter, y más adelante con Ollama, mezclar proveedores y tener respaldo si uno se cae. Hasta ahora el chat y los embeddings usaban la misma URL y la misma clave: cambiar el chat a OpenRouter cambiaba también los embeddings, y los 23 fragmentos guardados con `gemini-embedding-001` dejaban de servir, porque los vectores solo se comparan con los de su mismo modelo (D8).
+
+**Las opciones:** primero, variables propias para los embeddings (`LLM_EMBEDDINGS_BASE_URL` y `LLM_EMBEDDINGS_API_KEY`), que si quedan vacías usan las del chat; segundo, recargar la base con un modelo de embeddings de OpenRouter cada vez que se cambie el chat; tercero, una capa de “proveedores” con perfiles con nombre en el código.
+
+**La decisión:** la primera. `conectar_modelo(para_embeddings=True)` usa la configuración de los embeddings; el chat sigue con `LLM_BASE_URL`, `LLM_API_KEY` y `LLM_MODEL`.
+
+**Por qué:** son dos variables y cuatro líneas de código; el chat se cambia sin recargar la base; y deja lista la mezcla que pidió el usuario (por ejemplo, embeddings de Ollama con el chat de Gemini u OpenRouter). La segunda opción obliga a recargar en cada cambio y a pagar de nuevo los embeddings; la tercera es una capa que hoy no hace falta.
+
+**Qué implica:** el `.env` del usuario se completó el mismo día con la configuración de embeddings (copiando la de Gemini, sin mostrar la clave) y con un bloque comentado para OpenRouter. `scripts/prueba_conexion.py` ahora prueba también que el modelo de chat sepa usar herramientas y que el de embeddings entregue 768 números. Cambiar el **modelo** de embeddings sigue obligando a recargar la base. Ollama, el respaldo ante caídas y por qué no se recomienda balancear entre proveedores están en `proveedores-de-modelos.md`.
+
+**Probado el 2026-11-19** con OpenRouter en la capa gratuita (`pruebas/2026-11-19-openrouter.md`): con `nvidia/nemotron-3-ultra-550b-a55b:free` el agente se comportó igual que con Gemini, con los embeddings en Gemini y sin recargar la base. La prueba agregó `LLM_MAXIMO_TOKENS_SALIDA` (2.000 por defecto), un tope de salida en cada llamada al chat: sin él, OpenRouter reserva saldo para la salida máxima del modelo y rechaza el pedido si no alcanza.
+
+**Actualización del 2026-11-19:** las variables `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_EMBEDDINGS_BASE_URL` y `LLM_EMBEDDINGS_API_KEY` se reemplazaron por un proveedor elegido por nombre (D14). La idea de D13 se mantiene: el chat y los embeddings tienen cada uno su proveedor.
+
+## D14. Proveedor elegido por nombre y `.env` alineado con la plantilla
+
+**Fecha:** 2026-11-19. **Estado:** vigente, pedido del usuario (opción 1 de dos).
+
+**El problema:** el `.env` del usuario se había separado de `example.env`: le faltaban cuatro variables nuevas, conservaba comentarios de versiones viejas y tenía otro orden. La causa de fondo era doble: el `.env` se copia una vez de la plantilla y nada avisa cuando la plantilla cambia, y cambiar de proveedor obligaba a comentar y descomentar tres líneas, con una clave guardada en una línea comentada.
+
+**Las opciones:** primero, un proveedor elegido por nombre, con la clave de cada proveedor en su propia variable, más un script que compare y ordene el `.env`; segundo, mantener las variables de D13 y agregar solo el script.
+
+**La decisión:** la primera.
+
+- **Variables:** `GEMINI_API_KEY` y `OPENROUTER_API_KEY` (cada una con su nombre; Ollama no pide clave y tiene `OLLAMA_BASE_URL`); `LLM_PROVEEDOR` (`gemini`, `openrouter` u `ollama`) y `LLM_MODEL` para el chat; `LLM_EMBEDDINGS_PROVEEDOR` y `LLM_MODELO_EMBEDDINGS` para los embeddings. Cada proveedor tiene también su dirección en el `.env` (`GEMINI_BASE_URL` y `OPENROUTER_BASE_URL`, con las direcciones públicas como valor por defecto): son las mismas para todos, pero el usuario prefirió tenerlas a la vista para poder cambiarlas sin tocar el código si fuera urgente. `config.py` las reúne en `PROVEEDORES` y `datos_del_proveedor()`, y `faltan_variables()` avisa si el proveedor está mal escrito o si falta la clave del proveedor en uso.
+- **Cambiar de proveedor:** se cambian dos líneas, `LLM_PROVEEDOR` y `LLM_MODEL`; las dos claves quedan guardadas a la vez y no hay nada que comentar.
+- **`scripts/revisar_env.py`:** compara los nombres del `.env` con los de `example.env` y dice qué falta o sobra; con `--ordenar`, reescribe el `.env` con el orden y los comentarios de la plantilla, conservando los valores, agregando lo que falta con su valor de ejemplo y dejando al final lo que sobra, sin borrarlo. Antes guarda una copia en `.env.respaldo`. Nunca muestra los valores.
+- **`start-dev.bat`** ejecuta `revisar_env` al empezar, solo para avisar.
+- **`.gitignore`** ignora también `.env.*`, para que ningún respaldo con claves se suba.
+
+**Por qué:** la segunda opción detecta la diferencia pero deja el cambio de proveedor como una edición a mano, que es lo que la produjo. Con el proveedor por nombre, la plantilla y el `.env` tienen siempre las mismas líneas y solo cambian los valores.
+
+**Qué implica:** el `.env` del usuario se migró el mismo día a los nombres nuevos (las dos claves pasaron a `GEMINI_API_KEY` y `OPENROUTER_API_KEY`, sin mostrarse) y se ordenó como la plantilla; la versión anterior quedó en `src/docker/.env.respaldo-antes-de-d14`, ignorada por git, que el usuario puede borrar cuando confirme que todo funciona. Si la plantilla cambia, se ejecuta `python -m scripts.revisar_env --ordenar`. Agregar un proveedor que acepte el formato de OpenAI es una línea en `PROVEEDORES` y dos variables, su dirección y su clave. Al agregar las direcciones al `.env`, `revisar_env` avisó que faltaban y `--ordenar` las agregó sin tocar las claves: el mecanismo probado con un caso real.
+
+## D15. El prompt maestro: archivo y git, con una huella que hace cumplir la aprobación
+
+**Fecha:** 2026-11-19. **Estado:** vigente, aprobada por el usuario; el código llega en las etapas 4 y 5.
+
+**El problema:** el prompt maestro (`prompt_soporte_n1.md`) se lee del archivo en cada mensaje y, desplegado, viaja dentro de la imagen Docker; la base no guarda su texto. El plan dice que una versión se usa solo si pasó las pruebas y el usuario la aprobó (sección 2.6; la 2.7 dice que los criterios de aceptación son “una política organizacional, no una recomendación”), pero nada lo hacía cumplir: editar el archivo cambiaba al agente desde el mensaje siguiente, el número de versión se escribe a mano, y “Lo que no atiendes” (que llega desde `registro_agentes`) podía cambiar sin dejar rastro. El usuario creía que el prompt se guardaba en la base en cada consulta, y propuso guardarlo en un key vault (OpenBao).
+
+**Las opciones:** analizadas con elephant-goldfish-model (`revisiones/2026-11-19-revision-prompt-maestro.md`): A, como hoy; B, una huella del prompt aprobado; C, además el texto de cada versión en la base, y leerlo desde ahí; D, una traza completa de cada llamada al modelo; E, el prompt en OpenBao; B+, la propuesta consolidada.
+
+**La decisión:** B+.
+
+- **El prompt sigue en el archivo, con git como historia.** No se lee desde la base ni desde un vault.
+- **La huella** (SHA-256, como `hash_documento` de D8) se calcula sobre las instrucciones completas que recibe el modelo: el archivo más “Lo que no atiendes”, ya leído como texto, para que Windows y Docker den la misma. Es la identidad de cada versión.
+- **El número “Versión del prompt: N” se mantiene como etiqueta** para las personas (decisión del usuario); `aprobar_prompt.py` rechaza aprobar un número ya aprobado con otra huella.
+- **Etapa 4, solo registrar:** cada paso de la auditoría guarda la versión, la huella, el proveedor y el modelo, y los fragmentos con su documento, sección, huella del documento y parecido, sin su texto. Si falta el archivo del prompt, el ticket se escala por regla en vez de perder el mensaje.
+- **Etapa 5, hacer cumplir:** `aprobar_prompt.py` calcula la huella antes y después de las pruebas, y si pasan y coinciden guarda en `registro_agentes` la huella aprobada, la versión, quién y la fecha, y deja una fila de intervención en `registro_auditoria` con el texto completo (una vez por aprobación, unos 4 KB). Desde ahí, cada mensaje compara la huella del prompt que va a usar con la aprobada: si no coinciden y la barrera está activa, el ticket se escala por regla con el motivo “instrucciones sin aprobar” (D11: el escalamiento se confirma y queda explicado). En desarrollo y en las evals, la barrera está apagada y la diferencia solo queda anotada.
+- **Un cambio de modelo o de proveedor solo queda anotado** en la auditoría; no bloquea (decisión del usuario), para poder probar proveedores sin reaprobar. Antes de usar otro modelo en serio, se corren las evals.
+
+**Por qué:** hace cumplir la aprobación que pide el curso con dos columnas y unas veinte líneas, sin tablas nuevas ni servicios; distingue un cambio de instrucciones de una deriva (3.3 y la segunda señal de 3.4) y da la auditoría de prompt de la sección 4.6. La traza completa (D) ocuparía de 20 a 80 KB por ticket, copiaría hasta seis veces los datos del cliente y aun así no permitiría repetir una respuesta exacta; queda postergada, como Langfuse. OpenBao (E) se descartó para el prompt: el prompt no es un secreto (viaja completo al modelo en cada llamada), el versionado de un vault no es una aprobación con evals y abriría otro camino para cambiar las instrucciones en caliente.
+
+**Qué implica:** que cambiar el prompt de un agente desplegado exija reconstruir la imagen es una ventaja, no un problema: la imagen queda fija y la huella prueba que trae lo aprobado. Se corrigió también un pendiente de la etapa 3 que encontró la revisión: `modelo.py` acepta `temperatura` (`opciones_de_llamada()`), para que las evals y el juez usen 0, como dice `evals-del-llm.md`. Quedan postergados, con su señal, leer el prompt desde la base y OpenBao para las claves de API.

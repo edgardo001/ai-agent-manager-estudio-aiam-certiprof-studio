@@ -8,10 +8,11 @@ Todos se ejecutan desde la carpeta `src/backend`, con el entorno virtual activo 
 
 | Script | Etapa | Para qué sirve | Cuándo usarlo |
 |---|---|---|---|
-| `prueba_conexion.py` | 0 | Manda un saludo al modelo y muestra la respuesta | Al cambiar la clave o el modelo en el `.env` |
+| `prueba_conexion.py` | 0 | Prueba el modelo de chat (un saludo y si sabe usar herramientas) y el de embeddings (si entrega 768 números) | Al cambiar la clave, el modelo o el proveedor en el `.env` (`docs/proveedores-de-modelos.md`) |
 | `cargar_conocimiento.py` | 2 | Borra y vuelve a cargar en pgvector los documentos de `src/base-de-conocimiento/` | Cada vez que cambia un documento, y después de `clear.bat --borrar-volumenes` |
-| `probar_busqueda.py` | 2 | Prueba la búsqueda sin el agente: las consultas fijas (7 de 7 esperado) o una escrita por usted | Después de cargar el conocimiento o de cambiar la forma de fragmentar |
-| `estimar_costos.py` | 2 | Estima, sin llamar al modelo, el costo de los embeddings y de cada consulta (`docs/costos.md`) | Antes de cargar muchos documentos o al cambiar precios |
+| `probar_busqueda.py` | 2 | Prueba la búsqueda sin el agente, con la misma función que usa su herramienta `buscar_solucion`: las consultas fijas (7 de 7 esperado) o una escrita por usted | Después de cargar el conocimiento o de cambiar la forma de fragmentar |
+| `revisar_env.py` | 3 | Compara los nombres del `.env` con `example.env` y dice qué falta o sobra; con `--ordenar`, deja el `.env` con el orden y los comentarios de la plantilla, conservando sus valores (copia previa en `.env.respaldo`); nunca muestra los valores | Lo ejecuta `start-dev.bat` para avisar; a mano, cuando la plantilla cambió (D14) |
+| `estimar_costos.py` | 2 | Estima, sin llamar al modelo, el costo de los embeddings y de cada consulta (`docs/costos.md`); desde la etapa 3, si hay tickets atendidos, usa su costo real promedio | Antes de cargar muchos documentos o al cambiar precios |
 
 Ejemplos:
 
@@ -25,6 +26,6 @@ python -m scripts.estimar_costos --documentos 1000 --caracteres 20000
 ## Reglas para un script nuevo
 
 1. Va aquí si se ejecuta suelto y el agente no lo necesita para atender un ticket. Si la API o la consola lo necesitan, va en `aplicacion/`.
-2. Puede importar de `aplicacion`; la aplicación nunca importa de `scripts`. Si un script tiene lógica que el agente pasa a necesitar, esa lógica se mueve a `aplicacion/` (así pasará con `buscar()` de `probar_busqueda.py`, que en la etapa 3 se convierte en la herramienta `buscar_solucion`).
+2. Puede importar de `aplicacion`; la aplicación nunca importa de `scripts`. Si un script tiene lógica que el agente pasa a necesitar, esa lógica se mueve a `aplicacion/` (así pasó en la etapa 3 con `buscar()` de `probar_busqueda.py`, que ahora vive en `aplicacion/herramientas.py` y la usa la herramienta `buscar_solucion`).
 3. Su comentario inicial empieza con “Script de asistencia” y dice cómo se ejecuta.
 4. Se agrega a la tabla de arriba.
