@@ -2,7 +2,7 @@
 
 Este es el documento que manda en el desarrollo del agente. Si `referencia/arquitectura.md` o `referencia/ruta-de-construccion.md` dicen otra cosa, vale lo que dice este archivo; la sección “Qué cambia respecto de la ruta y la arquitectura” dice exactamente en qué. Se actualiza cada vez que el usuario pide un cambio, y cada cambio se anota en el registro del final.
 
-**Estado (2026-11-18):** etapas 0 y 1 listas y probadas por el usuario con el modelo real, `gemini-3.1-flash-lite` (ver `pruebas/2026-11-18-etapas-0-y-1.md`). Siguiente: etapa 2, la base de conocimiento.
+**Estado (2026-11-19):** etapas 0 y 1 listas y probadas por el usuario con el modelo real, `gemini-3.1-flash-lite` (ver `pruebas/2026-11-18-etapas-0-y-1.md`). Etapa 2 terminada y probada también por el usuario: 8 documentos, 23 fragmentos y 7 de 7 búsquedas correctas (ver `pruebas/2026-11-18-etapa-2.md`). La revisión con EGM y la verificación de fidelidad al curso se aplicaron el mismo día (ver `revisiones/2026-11-18-revision-etapa-2.md`). El 2026-11-19 el código se separó en `aplicacion/` (el agente) y `scripts/` (asistencia), y se volvió a probar con el mismo resultado (D10); el usuario probó `clear.bat` y `clear.bat --borrar-volumenes` y reconstruyó todo desde cero con los mismos resultados. Siguiente: la etapa 3.
 
 **Propósito (decisión del usuario):** entender en simple el flujo completo de un agente gobernado por las reglas del curso y el esfuerzo que hay detrás. El proyecto tiene lo mínimo que haga falta para eso: ni más piezas, ni menos que las que exige el curso.
 
@@ -24,7 +24,7 @@ Todo el proyecto se resume en este recorrido. Cada paso dice qué parte del curs
 **Cada vez que llega un ticket:**
 
 7. El cliente escribe su problema. El agente revisa si está detenido (kill switch) y si el caso ya superó 8 minutos.
-8. El agente conversa con el modelo y usa sus herramientas; cada paso queda en el registro de auditoría: qué decidió, con qué datos y por qué (Módulo 1, pregunta 9).
+8. El agente conversa con el modelo y usa sus herramientas; cada paso queda en el registro de auditoría: qué decidió y por qué (Módulo 1, pregunta 9) y, como ampliación del proyecto, con qué datos.
 9. Las reglas graves las revisa el código, no el modelo: cancelación, descuentos, cambios de cuenta, tiempo. Si corresponde, el caso pasa a una persona con todo el contexto (sección 2.5 y Módulo 4, equipo híbrido). Los cambios de cuenta siempre esperan confirmación humana: es el punto de verificación obligatoria antes de una acción de alto impacto (sección 3.3).
 10. Si el agente responde, el cliente confirma si se resolvió y lo califica de 1 a 5. Solo entonces cuenta como resuelto (decisión del proyecto, no viene en el curso).
 
@@ -32,7 +32,7 @@ Todo el proyecto se resume en este recorrido. Cada paso dice qué parte del curs
 
 11. **Revisa una muestra** del 10% de los casos y anota si hubo errores y de qué tipo, porque las métricas no ven los fallos silenciosos; además compara con los primeros 30 días para detectar la deriva de comportamiento (sección 3.3).
 12. **Mira el dashboard:** en menos de 90 segundos sabe si el agente genera valor, con 5 paneles y un semáforo (sección 3.5).
-13. **Decide si interviene o deja correr,** según 5 señales con valores fijos; si hay riesgo, revisa las instrucciones (sección 3.4) o detiene el agente con el kill switch (secciones 1.2 y 4.5).
+13. **Decide si interviene o deja correr,** según 5 señales con valores fijos; si hay riesgo, revisa las instrucciones (sección 3.4) o detiene el agente con el kill switch (sección 1.2; la 4.5 lo llama circuit breaker).
 14. **Calcula el valor:** costo por caso, horas ahorradas y ROI, para defender el agente ante la dirección (secciones 3.2 y 5.1 a 5.3).
 
 ## Reglas de desarrollo (decisiones del usuario)
@@ -47,10 +47,11 @@ Todo el proyecto se resume en este recorrido. Cada paso dice qué parte del curs
 8. **Nombres en español,** con el vocabulario del curso (`escalar_a_humano`, `buscar_solucion`, `registro_auditoria`); también las funciones de entrada de los scripts. Quedan en inglés solo los nombres que imponen las librerías.
 9. **Frontend en HTML y JavaScript simple,** sin framework ni compilación, entregado por el mismo FastAPI.
 10. **Documentos ficticios** en `src/base-de-conocimiento/`, generados a partir de una lista que el usuario aprueba antes. Nunca información real: el repositorio es público.
-11. **Dos formas de levantar el proyecto (forma de trabajo del usuario):** `start-dev.bat` es el entorno de desarrollo: la app corre en local con un entorno virtual de Python (`src/backend/.venv`) y el resto de los servicios con Docker Compose. `start-qa.bat` levanta todo en Docker Compose, incluida la app. En el `docker-compose.yml`, el servicio del backend lleva el perfil `qa`: sin perfil, Compose levanta solo PostgreSQL (dev); con `--profile qa`, también el backend (qa). `clear.bat` libera espacio: borra el entorno virtual con sus librerías y las cachés de Python y de `pytest` y, si el usuario confirma, los contenedores, volúmenes (los datos de la base) e imágenes de Docker del proyecto; nunca borra el código, los documentos ni el `.env`.
+11. **Dos formas de levantar el proyecto (forma de trabajo del usuario):** `start-dev.bat` es el entorno de desarrollo: la app corre en local con un entorno virtual de Python (`src/backend/.venv`) y el resto de los servicios con Docker Compose. `start-qa.bat` levanta todo en Docker Compose, incluida la app. En el `docker-compose.yml`, el servicio del backend lleva el perfil `qa`: sin perfil, Compose levanta solo PostgreSQL (dev); con `--profile qa`, también el backend (qa). `clear.bat` libera espacio: borra el entorno virtual con sus librerías y las cachés de Python y de `pytest` y, detiene y borra los contenedores que levantó Docker Compose. Nunca borra las imágenes descargadas, como la de PostgreSQL, para que volver a empezar sea rápido, y conserva los volúmenes (los datos de la base), salvo que se ejecute `clear.bat --borrar-volumenes`, que además pide confirmación (decisiones del usuario); nunca borra el código, los documentos ni el `.env`.
 12. **La consola se mantiene en todas las etapas (pedido del usuario):** `consola.py` sigue siendo la forma rápida de probar al agente aunque exista la API. La consola y la API llaman a la misma función del agente (`agente.py`, desde la etapa 3), así que lo que se prueba en la consola es lo que hace la API; la consola no necesita que la API esté corriendo (ver `decisiones.md`, D6).
-13. **Solo licencias permisivas (regla muy importante del usuario):** toda librería, imagen de Docker o herramienta que use el proyecto debe tener licencia MIT, BSD, Apache 2.0 o similar (ISC, PostgreSQL, PSF, MIT-0, 0BSD). No se usan licencias con copyleft, como GPL, LGPL, AGPL o SSPL, ni licencias de “código disponible” como RSAL. Antes de agregar una librería se revisa su licencia y la de las librerías que trae consigo (ver “Licencias”). Excepciones aceptadas por el usuario: la MPL 2.0 de `certifi` y `tqdm`, porque no se modifican, y Grafana (AGPL), si se agrega, porque el proyecto no se vende como producto.
+13. **Solo licencias permisivas (regla muy importante del usuario):** toda librería, imagen de Docker o herramienta que use el proyecto debe tener licencia MIT, BSD, Apache 2.0 o similar (ISC, PostgreSQL, PSF, MIT-0, 0BSD). No se usan licencias con copyleft, como GPL, LGPL, AGPL o SSPL, ni licencias de “código disponible” como RSAL. Antes de agregar una librería se revisa su licencia y la de las librerías que trae consigo (ver “Licencias”). Excepciones aceptadas por el usuario: la MPL 2.0 de `certifi`, `tqdm` e `hypothesis`, porque no se modifican, y Grafana (AGPL), si se agrega, porque el proyecto no se vende como producto.
 14. **Reglas del repositorio:** commits y push solo cuando el usuario los pide, uno por etapa; mensajes con el formato Conventional Commits, por ejemplo `feat(agente): agrega la base de conocimiento en pgvector` (ver `AGENTS.md`); sin firmas de agentes ni menciones del asistente.
+15. **El agente y los scripts de asistencia van separados (pedido del usuario):** `src/backend/aplicacion/` guarda solo lo que forma parte del agente y entra en la imagen Docker; `src/backend/scripts/` guarda lo que se ejecuta suelto para preparar, probar o estimar. Los scripts pueden importar de `aplicacion`, nunca al revés: si el agente pasa a necesitar la lógica de un script, esa lógica se mueve a `aplicacion/`. Cada script nuevo se agrega a la tabla de `src/backend/scripts/README.md` (ver `decisiones.md`, D10).
 
 ## Estructura de carpetas
 
@@ -60,12 +61,16 @@ estudio/proyecto-agente/
     ├── README.md                       # qué es y cómo probarlo
     ├── start-dev.bat                   # dev: app en local (entorno virtual) y servicios en Docker
     ├── start-qa.bat                    # qa: todo en Docker, incluida la app (funciona desde la etapa 6)
-    ├── clear.bat                       # limpieza: entorno virtual, cachés y, si se confirma, Docker
+    ├── clear.bat                       # limpieza: entorno virtual, cachés y contenedores; --borrar-volumenes, también los datos
     ├── docs/
     │   ├── README.md                   # el mapa de docs: qué leer primero y cómo se relacionan
     │   ├── plan-del-proyecto.md        # este archivo: las reglas y el diseño que mandan
     │   ├── diagramas-del-codigo.md     # archivos, funciones y quién llama a quién; se actualiza en cada etapa
     │   ├── decisiones.md               # decisiones técnicas: problema, opciones, elección y por qué
+    │   ├── pruebas-adversariales.md    # estrategia de pruebas adversariales (Hypothesis) para las etapas 5 y 6
+    │   ├── buenas-practicas.md         # prácticas de RAG y de agentes: cuáles se adoptan y en qué etapa
+    │   ├── estrategia-de-pruebas.md    # los cinco tipos de prueba, separados y documentados
+    │   ├── evals-del-llm.md            # plan de evaluaciones del modelo (evals) para la etapa 5
     │   ├── referencia/                 # versión futura (arquitectura.md) y diseño anterior (ruta-de-construccion.md)
     │   ├── pruebas/                    # registros de las pruebas manuales de cada etapa
     │   └── revisiones/                 # informes de revisión del plan y del código
@@ -73,8 +78,9 @@ estudio/proyecto-agente/
         ├── base-de-conocimiento/       # documentos de soporte ficticios (.md)
         ├── .dockerignore               # etapa 6: deja fuera de la imagen el .env, el entorno virtual y las cachés
         ├── backend/
-        │   ├── src/                    # todo el código Python, archivos sueltos sin paquetes
-        │   ├── tests/                  # pruebas
+        │   ├── aplicacion/             # el agente en sí: paquete Python que entra en la imagen Docker
+        │   ├── scripts/                # asistencia que se ejecuta suelta: carga, pruebas manuales, costos (D10)
+        │   ├── tests/                  # pruebas: unitarias, integracion, adversariales, evals y e2e
         │   ├── requirements.txt
         │   └── Dockerfile              # etapa 6
         ├── frontend/
@@ -85,12 +91,12 @@ estudio/proyecto-agente/
             ├── example.env             # fuente oficial de las variables
             └── postgres/
                 ├── 01_esquema.sql          # tablas (se ejecuta primero)
-                └── 02_datos_ficticios.sql  # agente, clientes, línea base e historial
+                └── 02_datos_ficticios.sql  # agente, clientes y línea base; el historial de tickets, en la etapa 7
 ```
 
 Los SQL llevan número porque PostgreSQL los ejecuta en orden alfabético, y el esquema debe ir antes que los datos. Solo se ejecutan la primera vez que se crea el volumen: mientras no haya datos reales, para cambiar el esquema se edita el SQL y se recrea todo con `docker compose down -v`.
 
-El código corre de dos formas: en local, con `start-dev.bat` (servidor de base de datos `localhost`), y dentro de Docker, con `start-qa.bat` desde la etapa 6 (servidor `postgres`). Por eso, desde la etapa 2, `config.py` armará la conexión con la variable `POSTGRES_HOST`, que vale `localhost` por defecto y `postgres` dentro del compose. Desde la etapa 6, el backend se construye con la carpeta `src/` completa como contexto, porque necesita leer `frontend/src/` y `base-de-conocimiento/`; el archivo `src/.dockerignore` evita que el `.env` y el entorno virtual entren en la imagen.
+El código corre de dos formas: en local, con `start-dev.bat` (servidor de base de datos `localhost`), y dentro de Docker, con `start-qa.bat` desde la etapa 6 (servidor `postgres`). Por eso, desde la etapa 2, `config.py` armará la conexión con la variable `POSTGRES_HOST`, que vale `localhost` por defecto y `postgres` dentro del compose. Desde la etapa 6, el backend se construye con la carpeta `src/` completa como contexto, porque necesita leer `frontend/src/` y `base-de-conocimiento/`; el archivo `src/.dockerignore` evita que el `.env` y el entorno virtual entren en la imagen. Del backend, el `Dockerfile` copia solo `aplicacion/` y `requirements.txt`: los scripts de asistencia quedan fuera (D10).
 
 **El compose de la etapa 2:** un solo servicio, `postgres`, con la imagen `pgvector/pgvector:pg17`; usuario, contraseña y base salen del `.env` (`${POSTGRES_USER}`, `${POSTGRES_PASSWORD}`, `${POSTGRES_DB}`); la carpeta `postgres/` se monta en `/docker-entrypoint-initdb.d` para que los SQL se ejecuten al crear el volumen; los datos quedan en un volumen con nombre; y el puerto se publica solo en el equipo (`127.0.0.1:5432:5432`). `POSTGRES_PASSWORD` es obligatoria: la imagen no arranca sin ella.
 
@@ -101,12 +107,12 @@ El código corre de dos formas: en local, con `start-dev.bat` (servidor de base 
 | Tema | Ruta o arquitectura | Esta versión |
 |---|---|---|
 | Documentos de soporte | `kb/` | `src/base-de-conocimiento/` |
-| Prompt | `prompts/soporte-n1.md` | `src/backend/src/prompt_soporte_n1.md` |
+| Prompt | `prompts/soporte-n1.md` | `src/backend/aplicacion/prompt_soporte_n1.md` |
 | Esquema | `sql/001_esquema.sql`, tablas en inglés | `src/docker/postgres/01_esquema.sql`, tablas en español (ver “Modelo de datos”) |
 | Variables | `.env.example` | `src/docker/example.env` |
 | Compose | en la raíz, con credenciales escritas | en `src/docker/`, con variables del `.env` |
 | Clientes del CRM | `datos/clientes.json` o servicio mock-crm | tabla `clientes` |
-| Código | paquete con imports relativos | archivos sueltos en `backend/src/`, se ejecutan con `python src/archivo.py` |
+| Código | paquete con imports relativos | dos paquetes en `backend/`: `aplicacion/` (el agente) y `scripts/` (asistencia), con imports absolutos (`from aplicacion import config`); se ejecutan desde `src/backend` con `python -m aplicacion.consola` o `python -m scripts.<nombre>` (D10) |
 | Conexión a PostgreSQL | `psycopg` (licencia LGPL), `pgvector` y `numpy` | `pg8000` (licencia BSD), por la licencia; los vectores se envían como texto y se convierten en SQL con `::vector`, sin librerías extra (ver `decisiones.md`, D1 y D2) |
 | Embeddings | librería `google-genai` y `GEMINI_API_KEY` | la misma librería `openai` y la misma clave del chat |
 | API | asíncrona, responde `202` y una cola atiende | síncrona: atiende en el mismo pedido |
@@ -114,8 +120,8 @@ El código corre de dos formas: en local, con `start-dev.bat` (servidor de base 
 | Seguridad | `API_CLAVE` | sin autenticación en el frontend ni en el backend, solo en el equipo local (ver `decisiones.md`, D4) |
 | Archivos de código | `llm.py`, `embeddings.py`, `db.py`, `auditoria.py`, `ingest.py`, `bucle.py`, `guardrails.py` | `modelo.py` (chat y embeddings), `base_de_datos.py` (conexión y auditoría), `cargar_conocimiento.py`, `agente.py`, `reglas.py` |
 | Tablas | `kb_documentos`, `kb_chunks`, `escalations`, `audit_log`, `prompt_versions` | `fragmentos_conocimiento` (con columna `documento`), columnas de escalamiento en `tickets`, `registro_auditoria`, `version_prompt` en `registro_agentes` |
-| Conexión a la base | `DATABASE_URL` | variables `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` y `POSTGRES_HOST`; `config.py` arma la conexión |
-| Embeddings, parámetros | 768 números, normalizados, `task_type` | 768 números pedidos con el parámetro `dimensions` (se comprueba en la etapa 2; si el proveedor no lo acepta, se ajusta la columna al tamaño que entregue), sin normalizar porque la distancia de coseno no lo necesita, sin `task_type`; fragmentos de unos 1.200 caracteres con 200 de solape; índice HNSW; 5 resultados por búsqueda |
+| Conexión a la base | `DATABASE_URL` | variables `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` y `POSTGRES_HOST`; `base_de_datos.py` arma la conexión con ellas |
+| Embeddings, parámetros | 768 números, normalizados, `task_type` | 768 números pedidos con el parámetro `dimensions` (comprobado el 2026-11-18: Gemini lo acepta por su punto de acceso compatible con OpenAI), sin normalizar porque la distancia de coseno no lo necesita, sin `task_type`; corte por secciones del documento, luego por párrafos y, si un párrafo es muy largo, por caracteres (1.200 con 200 de solape), con el título y la sección antepuestos; índice HNSW; 5 resultados por búsqueda |
 
 ## Etapas de esta versión
 
@@ -124,9 +130,9 @@ El código corre de dos formas: en local, con `start-dev.bat` (servidor de base 
 | 0 | Conexión con el modelo | `config.py`, `modelo.py`, `prueba_conexion.py`, `example.env`, `start-dev.bat`, `start-qa.bat`, `clear.bat` | el modelo responde un saludo |
 | 1 | Agente en la terminal con su JD+SOP | `consola.py`, `prompt_soporte_n1.md` | ante “quiero cancelar” responde que una persona seguirá el caso |
 | 2 | Base de conocimiento en pgvector (el RAG) | nuevos: `docker-compose.yml`, `01_esquema.sql`, `02_datos_ficticios.sql`, `base_de_datos.py` (`conectar()`, `buscar_fragmentos()`), `cargar_conocimiento.py`, `probar_busqueda.py`, los documentos aprobados; cambian: `modelo.py` (`crear_embedding()`), `config.py` (variables `POSTGRES_*` y `LLM_MODELO_EMBEDDINGS`), `requirements.txt` (`pg8000`) | cada embedding tiene 768 números y “no puedo entrar” encuentra el documento de contraseñas |
-| 3 | Herramientas y bucle del agente | `herramientas.py`, `agente.py` | resuelve con documentos o escala con el contexto completo |
+| 3 | Herramientas y bucle del agente, con las prácticas adoptadas en `buenas-practicas.md` (citar la fuente, datos separados de las instrucciones, tope de tokens, herramientas desconocidas rechazadas) | nuevos: `herramientas.py` (las tres herramientas; `buscar()` de `probar_busqueda.py` pasa aquí como `buscar_solucion`), `agente.py`; cambian: `modelo.py` (acepta las herramientas y devuelve los tokens usados), `base_de_datos.py` (funciones de clientes y tickets: todo el SQL sigue en este archivo), `consola.py` (pide el código del cliente y crea el ticket), `estimar_costos.py` (usa los tokens reales de los tickets en vez de los supuestos), `prompt_soporte_n1.md` (el programa le agrega la lista de lo que no atiende, leída de `registro_agentes.fuera_de_alcance`, que es su única fuente) | resuelve con documentos o escala con el contexto completo |
 | 4 | Reglas en código, auditoría y kill switch | nuevos: `reglas.py` (incluye `escalar_vencidos()`); cambia: `base_de_datos.py` (`registrar_paso()`) | cada ticket se puede explicar con el registro de auditoría |
-| 5 | Pruebas y aprobación del prompt | `tests/`, `aprobar_prompt.py` | pasan las pruebas y la versión queda aprobada con nombre |
+| 5 | Evals, pruebas adversariales de las reglas y aprobación del prompt | `tests/evals/`, `tests/adversariales/`, `scripts/aprobar_prompt.py` | pasan las pruebas y la versión queda aprobada con nombre |
 | 6 | API REST y Docker | `api.py`, `Dockerfile`, `src/.dockerignore`, perfil `qa` en el compose | con curl se crea un ticket, se responde y se califica, tanto con `start-dev.bat` como con `start-qa.bat` |
 | 7 | Frontend y supervisión | `frontend/src/`, `supervision.py` | el dashboard dice en menos de 90 segundos si el agente genera valor |
 
@@ -136,7 +142,7 @@ Seis tablas, la versión mínima que cubre el curso. Escalaciones, revisiones de
 
 - **`registro_agentes`:** nombre, rol, alcance, `fuera_de_alcance` (lo que el agente no atiende), nivel de autonomía, dueño (el AI Agent Manager), `area_responsable`, permisos con la justificación de cada uno, restricciones, `version_prompt`, `aprobado_por`, `fecha_aprobacion` (la última validación), `fecha_ultima_auditoria`, `detenido` (el kill switch), `motivo_detencion`, metas o métricas de éxito (resolución autónoma, escalamiento, tiempo, CSAT) y línea base (casos por día, minutos por caso y costo por caso antes del agente). Curso: secciones 1.2, 2.2, 2.6, 2.7 y 3.7, y responsabilidades 3 y 5 del Módulo 2.
 - **`clientes`:** el CRM simulado, de solo lectura para el agente: `codigo` (el ID visible que da el cliente, con el formato `C-001`), nombre, empresa, plan contratado e historial. Curso: sección 2.3.
-- **`fragmentos_conocimiento`:** documento, orden, texto y `embedding vector(768)`. Curso: sección 2.5, base de conocimiento.
+- **`fragmentos_conocimiento`:** documento, `seccion`, orden, texto, `embedding vector(768)`, `modelo_embedding`, `hash_documento` (huella SHA-256 del documento) y `cargado_en`. Curso: sección 2.5, base de conocimiento; el control de modelo, versión y fecha es una práctica de RAG que no viene en el curso (decisión D8).
 - **`tickets`:** `agente_id`, `cliente_id`, texto, `estado`, `creado_en`, `cerrado_en`, `respuesta`, `motivo_escalamiento`, `resumen_escalamiento`, `escalado_por` (el modelo o una regla), `minutos_persona` (tiempo de la persona que atendió un caso escalado), `tokens_entrada`, `tokens_salida`, `costo_tokens`, `csat` (1 a 5), `en_muestra`, `revisado_por`, `error_encontrado` y `categoria_error`. Curso: secciones 2.5, 3.2, 3.3 y Módulo 4.
 - **`mensajes`:** la conversación de cada ticket (quién habló y qué dijo), para que la persona que recibe un caso escalado vea todo el contexto.
 - **`registro_auditoria`:** `agente_id`, `ticket_id` (vacío en las intervenciones que no son de un ticket: detener o reactivar el agente y registrar un cambio externo), paso, tipo (modelo, herramienta, regla, intervención, cambio externo), decisión, datos usados, motivo, versión del prompt, tokens, quién (para las intervenciones humanas) y fecha. Curso: Módulo 1, pregunta 9 (audit trail), y sección 3.4 (intervenciones).
@@ -173,17 +179,19 @@ Semáforo (la regla de colores es del proyecto; el curso solo dice “dentro de 
 
 **Los 5 paneles del dashboard (sección 3.5):** 1, semáforo del agente; 2, resolución autónoma, escalamiento, tiempo promedio y costo por caso frente a la línea base, con tendencia de las últimas 2 semanas; 3, resultado del muestreo: casos revisados, errores por categoría y tendencia; 4, alertas de las 5 señales, en una lista priorizada, cada una con fecha y hora, descripción y acción recomendada, más los escalamientos contados por motivo, para ver si los traspasos se repiten en el mismo punto (sección 4.6); 5, valor acumulado: horas ahorradas, casos resueltos solos, ahorro frente a la línea base e impacto en NPS como proyección. Las tendencias salen de agrupar los tickets por día; no hacen falta tablas extra.
 
-**Costo y valor (secciones 3.2 y 5.1 a 5.3):** el curso define el costo por caso como la inversión total del proceso dividida por el volumen; el proyecto usa una versión simplificada: el costo de tokens, más los minutos de las personas en los casos escalados por su costo por hora, dividido por el número de tickets. Las horas ahorradas son los casos resueltos solos por los minutos por caso de la línea base (fórmula del proyecto; el curso pide las horas, no la fórmula). Los riesgos y la próxima fase del business case (sección 5.3) se muestran como un texto fijo del dashboard. Los precios por millón de tokens y el costo por hora de una persona van en el `.env`. Solo el horizonte 1 del curso (eficiencia) se mide con datos; el NPS y los horizontes 2 y 3 se muestran como proyección, porque un proyecto de estudio no tiene datos para medirlos. La línea base y los tickets históricos de `02_datos_ficticios.sql` son ficticios y van marcados así, para que el dashboard muestre tendencias desde el primer día.
+**Costo y valor (secciones 3.2 y 5.1 a 5.3):** el curso define el costo por caso como la inversión total del proceso dividida por el volumen; el proyecto usa una versión simplificada: el costo de tokens, más los minutos de las personas en los casos escalados por su costo por hora, dividido por el número de tickets. Las horas ahorradas son los casos resueltos solos por los minutos por caso de la línea base (fórmula del proyecto; el curso pide las horas, no la fórmula). Los riesgos y la próxima fase del business case (sección 5.3) se muestran como un texto fijo del dashboard. Los precios por millón de tokens y el costo por hora de una persona van en el `.env`. Solo el horizonte 1 del curso (eficiencia) se mide con datos; el NPS y los horizontes 2 y 3 se muestran como proyección, porque un proyecto de estudio no tiene datos para medirlos. La línea base de `02_datos_ficticios.sql` es ficticia y va marcada así. Los tickets históricos, también ficticios, se agregan en la etapa 7, junto con el dashboard que los usa, para que muestre tendencias desde el primer día.
 
-## Pruebas (etapa 5)
+## Pruebas
 
-Tres grupos, para gastar pocas llamadas al modelo:
+Cinco tipos de prueba, cada uno en su carpeta de `src/backend/tests/` y documentado (decisión del usuario): unitarias, de integración, adversariales de robustez, evals del modelo y de punta a punta (e2e). La estrategia, qué cubre cada tipo, cuánto cuesta y cuándo se escribe están en `estrategia-de-pruebas.md`; las evals tienen su plan en `evals-del-llm.md` y las adversariales en `pruebas-adversariales.md`.
 
-1. **Reglas en código, sin modelo:** cancelación, descuento, cambio de cuenta, 8 minutos (con el límite en 0) y kill switch. Son gratis y siempre dan el mismo resultado.
-2. **Las 5 dimensiones de la sección 2.6, con el modelo real:** al menos un caso por dimensión y uno por cada condición de escalamiento del SOP (sin resolución documentada, cancelación y tiempo), con `temperature=0`, y cada caso se repite 3 veces y vale la mayoría.
-3. **Métricas:** unos 20 tickets con una mezcla realista (la mayoría con solución documentada), comparados con las metas: resolución autónoma de 80% o más, escalamiento de 20% o menos y tiempo promedio de 3 minutos o menos. El CSAT no se puede medir en las pruebas, porque lo da el cliente.
+Lo esencial para gastar pocas llamadas al modelo:
 
-Antes de empezar, las pruebas verifican que PostgreSQL responde y que la base de conocimiento está cargada.
+1. **Sin modelo y gratis:** unitarias (incluidas las reglas en código: cancelación, descuento, cambio de cuenta, 8 minutos con el límite en 0 y kill switch), de integración y adversariales. Se corren a cada cambio.
+2. **Con el modelo real (evals):** al menos un caso por dimensión de la sección 2.6 y uno por cada condición de escalamiento del SOP (sin resolución documentada, cancelación y tiempo), con `temperature=0`, repitiendo cada caso 3 veces y valiendo la mayoría; y unos 20 tickets con una mezcla realista, comparados con las metas: resolución autónoma de 80% o más, escalamiento de 20% o menos y tiempo promedio de 3 minutos o menos. El CSAT no se puede medir en las pruebas, porque lo da el cliente.
+3. **De punta a punta:** pocos casos del recorrido completo, por la API.
+
+Antes de empezar, las pruebas que lo necesitan verifican que PostgreSQL responde y que la base de conocimiento está cargada.
 
 ## Qué pide el curso y dónde se cubre
 
@@ -221,6 +229,7 @@ Revisión del 2026-11-18, leída de los metadatos de cada paquete instalado (`pi
 | `fastapi`, `starlette`, `pydantic` | MIT, BSD 3, MIT | etapa 6 |
 | `uvicorn` | BSD 3 | etapa 6 |
 | `pytest`, `PyYAML` | MIT, MIT | etapa 5 |
+| `hypothesis` y su dependencia `sortedcontainers` | MPL 2.0 y Apache 2.0 | etapas 5 y 6; aceptada por el usuario como excepción, porque no se modifica, igual que `certifi` y `tqdm` |
 | Dependencias de `openai`: `httpx`, `httpcore`, `anyio`, `distro`, `jiter`, `sniffio`, `idna`, `typing_extensions` | BSD, MIT o Apache 2.0, PSF | en uso |
 | Dependencias de `openai`: `certifi` y `tqdm` | MPL 2.0 (`tqdm`: MPL 2.0 y MIT) | en uso; aceptadas por el usuario, porque no se modifican |
 | Imagen `pgvector/pgvector` (PostgreSQL y la extensión pgvector) | Licencia PostgreSQL, permisiva | etapa 2 |
@@ -245,12 +254,15 @@ Lo que se saca no se descarta: se posterga, y esta tabla recuerda por qué y qu�
 | Langfuse | `registro_auditoria` | el curso pide el audit trail, no una plataforma de trazas | cuando haga falta analizar en detalle prompts, tokens y latencia. Qué es: una herramienta de código abierto que registra cada llamada al modelo (el prompt enviado, la respuesta, los tokens, el costo y la demora) y la muestra en una interfaz web para buscar y comparar. Licencia: MIT, salvo sus módulos empresariales, que no se usarían |
 | CI automático | pruebas a mano con `pytest` | no hay flujo de despliegue | cuando el código se publique o lo modifiquen varias personas |
 | Autenticación del frontend y del backend | todo corre solo en el equipo local (`127.0.0.1`), sin claves ni usuarios | es un proyecto para entender el curso, y el curso no exige autenticación; con un frontend estático, una clave quedaría expuesta | cuando el sistema se exponga fuera del equipo: en una capa superior, por ejemplo un API gateway o un proxy con autenticación delante del backend, sin cambiar el código del agente; ahí conviene separar el acceso de los clientes del acceso del administrador (kill switch, aprobación del prompt) |
+| Prácticas de RAG a gran escala: PDF y OCR, búsqueda híbrida, reranking, carga incremental, permisos por documento | documentos en Markdown, búsqueda por significado y recarga completa | a escala pequeña no cambian el resultado (7 de 7 búsquedas correctas) y suman código o costo | cada una tiene su señal en `decisiones.md`, D8 |
+| Framework de evals (`deepeval`, `ragas`, `inspect-ai`) | `pytest` y un juez propio de pocas líneas | no suma librerías y deja ver cómo se calcula cada métrica | cuando los casos o las métricas crezcan tanto que el juez propio deje de ser simple; antes, revisar su licencia |
+| Anonimizar datos sensibles antes de enviarlos al modelo | datos ficticios, permisos mínimos y la restricción de no compartir datos de otros clientes | ningún dato del proyecto es real | cuando el agente atienda clientes reales o se carguen documentos con datos personales: detectarlos en el propio equipo (patrones con dígito verificador para RUT, correos y teléfonos; un modelo local de reconocimiento de entidades para nombres y direcciones, por ejemplo con Presidio, MIT, revisando la licencia del modelo de idioma, porque los de español de spaCy son GPL; detalle en `anonimizacion-de-datos.md`), reemplazarlos por etiquetas antes de cargarlos o de enviar el texto al modelo, revisar que las respuestas no los muestren y guardar en la auditoría solo lo necesario |
 | `task_type` de los embeddings | embeddings sin tipo, por la librería `openai` | se ahorra una librería y una clave | si la búsqueda encuentra mal los documentos |
 
 ## Decisiones del usuario
 
 - **Por defecto (2026-11-18):** carpeta `agente-soporte-n1`; un commit por etapa.
-- **Recomendaciones de la revisión aceptadas (2026-11-18):** modelo de datos mínimo; el usuario aprueba cada versión del prompt con su nombre, y el programa lee el archivo; sin clave de API, solo en local; un ticket se resuelve cuando el cliente lo confirma y lo califica, con cierre por inactividad que no cuenta como resolución autónoma; NPS como proyección; el agente pasa a Nivel 3; embeddings con la librería `openai`; pruebas en tres grupos, unos 20 casos y 3 repeticiones en los de las 5 dimensiones; documentos ficticios generados a partir de una lista que el usuario aprueba.
+- **Recomendaciones de la revisión aceptadas (2026-11-18):** modelo de datos mínimo; el usuario aprueba cada versión del prompt con su nombre, y el programa lee el archivo; sin clave de API, solo en local; un ticket se resuelve cuando el cliente lo confirma y lo califica, con cierre por inactividad que no cuenta como resolución autónoma; NPS como proyección; el agente pasa a Nivel 3; embeddings con la librería `openai`; pruebas en tres grupos (hoy, cinco tipos: ver “Pruebas”), unos 20 casos y 3 repeticiones en los de las 5 dimensiones; documentos ficticios generados a partir de una lista que el usuario aprueba.
 
 ## Registro de cambios
 
@@ -275,3 +287,18 @@ Lo que se saca no se descarta: se posterga, y esta tabla recuerda por qué y qu�
 - 2026-11-18: pedido del usuario: la regla 7 pasa a exigir que toda la documentación del proyecto se actualice con cada cambio.
 - 2026-11-18: el usuario confirma FastAPI frente a Flask, en su forma más simple; se registra como decisión D7, con una explicación de Pydantic.
 - 2026-11-18: decisión del usuario: los commits siguen Conventional Commits 1.0.0 (regla 14).
+- 2026-11-18: etapa 2 escrita: 8 documentos ficticios de Nubesoft aprobados por el usuario, `01_esquema.sql` con las seis tablas, `02_datos_ficticios.sql` (el agente, 6 clientes y la línea base; el historial de tickets pasa a la etapa 7, donde se usa), `docker-compose.yml`, `base_de_datos.py`, `cargar_conocimiento.py`, `probar_busqueda.py`, `crear_embedding()` en `modelo.py` y `pg8000` en `requirements.txt`. Se comprobó que Gemini entrega embeddings de 768 números. `start-dev.bat` espera a que PostgreSQL esté listo.
+- 2026-11-18: decisión del usuario: las pruebas incluyen pruebas adversariales; se documenta la estrategia en `pruebas-adversariales.md` (adaptada a FastAPI desde el ejemplo del usuario con Flask) y se agrega el grupo 4 de pruebas. Hypothesis es MPL 2.0: pendiente de que el usuario la acepte.
+- 2026-11-18: el usuario acepta Hypothesis (MPL 2.0) como excepción, porque no se modifica.
+- 2026-11-18: decisión del usuario: el proyecto tendrá evals del modelo; se documenta su plan en `evals-del-llm.md` (a partir de un prompt de ejemplo del usuario, adaptado al proyecto): `pytest` con un juez propio en vez de un framework, evaluación en tres capas, golden dataset en JSONL con campos en español, umbrales del curso y del proyecto, y lo que se puede ir dejando listo.
+- 2026-11-18: decisión del usuario: también pruebas unitarias y de punta a punta, y todas las pruebas documentadas y separadas. Se crea `estrategia-de-pruebas.md` con cinco tipos (unitarias, integración, adversariales, evals y e2e), una carpeta con su `README.md` por tipo en `src/backend/tests/`, y la sección “Pruebas” del plan remite a ella.
+- 2026-11-18: el usuario preguntó si el RAG tiene las prácticas estándar. Decisión D8: se agregan a `fragmentos_conocimiento` el modelo de embeddings, las dimensiones, la huella del documento y la fecha de carga, y la búsqueda solo compara vectores del mismo modelo; PDF y OCR, corte por secciones, búsqueda híbrida, reranking, carga incremental y permisos por documento se postergan. Probado: 7 de 7.
+- 2026-11-18: el usuario aporta material de referencia sobre RAG y patrones de agentes. Lo relevante se resume en `buenas-practicas.md`, sin citar las fuentes (pedido del usuario): casi todo ya está; se adoptan 7 prácticas pequeñas en las etapas 3, 4 y 5, y el resto se posterga o no aplica. El material original no se sube (`.gitignore`).
+- 2026-11-18: ideas tomadas de un RAG de ejemplo compartido por el usuario (sin copiar código, sin licencia): se agregan a `buenas-practicas.md` y a `evals-del-llm.md` (evaluar la búsqueda sola, datos esperados con alternativas, casos de varios documentos, modo detallado de la consola). Queda propuesto, sin aplicar, cortar los documentos por secciones.
+- 2026-11-18: el usuario aprueba cortar los documentos por secciones (luego por párrafos y, si hace falta, por caracteres con solape), con el título antepuesto y la columna `seccion` para citar. Implementado en la etapa 2: 23 fragmentos y 7 de 7 búsquedas correctas, con parecidos más altos.
+- 2026-11-18: el usuario prueba la etapa 2 completa (limpieza, arranque, carga y búsqueda) con el mismo resultado: queda cerrada. Sus búsquedas propias pasan a ser casos de las evals (tema correcto sin solución, pregunta ambigua). Decisión del usuario: los registros de pruebas no incluyen rutas completas ni logs de errores; los incidentes se resumen en una línea.
+- 2026-11-18: el usuario acepta las recomendaciones de la revisión de la etapa 2 (EGM y fidelidad al curso), con un cambio propio: `clear.bat` nunca borra las imágenes descargadas; detiene y borra los contenedores y solo borra los volúmenes con `--borrar-volumenes`. Decisiones: el SQL de clientes y tickets va en `base_de_datos.py`; la lista de lo que el agente no atiende se agrega al prompt desde `registro_agentes.fuera_de_alcance`; se elimina la columna `dimensiones` (redundante con `vector(768)`); la fuente se cita en la respuesta desde la etapa 3 y en la auditoría desde la etapa 4. Correcciones: `trocear()` ya no repite el pedazo final; carga y búsqueda manejan errores de conexión y una base vacía, y cierran la conexión siempre; `conectar()` espera como máximo 10 segundos; un documento vacío se omite; `start-dev.bat` revisa que exista el `.env`; citas al curso precisadas (kill switch, audit trail, umbrales de las evals). La etapa 3 queda detallada en la tabla de etapas.
+- 2026-11-18: preguntas del usuario sobre los vectores (por qué 768, si dependen del fragmento, cuánto cuesta calcularlos) y sobre cómo anonimizar datos sin un modelo remoto: se documentan en `embeddings-y-vectores.md` y `anonimizacion-de-datos.md`. Decisión del usuario: lo que es del proyecto se documenta en el proyecto, no en el material del curso.
+- 2026-11-18: a pedido del usuario, la eliminación de la columna `dimensiones` pasa a ser la decisión D9, con las consultas que muestran dónde guarda la base el 768 (el tipo `vector(768)` y `vector_dims()`).
+- 2026-11-18: a pedido del usuario, `estimar_costos.py` estima sin llamar al modelo el costo de cargar X documentos de X tamaño y el de cada consulta, en tres escenarios de demanda y con el pico frente al límite de la cuenta (`docs/costos.md`). Nuevas variables: `PRECIO_MILLON_TOKENS_EMBEDDINGS`, `LLAMADAS_POR_CONSULTA` y `LIMITE_LLAMADAS_POR_MINUTO`. También se documenta cómo cambiar el tamaño del vector sin reconstruir la base y que DBeaver no muestra el 768 (D9).
+- 2026-11-19: a pedido del usuario, el código del backend se separa en dos paquetes: `aplicacion/` (config, modelo, base de datos, prompt y consola; desde la etapa 3, el agente, sus herramientas, las reglas y la API) y `scripts/` (prueba de conexión, carga del conocimiento, prueba de búsqueda, costos y, en la etapa 5, la aprobación del prompt). Se ejecutan con `python -m` desde `src/backend`; `RUTA_PROMPT` pasa a `config.py`; regla 15 y decisión D10. Probado de nuevo: 23 fragmentos y 7 de 7.

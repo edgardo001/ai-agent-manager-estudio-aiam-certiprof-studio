@@ -22,7 +22,14 @@ flowchart TD
 |---|---|---|---|
 | 1 | `plan-del-proyecto.md` | empiece por “El flujo completo, en simple”; tiene las reglas, las etapas y el modelo de datos, y manda sobre todo lo demás | sí |
 | 2 | `diagramas-del-codigo.md` | qué archivo y qué función hace cada cosa; se actualiza al terminar cada etapa | sí |
-| 3 | `decisiones.md` | por qué se eligió cada librería, cómo se guardan los vectores, las licencias, la seguridad, el modelo, la consola y FastAPI con Pydantic | sí |
+| 3 | `decisiones.md` | por qué se eligió cada librería, cómo se guardan los vectores, las licencias, la seguridad, el modelo, la consola, FastAPI con Pydantic, por qué el tamaño del vector no se guarda en una columna y por qué el agente y los scripts de asistencia van en carpetas separadas | sí |
+| antes de la etapa 3 | `buenas-practicas.md` | prácticas de RAG y de agentes: cuáles ya están, cuáles se adoptan y en qué etapa, y cuáles no hacen falta | sí, es la lista vigente |
+| antes de escribir pruebas | `estrategia-de-pruebas.md` | los cinco tipos de prueba (unitarias, integración, adversariales, evals y e2e): qué prueba cada uno, cuánto cuesta y cuándo se escribe | sí, es la estrategia vigente |
+| antes de la etapa 5 | `evals-del-llm.md` | el plan de evaluaciones del modelo: capas, golden dataset, modelo juez y umbrales para aprobar un prompt | sí, es el plan vigente |
+| antes de las etapas 5 y 6 | `pruebas-adversariales.md` | la estrategia de pruebas adversariales: las del agente, que pide el curso, y las de robustez con Hypothesis | sí, es la estrategia vigente |
+| para entender el RAG | `embeddings-y-vectores.md` | qué es un embedding, por qué mide siempre 768 números, cómo influye el tamaño del fragmento, qué hacer al cambiar de modelo y cuánto cuesta calcularlos | sí |
+| para planificar el gasto | `costos.md` | cuánto cuesta cargar documentos y atender consultas, con escenarios de demanda y el pico de uso; cómo usar `estimar_costos.py` | sí |
+| cuando haya datos reales | `anonimizacion-de-datos.md` | cómo proteger datos personales sin enviarlos fuera del equipo: técnicas, herramientas con su licencia y marcos de referencia | sí; está postergado en el plan |
 | opcional | `referencia/arquitectura.md` | hacia dónde puede crecer el sistema: colas, workers, más contenedores | no, es la versión futura |
 | opcional | `referencia/ruta-de-construccion.md` | cada pieza explicada con código de un diseño anterior | no, fue reemplazada por el plan |
 | registro | `pruebas/` | lo que se probó en cada etapa y qué enseñó | es historia |
