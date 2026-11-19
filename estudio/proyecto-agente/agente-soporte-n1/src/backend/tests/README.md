@@ -16,10 +16,11 @@ Todas se corren desde `src/backend` con `.\.venv\Scripts\python.exe -m pytest te
 
 | Archivo | Qué prueba |
 |---|---|
-| `unitarias/test_piezas_simples.py` | configuración y proveedores (D14), costo, vector como texto, instrucciones del agente (lo que no atiende, datos marcados, versión del prompt), corte de documentos (D8) y la revisión del archivo de configuración local |
-| `unitarias/test_herramientas.py` | solo existen las tres herramientas; se rechazan las desconocidas y los argumentos inválidos; `buscar_cliente` no acepta otro cliente; los datos marcados no se pueden cerrar desde adentro; cada fragmento lleva su fuente |
-| `unitarias/test_modelo.py` | cómo se lee la respuesta de la librería `openai` sin llamar a un proveedor: la firma de pensamiento (D11), los pedidos de herramientas, el motivo de fin, los tokens, la temperatura y que el chat y los embeddings usen cada uno su proveedor (D13) |
-| `integracion/test_base_de_datos.py` | búsqueda por parecido con vectores escritos a mano, registro del agente, clientes y tickets con su conversación y sus tokens |
-| `integracion/test_agente.py` | el bucle del agente con un **modelo falso** que entrega respuestas escritas de antemano: resolver, escalar con el contexto completo (también en el límite de tokens o de llamadas), varias herramientas en un mensaje, herramientas o argumentos rechazados, el segundo mensaje, los topes, las fallas del modelo o de una herramienta y las respuestas vacías o cortadas. Cada prueba revisa cuántas veces se llamó al modelo |
+| `unitarias/test_piezas_simples.py` | configuración y proveedores, costo, vector, instrucciones del agente, corte de documentos y revisión de la configuración local |
+| `unitarias/test_reglas.py` | las reglas en código (D16): cancelación, largo, lo que una respuesta no puede decir, 8 minutos y kill switch, con casos que deben pasar |
+| `unitarias/test_herramientas.py` | las tres herramientas, el rechazo de herramientas y argumentos inválidos y la marca de datos |
+| `unitarias/test_modelo.py` | cómo se lee la respuesta de la librería `openai` (D11), la temperatura y el proveedor del chat y de los embeddings (D13) |
+| `integracion/test_base_de_datos.py` | búsqueda por parecido, registro del agente, clientes y tickets |
+| `integracion/test_agente.py` | el bucle del agente con un **modelo falso**: cada salida (resolver, escalar, topes, fallas), las reglas, la auditoría y el kill switch; cada prueba cuenta las llamadas al modelo |
 
 **No dejan datos:** la fixture `conexion` de `conftest.py` deshace al final de cada prueba de integración todo lo que escribió, porque el código del agente no confirma los cambios; lo hace quien llama (D11). El modelo falso prueba gratis y siempre igual lo que controla el código; cómo se comporta el modelo real se prueba en las evals.

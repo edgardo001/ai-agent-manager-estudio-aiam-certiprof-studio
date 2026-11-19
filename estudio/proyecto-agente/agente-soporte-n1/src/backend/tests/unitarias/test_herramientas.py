@@ -58,7 +58,7 @@ def test_marcar_como_datos_no_se_puede_cerrar_desde_adentro():
 def test_fragmentos_llevan_su_fuente():
     """Cada fragmento llega al modelo con su fuente, para que pueda citarla.
     Técnico: práctica de RAG que no viene en el curso (rag.md)."""
-    texto = formatear_fragmentos([("restablecer-contrasena.md", "Pasos", "1. Entrar.", 0.8123)])
+    texto = formatear_fragmentos([("restablecer-contrasena.md", "Pasos", "1. Entrar.", 0.8123, "huella")])
     assert "Fuente: restablecer-contrasena.md > Pasos (parecido 0.81)" in texto
     assert texto.startswith("<fragmento>")
 
