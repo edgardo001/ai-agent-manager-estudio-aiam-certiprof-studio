@@ -118,6 +118,13 @@ El operador `<=>` mide qué tan distintos son dos vectores (la distancia de cose
 
 **Qué implica:** el proyecto no se puede exponer a internet tal como está. Cuando haga falta, la autenticación se agrega en una capa superior, por ejemplo un API gateway o un proxy con autenticación delante del backend, sin cambiar el código del agente. En ese momento conviene separar el acceso de los clientes (crear y ver sus tickets) del acceso del administrador, el AI Agent Manager (kill switch, aprobación del prompt, revisión del muestreo y dashboard). Está anotado en la tabla de lo postergado del plan.
 
+**Enumeración de clientes y tickets (consulta del usuario, 2026-11-19).** El código del cliente (C-001) y el número del ticket (419) son correlativos: si una puerta de entrada los aceptara del pedido, cualquiera podría probar uno tras otro y ver los datos de cada cliente o sus conversaciones (en OWASP, *Broken Object Level Authorization*, API1:2023). Dentro de un ticket no pasa: el cliente queda fijado al crearlo, `buscar_cliente` solo lee a ese cliente y `revisar_respuesta()` bloquea el código o el nombre de otro (D16). Cambiar los códigos por UUID los haría imposibles de adivinar, pero no es la solución: un identificador no es un secreto (queda en URLs, logs y correos). Decisión del usuario: no cambiar el esquema ahora y fijar cuatro condiciones para la API de la etapa 6. Esto no viene del curso, aunque se relaciona con los permisos mínimos (Módulo 2, sección 2.3).
+
+1. **El código del cliente no se toma del pedido como identidad.** En la versión local, la API lo recibe como “cliente simulado”, marcado así en su documentación; al exponerla, sale del token de quien inició sesión.
+2. **Cada ruta que recibe un ticket comprueba que es del cliente que pide**, y la respuesta sin permiso no distingue “no existe” de “no es suyo”, para no ayudar a enumerar. Esto sí exige código en la API, no solo la capa superior.
+3. **UUID como capa extra opcional** para lo que se exponga en URLs, sobre todo los tickets; el `id` correlativo sigue siendo interno, para las relaciones entre tablas.
+4. **Un límite de pedidos por minuto** en la capa de autenticación, contra la fuerza bruta.
+
 ## D5. Modelo de lenguaje: Gemini 3.1 Flash Lite
 
 **Fecha:** 2026-11-18. **Estado:** vigente, elección del usuario.
@@ -370,6 +377,6 @@ Los imports son absolutos (`from aplicacion import config`) y todo se ejecuta de
 
 **Las opciones:** patrones de palabras en el código, o un segundo modelo que revise la entrada y la salida.
 
-**La decisión:** patrones de palabras en `reglas.py`, más un kill switch que se activa desde la consola hasta que exista la API. Cómo se comporta cada regla está en el plan, “Cómo funciona cada regla”, que es su única fuente. Dos decisiones del usuario en la revisión: la cancelación exige intención u objeto (“ya cancelé la factura” significa pagarla) y el mensaje del cliente se confirma antes de atenderlo, para no perderlo si el programa se cae (matiza D11).
+**La decisión:** patrones de palabras en `reglas.py`, más un kill switch que se activa desde la consola hasta que exista la API. Cómo se comporta cada regla está en el plan, “Cómo funciona cada regla”, que es su única fuente. Dos decisiones del usuario en la revisión: la cancelación exige intención u objeto (“ya cancelé la factura” significa pagarla) y el mensaje del cliente se confirma antes de atenderlo, para no perderlo si el programa se cae (matiza D11). En la etapa 5, tras las pruebas adversariales, el usuario decidió arreglar en el código los trucos de caracteres y al otro cliente nombrado por su nombre, y dejar a las evals lo que un patrón no ve.
 
 **Por qué:** los patrones son pocas líneas, gratis, instantáneos y se prueban sin modelo; un segundo modelo costaría llamadas y demora y sería otra fuente de error. Su límite es conocido: no entienden el sentido. Por eso buscan ofrecer o afirmar, no mencionar (se comprobó contra los 8 documentos de la base de conocimiento: ningún falso positivo), el texto bloqueado queda en la auditoría para revisarlo, y las evals de la etapa 5 y la revisión por muestreo (sección 3.3) miden lo que se escape. El prompt sigue diciendo “si menciona cancelación, escala” (el SOP del curso): el modelo puede escalar un caso que la regla dejó pasar, lo que es el lado seguro.

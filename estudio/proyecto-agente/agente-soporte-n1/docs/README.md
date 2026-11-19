@@ -10,10 +10,11 @@ Este es el mapa de `docs/`. Para entender el proyecto bastan los tres primeros; 
 
 ## Consulte cuando necesite...
 
-- **saber por qué se eligió algo:** `decisiones.md` (D1 a D15, con un índice al inicio).
+- **saber por qué se eligió algo:** `decisiones.md` (D1 a D16, con un índice al inicio).
 - **entender la búsqueda del agente:** `rag.md`: qué es un embedding, por qué 768 números, cómo cambiar de modelo y las buenas prácticas de RAG y de agentes que se adoptan.
 - **cambiar de proveedor o estimar el gasto:** `modelos-y-costos.md`: cómo probar OpenRouter u Ollama, respaldo ante caídas y las cifras de costo.
 - **escribir o correr pruebas:** `estrategia-de-pruebas.md` (los cinco tipos, incluidas las adversariales) y `evals-del-llm.md` (el plan de evals de la etapa 5, con sus metas y umbrales).
+- **revisar la seguridad:** `seguridad-owasp.md`: los Top 10 de OWASP (aplicaciones con LLM y APIs), qué cubre ya el proyecto, qué falta y cuándo revisarlo.
 - **mirar más allá de esta versión:** `referencia/`: `arquitectura.md` (hacia dónde podría crecer el sistema) y `anonimizacion-de-datos.md` (cómo proteger datos personales cuando haya datos reales).
 
 ## Historia (no hace falta leer)
