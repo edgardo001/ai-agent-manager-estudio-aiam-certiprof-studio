@@ -22,6 +22,7 @@ Todas se corren desde `src/backend` con `.\.venv\Scripts\python.exe -m pytest te
 | `unitarias/test_modelo.py` | cómo se lee la respuesta de la librería `openai` (D11), la temperatura y el proveedor del chat y de los embeddings (D13) |
 | `integracion/test_base_de_datos.py` | búsqueda por parecido, registro del agente, clientes y tickets |
 | `adversariales/test_reglas_adversariales.py` | intentos de saltarse `reglas.py` (trucos de caracteres, otros clientes por su nombre), propiedades con Hypothesis y los límites conocidos, marcados como falla esperada |
+| `evals/` (cinco archivos) | el agente real contra el golden dataset y un modelo juez: búsqueda, casos críticos al 100% y métricas con sus umbrales; ver `evals/README.md` |
 | `integracion/test_agente.py` | el bucle del agente con un **modelo falso**: cada salida (resolver, escalar, topes, fallas), las reglas, la auditoría y el kill switch; cada prueba cuenta las llamadas al modelo |
 
 **No dejan datos:** la fixture `conexion` de `conftest.py` deshace al final de cada prueba de integración todo lo que escribió, porque el código del agente no confirma los cambios; lo hace quien llama (D11). El modelo falso prueba gratis y siempre igual lo que controla el código; cómo se comporta el modelo real se prueba en las evals.

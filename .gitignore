@@ -7,6 +7,8 @@ __pycache__/
 .venv*/
 .pytest_cache/
 .hypothesis/
+# Resultado de la última corrida de las evals: su resumen va a docs/pruebas/
+ultima_corrida.json
 
 # PDF de la raíz: solo se versiona la guía del curso; el material de referencia del usuario no se sube
 /*.pdf
