@@ -25,6 +25,7 @@ TEMAS = {
     "Adopción y gestión del cambio": r"gesti[oó]n del cambio|niveles de adopci[oó]n|resistencia",
     "Agent sprawl": r"agent sprawl",
     "Embeddings y pgvector (búsqueda semántica)": r"embedding|pgvector|b[uú]squeda (sem[aá]ntica|vectorial)",
+    "Anonimización y datos personales": r"anonimiz|seudonimiz|datos (personales|sensibles)",
     "Rol del AI Agent Manager": r"nuevo rol|rol en evoluci|futuro del ai agent manager|qu[eé] es un ai agent manager",
     "AI Productivity Paradox": r"productivity paradox",
     "Alucinaciones": r"alucinaci",
